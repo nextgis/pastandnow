@@ -1,25 +1,28 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "es6",
-      "dom"
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "sourceMap": true,
+        "strict": false,
+        "noImplicitReturns": false,
+        "module": "es2015",
+        "moduleResolution": "node",
+        "target": "es5",
+        "experimentalDecorators": true,
+
+            /* Basic Options */
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        /* Module Resolution Options */
+        "esModuleInterop": true, /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
+    },
+    "include": [
+        "./src/**/*"
     ],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "strict": false,
-    "importHelpers": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "sourceMap": true,
-    "allowJs": true,
-    "noUnusedLocals": true,
-    "typeRoots": ["node_modules/@types", "./custom_typings"],
-  },
-  "include": [
-    "src/**/*.ts",
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "exclude": [
+        "node_modules"
+    ]
 }
