@@ -52,7 +52,7 @@ module.exports = (env, argv) => {
 
     devtool: isProd ? '#source-map' : 'eval-source-map',
 
-    entry: './src/main.ts',
+    entry: './src/index.ts',
 
     output: {
       filename: '[name][hash:7].js',

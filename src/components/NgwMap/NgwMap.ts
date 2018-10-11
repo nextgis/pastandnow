@@ -15,13 +15,12 @@ export class NgwMap {
     starterKits: [new QmsKit()],
   });
 
-  constructor(public options: NgwMapOptions) {
-    // ignore
-  }
+  options: NgwMapOptions = { mapOptions: { target: 'map' } };
 
-  createWebMap() {
+  createWebMap(options?: MapOptions) {
     const webMap = this.webMap;
-    webMap.create(this.options.mapOptions).then(() => {
+    this.options.mapOptions = { ...this.options.mapOptions, ...options };
+    webMap.create(options).then(() => {
 
       webMap.addBaseLayer('sputnik', 'QMS', {
         qmsid: 487
