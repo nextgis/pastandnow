@@ -1,40 +1,45 @@
 <template>
-  <div id="container">
-    <div id="left">
-      <ul>
-        <li
-          v-for="item in items"
-          :key="item.id">
-          {{ item.name }}
-        </li>
-      </ul>
-    </div>
-    <div id="center">
-      <div id="map"></div>
-    </div>
-    <router-view class="view"></router-view>
-  </div>
+  <v-app id="inspire">
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      app
+    >
+      <v-toolbar flat class="transparent">
+        <v-list class="pa-0">
+          <v-list-tile avatar>
+
+            <v-list-tile-content>
+              <v-list-tile-title>Устная история Москвы</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-toolbar>
+
+      <v-divider></v-divider>
+
+      <v-list dense>
+        <v-list-tile v-for="item in items" :key="item.id">
+          <v-list-tile-content>
+            <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+    <v-content>
+        <div id="map"></div>
+    </v-content>
+  </v-app>
 </template>
 
 <script lang="ts">
+
 export { App as default } from './App';
+
 </script>
 
 
 <style lang="scss">
-
-#container {
-  display: flex;
-  height: 100%;
-}
-
-#left {
-  flex: 0 1 300px; /* Positive flex-shrink */
-  overflow: auto;
-}
-#center {
-  flex: 1 1 auto; /* Positive flex-shrink */
-}
 
 #map {
   position: relative;
@@ -53,5 +58,6 @@ export { App as default } from './App';
 html, body {
   width: 100%;
   height: 100%;
+  overflow: hidden !important;
 }
 </style>

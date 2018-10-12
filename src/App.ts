@@ -5,6 +5,10 @@ import { mapState } from 'vuex';
 import { GeoJSON, Projection, Point, geoJSON, circleMarker } from 'leaflet';
 
 @Component({
+
+  data: () => ({
+    drawer: null,
+  }),
   computed: mapState({
     items: (state: any) => state.bdMain.items.map((x) => x.properties)
   })

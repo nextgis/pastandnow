@@ -3,7 +3,11 @@ import VueRouter from 'vue-router';
 import App from './App.vue';
 import { router } from './routes';
 import store from './store';
+import Vuetify from 'vuetify';
+import 'vuetify/dist/vuetify.min.css';
+// import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
+Vue.use(Vuetify);
 Vue.use(VueRouter);
 
 const app = new Vue({

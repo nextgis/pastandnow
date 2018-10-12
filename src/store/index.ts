@@ -5,6 +5,8 @@ import bdMain from './modules/bd_main';
 
 // Example projects
 // https://github.com/vuejs/vuex/tree/dev/examples/
+// Vuex and typescript
+// https://github.com/utahta/vue-vuex-typescript-example
 
 Vue.use(Vuex);
 

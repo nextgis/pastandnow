@@ -5097,6 +5097,21 @@ vue@^2.5.16:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
   integrity sha512-mFbcWoDIJi0w0Za4emyLiW72Jae0yjANHbCVquMKijcavBGypqlF7zHRgMa5k4sesdv7hv2rB4JPdZfR+TPfhQ==
 
+vuetify@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.2.9.tgz#1c0d00f9a76620931ef4c662bfafe12f120b0d52"
+  integrity sha512-PQJrBU56KThmuffhO147D1wX+7fHyFIfdh+kTHb+Od234PgqcyGH8hQ4KWDM76SbL5ozinF6FLZBPPw07TR9UQ==
+
+vuex-class@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/vuex-class/-/vuex-class-0.3.1.tgz#3c0b946bcff4cf2be1904de5b0cab1a3dd5c41d5"
+  integrity sha512-d7Hc+ItQx6p9E/2mEWiyrvyEuo7Uj0mq4VNImd7dmxTelnkhOavKPMEG1Xdypug2RlPEYv0920IOa3hdVZ+4AA==
+
+vuex-type-helper@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/vuex-type-helper/-/vuex-type-helper-1.2.0.tgz#8b32e653e0f542c394459bf08f3839748093a094"
+  integrity sha512-5W9smGBgigRTccc0KpQLYupGzrX99/rzXHIN8cxx197MX7h3M/aWPQ5o1P5HBlt2FIf73h9e7FWGonKgYLmQlg==
+
 vuex@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/vuex/-/vuex-3.0.1.tgz#e761352ebe0af537d4bb755a9b9dc4be3df7efd2"
