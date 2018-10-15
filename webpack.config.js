@@ -80,6 +80,9 @@ module.exports = (env, argv) => {
       }),
       new TSLintPlugin({
         files: ['./src/**/*.ts']
+      }),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('argv.mode')
       })
     ],
     performance: {
