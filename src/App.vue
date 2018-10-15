@@ -1,45 +1,37 @@
 <template>
-  <v-app id="inspire">
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
       fixed
       app
     >
-      <v-toolbar flat>
-        <v-list>
-          <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title>Устная история Москвы</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-      </v-toolbar>
 
-      <v-divider></v-divider>
+    <drawer-container header="Устная память Москвы">
+      <div>
+        <items-filter></items-filter>
+        <v-divider></v-divider>
+      </div>
 
-
-      <items-filter></items-filter>
-
-
-
-      <v-divider></v-divider>
-
-      <list></list>
+      <div>
+        <list></list>
+      </div>
+    </drawer-container>
 
     </v-navigation-drawer>
 
 
-  <v-navigation-drawer
-      :value="detail"
-      fixed
+    <v-navigation-drawer
+      :value="!!detail"
+      width="400"
       app
       right
     >
-    <detail></detail>
+
+      <drawer-container v-if="detail" :header="detail.name">
+        <detail></detail>
+      </drawer-container>
 
     </v-navigation-drawer>
-
-
 
     <v-content>
       <ngw-map :center="[55.75, 37.63]" :zoom="10"></ngw-map>
@@ -66,4 +58,5 @@ html, body {
   height: 100%;
   overflow: hidden !important;
 }
+
 </style>

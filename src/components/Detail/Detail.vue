@@ -1,29 +1,12 @@
 <template>
   <div v-if="detail">
-    <v-toolbar flat>
-      <v-list>
-        <v-list-tile>
-          <v-list-tile-content>
-            <v-list-tile-title>{{detail.name}}</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-toolbar>
-
-    <v-divider></v-divider>
-
     <v-list dense>
       <v-list-tile v-for="(value, key) in detail" :key="key">
         <v-list-tile-content>
           <v-list-tile-title>{{key}} - {{ value }}</v-list-tile-title>
         </v-list-tile-content>
-
-
       </v-list-tile>
     </v-list>
-
-
-
   </div>
 </template>
 
