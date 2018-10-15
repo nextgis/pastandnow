@@ -3,7 +3,7 @@ import { LeafletMapAdapter } from '../../../nextgisweb_frontend/packages/leaflet
 import { QmsKit } from '../../../nextgisweb_frontend/packages/qms-kit/src/qms-kit';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { GeoJSON, Projection, Point, geoJSON, circleMarker } from 'leaflet';
+import { Projection, Point, geoJSON } from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
 
@@ -29,17 +29,26 @@ export class NgwMap extends Vue {
   mounted() {
     const target = this.$el as HTMLElement;
     this.createWebMap({ target, center: this.center, zoom: this.zoom }).then(() => {
-      const map = this.webMap.map.map;
-      this.$store.watch((state) => state.bdMain.items, (items) => {
-        items = JSON.parse(JSON.stringify(items));
-        items.forEach((item) => {
-          const [x, y] = item.geometry.coordinates;
-          const { lat, lng } = Projection.SphericalMercator.unproject(new Point(x, y));
-          item.geometry.coordinates = [lng, lat];
-          const layer = geoJSON(item);
-          layer.addTo(map);
-        });
+      const items = this.$store.state.bdMain.items;
+      if (items && items.length) {
+        this.addMarkers(items);
+      }
+
+      this.$store.watch((state) => state.bdMain.items, (_items) => {
+        _items = JSON.parse(JSON.stringify(_items));
+        this.addMarkers(_items);
       });
+    });
+  }
+
+  addMarkers(items) {
+    const map = this.webMap.map.map;
+    items.forEach((item) => {
+      const [x, y] = item.geometry.coordinates;
+      const { lat, lng } = Projection.SphericalMercator.unproject(new Point(x, y));
+      item.geometry.coordinates = [lng, lat];
+      const layer = geoJSON(item);
+      this.webMap.map.addLayer('GEOJSON', { data: item }).then((l) => this.webMap.map.showLayer(l.name));
     });
   }
 
