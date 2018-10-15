@@ -4,7 +4,7 @@ import { mapState } from 'vuex';
 
 @Component({
   computed: mapState({
-    items: (state: any) => state.bdMain.items.map((x) => x.properties)
+    items: (state: any) => state.bdMain.filtered.map((x) => x.properties)
   })
 })
 export class List extends Vue {

@@ -4,11 +4,12 @@ import ngw from '../../api/ngw';
 // shape: [{ id, quantity }]
 const _state = {
   items: [],
+  filtered: []
 };
 
 // getters
 const _getters = {
-  features: (state, getters, rootState) => state.items
+  features: (state, getters, rootState) => state.filtered
 };
 
 // actions
@@ -18,7 +19,12 @@ const actions = {
     ngw.getLayerGeoJson(items => {
       commit('setItems', items);
     });
+  },
+
+  setFilter({ commit }, items) {
+    commit('setFilter', items);
   }
+
 
 };
 
@@ -27,6 +33,11 @@ const mutations = {
 
   setItems(state, items) {
     state.items = items;
+    state.filtered = items;
+  },
+
+  setFilter(state, items) {
+    state.filtered = items;
   },
 
 };

@@ -3,9 +3,10 @@ import { LeafletMapAdapter } from '../../../nextgisweb_frontend/packages/leaflet
 import { QmsKit } from '../../../nextgisweb_frontend/packages/qms-kit/src/qms-kit';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Projection, Point, geoJSON } from 'leaflet';
+import { Projection, Point } from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
+import { BdMainItem } from '../../api/ngw';
 
 export interface NgwMapOptions {
   mapOptions: MapOptions;
@@ -26,29 +27,57 @@ export class NgwMap extends Vue {
 
   options: NgwMapOptions = { mapOptions: { target: 'map' } };
 
+  markers: { [name: string]: boolean } = {};
+
   mounted() {
     const target = this.$el as HTMLElement;
     this.createWebMap({ target, center: this.center, zoom: this.zoom }).then(() => {
-      const items = this.$store.state.bdMain.items;
+      const items = this.$store.state.bdMain.filtered;
       if (items && items.length) {
         this.addMarkers(items);
       }
 
-      this.$store.watch((state) => state.bdMain.items, (_items) => {
+      this.$store.watch((state) => state.bdMain.filtered, (_items) => {
         _items = JSON.parse(JSON.stringify(_items));
         this.addMarkers(_items);
       });
     });
   }
 
-  addMarkers(items) {
-    const map = this.webMap.map.map;
-    items.forEach((item) => {
-      const [x, y] = item.geometry.coordinates;
-      const { lat, lng } = Projection.SphericalMercator.unproject(new Point(x, y));
-      item.geometry.coordinates = [lng, lat];
-      const layer = geoJSON(item);
-      this.webMap.map.addLayer('GEOJSON', { data: item }).then((l) => this.webMap.map.showLayer(l.name));
+  addMarkers(items: BdMainItem[]) {
+    const promises: Array<Promise<any>> = items.map((item) => {
+      const id = String(item.properties.id);
+      if (this.markers[id] === undefined) {
+        this.markers[id] = false;
+        const [x, y] = item.geometry.coordinates;
+        const { lat, lng } = Projection.SphericalMercator.unproject(new Point(x, y));
+        item.geometry.coordinates = [lng, lat];
+        return this.webMap.map.addLayer('GEOJSON', { data: item, id });
+      } else {
+        return Promise.resolve();
+      }
+
+    });
+
+    const ids: string[] = items.map((x) => String(x.properties.id));
+
+    Promise.all(promises).then(() => {
+      for (const m in this.markers) {
+        if (this.markers.hasOwnProperty(m)) {
+
+          if (ids.indexOf(m) !== -1) {
+            if (!this.markers[m]) {
+              this.markers[m] = true;
+              this.webMap.map.showLayer(m);
+            }
+          } else {
+            if (this.markers[m]) {
+              this.markers[m] = false;
+              this.webMap.map.hideLayer(m);
+            }
+          }
+        }
+      }
     });
   }
 

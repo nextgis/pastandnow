@@ -1,11 +1,8 @@
 import { NgwConnector } from '../../nextgisweb_frontend/packages/ngw-connector/src/ngw-connector';
-import { FeatureCollection, Point } from 'geojson';
+import { FeatureCollection, Point, Feature } from 'geojson';
 
 const connector = new NgwConnector({ baseUrl: 'http://pastandnow.nextgis.com' });
 
-/**
- * Mocking client-server processing
- */
 export interface BdMainItemProperties {
 
   id: number;
@@ -33,6 +30,8 @@ export interface BdMainItemProperties {
   narrativ_p?: string;
   type: string;
 }
+
+export type  BdMainItem = Feature<Point, BdMainItemProperties>;
 
 export default {
   getLayerGeoJson(cb) {

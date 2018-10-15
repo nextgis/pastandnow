@@ -17,6 +17,13 @@
 
       <v-divider></v-divider>
 
+
+      <items-filter></items-filter>
+
+
+
+      <v-divider></v-divider>
+
       <list></list>
 
     </v-navigation-drawer>
