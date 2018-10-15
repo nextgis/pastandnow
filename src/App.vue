@@ -28,6 +28,19 @@
 
     </v-navigation-drawer>
 
+
+  <v-navigation-drawer
+      :value="detail"
+      fixed
+      app
+      right
+    >
+    <detail></detail>
+
+    </v-navigation-drawer>
+
+
+
     <v-content>
       <ngw-map :center="[55.75, 37.63]" :zoom="10"></ngw-map>
     </v-content>

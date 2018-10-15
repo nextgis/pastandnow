@@ -3,14 +3,51 @@ import { LeafletMapAdapter } from '../../../nextgisweb_frontend/packages/leaflet
 import { QmsKit } from '../../../nextgisweb_frontend/packages/qms-kit/src/qms-kit';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Projection, Point } from 'leaflet';
+import { Projection, Point, Layer, Marker, Icon, GeoJSON } from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
+
+import '../../images/marker-icon.png';
+import '../../images/marker-icon-2x.png';
+import '../../images/marker-shadow.png';
+
+import '../../images/marker-icon_selected.png';
+import '../../images/marker-icon-2x_selected.png';
+
 import { BdMainItem } from '../../api/ngw';
 
 export interface NgwMapOptions {
   mapOptions: MapOptions;
 }
+
+const markerOptions = {
+  iconUrl: 'marker-icon.png',
+  iconRetinaUrl: 'marker-icon-2x.png',
+  shadowUrl: 'marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41]
+};
+
+const selectedOptions = {
+  ...markerOptions, ...{
+    iconUrl: 'marker-icon_selected.png',
+    iconRetinaUrl: 'marker-icon-2x_selected.png',
+  }
+};
+
+const _customIcon = Icon.extend({
+  options: markerOptions
+});
+
+const _selectedIcon = Icon.extend({
+  options: selectedOptions
+});
+
+const customIcon = new _customIcon();
+const selectedIcon = new _selectedIcon();
 
 @Component({
   props: ['center', 'zoom']
@@ -28,6 +65,7 @@ export class NgwMap extends Vue {
   options: NgwMapOptions = { mapOptions: { target: 'map' } };
 
   markers: { [name: string]: boolean } = {};
+  selected: GeoJSON;
 
   mounted() {
     const target = this.$el as HTMLElement;
@@ -41,6 +79,26 @@ export class NgwMap extends Vue {
         _items = JSON.parse(JSON.stringify(_items));
         this.addMarkers(_items);
       });
+
+      this.$store.watch((state) => state.bdMain.detailItem, (detail: BdMainItem) => {
+        this.setSelected(detail);
+      });
+    });
+  }
+
+  createWebMap(options?: MapOptions) {
+    const webMap = this.webMap;
+    this.options.mapOptions = { ...this.options.mapOptions, ...options };
+    return webMap.create(options).then(() => {
+
+      webMap.addBaseLayer('sputnik', 'QMS', {
+        qmsid: 487
+      }).then((layer) => {
+        webMap.map.showLayer(layer.name);
+      });
+
+      // webMap.map.addControl('ZOOM', 'top-left');
+
     });
   }
 
@@ -52,7 +110,15 @@ export class NgwMap extends Vue {
         const [x, y] = item.geometry.coordinates;
         const { lat, lng } = Projection.SphericalMercator.unproject(new Point(x, y));
         item.geometry.coordinates = [lng, lat];
-        return this.webMap.map.addLayer('GEOJSON', { data: item, id });
+        return this.webMap.map.addLayer('GEOJSON', { data: item, id }).then((l) => {
+          // @ts-ignore
+          const layerMem = this.webMap.map._layers[l.name];
+          const layer: GeoJSON = layerMem.layer;
+          layer.on('click', () => {
+            this.$store.dispatch('bdMain/setDetail', Number(id));
+          });
+          this._unselectMarker(layer);
+        });
       } else {
         return Promise.resolve();
       }
@@ -81,20 +147,33 @@ export class NgwMap extends Vue {
     });
   }
 
-  createWebMap(options?: MapOptions) {
-    const webMap = this.webMap;
-    this.options.mapOptions = { ...this.options.mapOptions, ...options };
-    return webMap.create(options).then(() => {
+  setSelected(item: BdMainItem) {
 
-      webMap.addBaseLayer('sputnik', 'QMS', {
-        qmsid: 487
-      }).then((layer) => {
-        webMap.map.showLayer(layer.name);
-      });
-
-      // webMap.map.addControl('ZOOM', 'top-left');
-
-    });
+    if (item) {
+      // @ts-ignore
+      const layerMem = this.webMap.map._layers[item.id];
+      const layerToSelect = layerMem && layerMem.layer;
+      if (layerToSelect && layerToSelect !== this.selected) {
+        if (this.selected) {
+          this._unselectMarker(this.selected);
+        }
+        this.selected = layerToSelect;
+        this._selectMarker(layerToSelect);
+      }
+    } else if (this.selected) {
+      this._unselectMarker(this.selected);
+    }
   }
 
+  private _selectMarker(layer: GeoJSON) {
+    layer.eachLayer((x: Marker) => {
+      x.setIcon(selectedIcon);
+    });
+    layer.bringToFront();
+  }
+
+
+  private _unselectMarker(layer: GeoJSON) {
+    layer.eachLayer((x: Marker) => x.setIcon(customIcon));
+  }
 }

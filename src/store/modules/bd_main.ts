@@ -1,10 +1,11 @@
-import ngw from '../../api/ngw';
+import ngw, { BdMainItem } from '../../api/ngw';
 
 // initial state
 // shape: [{ id, quantity }]
 const _state = {
   items: [],
-  filtered: []
+  filtered: [],
+  detailItem: false,
 };
 
 // getters
@@ -21,11 +22,21 @@ const actions = {
     });
   },
 
-  setFilter({ commit }, items) {
+  setFilter({ commit, state }, items) {
     commit('setFilter', items);
+    const detail = state.detailItem;
+    if (detail) {
+      const item = items.find((x: BdMainItem) => x.id === detail.id);
+      if (!item) {
+        commit('setDetail', false);
+      }
+    }
+  },
+
+  setDetail({ commit, state }, id: number) {
+    const item = state.filtered.find((x: BdMainItem) => x.id === id);
+    commit('setDetail', item);
   }
-
-
 };
 
 // mutations
@@ -38,6 +49,10 @@ const mutations = {
 
   setFilter(state, items) {
     state.filtered = items;
+  },
+
+  setDetail(state, item) {
+    state.detailItem = item;
   },
 
 };

@@ -39,7 +39,7 @@ export default {
       id: 4
     }).then((data: FeatureCollection<Point, BdMainItemProperties>) => {
       data.features.forEach((x, i) => {
-        x.properties.id = i;
+        x.properties.id = Number(x.id || i);
       });
       cb(data.features);
     });
