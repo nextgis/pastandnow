@@ -7,7 +7,13 @@
 
         <v-list-tile-action>
           <v-btn icon ripple>
-            <v-icon @click="setDetail(item.id)" color="grey lighten-1">info</v-icon>
+            <v-icon
+              @click="setDetail(item.id)"
+              color="lighten-1"
+              v-bind:style="{ color: item.id === (detail && detail.id) ? 'orange' : 'grey' }"
+            >
+              info
+            </v-icon>
           </v-btn>
         </v-list-tile-action>
       </v-list-tile>
