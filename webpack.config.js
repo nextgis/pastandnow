@@ -48,7 +48,7 @@ module.exports = (env, argv) => {
 
   const config = {
 
-    mode: 'development',
+    mode: argv.mode || 'development',
 
     devtool: isProd ? '#source-map' : 'eval-source-map',
 
@@ -82,7 +82,7 @@ module.exports = (env, argv) => {
         files: ['./src/**/*.ts']
       }),
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('argv.mode')
+        'process.env.NODE_ENV': JSON.stringify(argv.mode || 'development')
       })
     ],
     performance: {

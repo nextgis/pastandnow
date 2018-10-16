@@ -4,8 +4,7 @@ import Table from './components/Table/Table.vue';
 import Main from './Main.vue';
 
 const routes: RouteConfig[] = [
-  // { path: '/', redirect: '/about' },
-  { path: '/', component: Main },
+  { path: '/' },
   { path: '/table', component: Table },
   { path: '/about', component: About }
 ];

@@ -1,5 +1,51 @@
 <template>
-  <router-view></router-view>
+  <v-app>
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      app
+    >
+
+    <drawer-container header="Устная память Москвы">
+      <div>
+        <v-expansion-panel
+          expand
+        >
+          <v-expansion-panel-content>
+            <div slot="header">Фильтр</div>
+            <items-filter></items-filter>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+
+        <v-divider></v-divider>
+      </div>
+
+      <div>
+        <list></list>
+      </div>
+
+    </drawer-container>
+
+    </v-navigation-drawer>
+
+
+    <v-navigation-drawer
+      :value="!!detail"
+      width="400"
+      app
+      right
+    >
+
+      <drawer-container v-if="detail" :header="detail.name">
+        <detail></detail>
+      </drawer-container>
+
+    </v-navigation-drawer>
+
+    <v-content>
+      <ngw-map :center="[55.75, 37.63]" :zoom="10"></ngw-map>
+    </v-content>
+  </v-app>
 </template>
 
 <script lang="ts">
@@ -14,6 +60,12 @@ export { App as default } from './App';
 * {
   padding: 0;
   margin: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+
 }
 
 </style>
