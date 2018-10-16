@@ -8,7 +8,6 @@
 
     <drawer-container header="Устная память Москвы">
       <div>
-
         <v-expansion-panel
           expand
         >
@@ -24,6 +23,7 @@
       <div>
         <list></list>
       </div>
+
     </drawer-container>
 
     </v-navigation-drawer>
