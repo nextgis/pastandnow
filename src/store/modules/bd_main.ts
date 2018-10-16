@@ -34,7 +34,11 @@ const actions = {
   },
 
   setDetail({ commit, state }, id: number) {
-    const item = state.filtered.find((x: BdMainItem) => x.id === id);
+    let item = state.filtered.find((x: BdMainItem) => x.id === id);
+    const detail = state.detailItem;
+    if (detail && detail.id === id) {
+      item = false;
+    }
     commit('setDetail', item);
   }
 };

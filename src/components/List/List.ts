@@ -13,10 +13,6 @@ export class List extends Vue {
   }
 
   setDetail(id: string) {
-
-    if (this.detail && this.detail.id === id) {
-      id = '';
-    }
     this.$store.dispatch('bdMain/setDetail', id);
   }
 

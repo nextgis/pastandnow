@@ -165,12 +165,14 @@ export class NgwMap extends Vue {
   private _selectMarker(layer: GeoJSON) {
     layer.eachLayer((x: Marker) => {
       x.setIcon(selectedIcon);
+      x.setZIndexOffset(100);
     });
-    layer.bringToFront();
   }
 
-
   private _unselectMarker(layer: GeoJSON) {
-    layer.eachLayer((x: Marker) => x.setIcon(customIcon));
+    layer.eachLayer((x: Marker) => {
+      x.setIcon(customIcon);
+      x.setZIndexOffset(10);
+    });
   }
 }

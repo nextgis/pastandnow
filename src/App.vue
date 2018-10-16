@@ -8,7 +8,16 @@
 
     <drawer-container header="Устная память Москвы">
       <div>
-        <items-filter></items-filter>
+
+        <v-expansion-panel
+          expand
+        >
+          <v-expansion-panel-content>
+            <div slot="header">Фильтр</div>
+            <items-filter></items-filter>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+
         <v-divider></v-divider>
       </div>
 
