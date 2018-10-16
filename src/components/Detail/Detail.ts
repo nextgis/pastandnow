@@ -1,15 +1,11 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { mapState } from 'vuex';
-import { BdMainItem } from '../../api/ngw';
+import { Vue, Component } from 'vue-property-decorator';
+import { BdMainItemProperties } from '../../api/ngw';
 
-@Component({
-  computed: mapState({
-    detail: (state: any) => state.bdMain.detailItem && state.bdMain.detailItem.properties
-  })
-})
+@Component
 export class Detail extends Vue {
 
-  detail: BdMainItem;
+  get detail(): BdMainItemProperties {
+    return this.$store.state.bdMain.detailItem && this.$store.state.bdMain.detailItem.properties;
+  }
 
 }

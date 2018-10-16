@@ -1,9 +1,8 @@
 import { WebMap, MapOptions } from '../../../nextgisweb_frontend/packages/webmap/src/webmap';
 import { LeafletMapAdapter } from '../../../nextgisweb_frontend/packages/leaflet-map-adapter/src/leaflet-map-adapter';
 import { QmsKit } from '../../../nextgisweb_frontend/packages/qms-kit/src/qms-kit';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Projection, Point, Layer, Marker, Icon, GeoJSON } from 'leaflet';
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Projection, Point, Marker, Icon, GeoJSON } from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
 
@@ -49,13 +48,11 @@ const _selectedIcon = Icon.extend({
 const customIcon = new _customIcon();
 const selectedIcon = new _selectedIcon();
 
-@Component({
-  props: ['center', 'zoom']
-})
+@Component
 export class NgwMap extends Vue {
 
-  center: [number, number];
-  zoom: number;
+  @Prop() center: [number, number];
+  @Prop() zoom: number;
 
   webMap = new WebMap({
     mapAdapter: new LeafletMapAdapter(),

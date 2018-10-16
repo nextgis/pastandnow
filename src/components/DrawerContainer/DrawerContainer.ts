@@ -1,9 +1,6 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 
-@Component({
-  props: ['header']
-})
+@Component
 export class DrawerContainer extends Vue {
-
+  @Prop() header: string;
 }
