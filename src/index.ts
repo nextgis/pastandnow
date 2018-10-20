@@ -5,6 +5,7 @@ import { router } from './routes';
 import store from './store';
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
+import { version } from '../package.json';
 // import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 Vue.use(Vuetify);
@@ -16,3 +17,11 @@ const app = new Vue({
   store,
   render: h => h(App),
 });
+
+declare global {
+  interface Window {
+    version: string;
+  }
+}
+
+window.version = version;

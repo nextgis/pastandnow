@@ -14,6 +14,7 @@ import '../../images/marker-icon_selected.png';
 import '../../images/marker-icon-2x_selected.png';
 
 import { BdMainItem } from '../../api/ngw';
+import { Panel } from './controls/Panel';
 
 export interface NgwMapOptions {
   mapOptions: MapOptions;
@@ -88,6 +89,16 @@ export class NgwMap extends Vue {
     this.options.mapOptions = { ...this.options.mapOptions, ...options };
     return webMap.create(options).then(() => {
 
+      webMap.map.addControl('ZOOM', 'top-left');
+      webMap.map.addControl('ATTRIBUTION', 'bottom-right', {
+        customAttribution: [
+          '<a href="http://nextgis.ru" target="_blank">©NextGIS</a>',
+        ]
+      });
+
+      // const panel = this.createDrawerSwitcher();
+      // webMap.map.addControl(panel, 'top-left');
+
       webMap.addBaseLayer('sputnik', 'QMS', {
         qmsid: 487
       }).then((layer) => {
@@ -97,6 +108,35 @@ export class NgwMap extends Vue {
       // webMap.map.addControl('ZOOM', 'top-left');
 
     });
+  }
+
+  createDrawerSwitcher() {
+    const panel = new Panel();
+
+    const switcher = document.createElement('div');
+    switcher.id = '1234';
+    panel.updateBody(switcher);
+
+    Vue.component('button-counter', {
+      data: () => {
+        return {
+          count: 0
+        };
+      },
+      template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+    });
+
+    const s = new Vue({
+      template: `
+        <button-counter></button-counter>
+      `
+    });
+
+    setTimeout(() => {
+      s.$mount(switcher);
+    }, 1000);
+
+    return panel;
   }
 
   addMarkers(items: BdMainItem[]) {

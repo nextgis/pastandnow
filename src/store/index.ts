@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import bdMain from './modules/bd_main';
+import app from './modules/app';
 // import createLogger from '../../../src/plugins/logger';
 
 // Example projects
@@ -10,12 +11,13 @@ import bdMain from './modules/bd_main';
 
 Vue.use(Vuex);
 
-// const debug = process.env.NODE_ENV !== 'production';
+const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({
   modules: {
-    bdMain
+    bdMain,
+    app,
   },
-  // strict: debug,
+  strict: debug,
   // plugins: debug ? [createLogger()] : []
 });

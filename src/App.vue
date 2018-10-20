@@ -2,6 +2,7 @@
   <v-app>
     <v-navigation-drawer
       v-model="drawer"
+      disable-resize-watcher
       fixed
       app
     >
@@ -31,6 +32,7 @@
 
     <v-navigation-drawer
       :value="!!detail"
+      disable-resize-watcher
       width="400"
       app
       right

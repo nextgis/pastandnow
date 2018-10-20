@@ -11,7 +11,13 @@ import { BdMainItemProperties } from './api/ngw';
 })
 export class App extends Vue {
 
-  drawer: boolean = true;
+  get drawer(): boolean {
+    return this.$store.state.app.drawer;
+  }
+
+  set drawer(value: boolean) {
+    this.$store.dispatch('app/toggleDrawer', value);
+  }
 
   get items(): BdMainItemProperties[] {
     return this.$store.state.bdMain.items.map((x) => x.properties);
