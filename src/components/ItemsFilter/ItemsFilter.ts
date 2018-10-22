@@ -1,16 +1,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { BdMainItemProperties } from '../../api/ngw';
 
-@Component({
-  data() {
-    return {
-
-
-      rayon: 'Все',
-      areas: ['Все']
-    };
-  }
-})
+@Component
 export class ItemsFilter extends Vue {
 
   form = false;
@@ -34,16 +25,23 @@ export class ItemsFilter extends Vue {
       x.value = x.value !== undefined ? x.value : true;
     });
 
+    if (this.$store.state.bdMain.items) {
+      this.updateFilterAreas(this.$store.state.bdMain.items);
+    }
     this.$store.watch((state) => state.bdMain.items, (items) => {
-      const areas = {};
-      const properties: BdMainItemProperties[] = items.map((x) => {
-        const prop = x.properties;
-        areas[prop.rayon] = true;
-        return prop;
-      });
-      this.areas = this.areas.concat(Object.keys(areas));
+      this.updateFilterAreas(items);
     });
 
+  }
+
+  updateFilterAreas(items) {
+    const areas = {};
+    const properties: BdMainItemProperties[] = items.map((x) => {
+      const prop = x.properties;
+      areas[prop.rayon] = true;
+      return prop;
+    });
+    this.areas = this.areas.concat(Object.keys(areas));
   }
 
   updateFilter() {
@@ -55,7 +53,6 @@ export class ItemsFilter extends Vue {
       if (this.rayon && this.rayon !== 'Все' && prop.rayon !== this.rayon) {
         return false;
       }
-
       return true;
     });
 

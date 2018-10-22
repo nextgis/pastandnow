@@ -4,6 +4,7 @@ import ngw, { BdMainItem } from '../../api/ngw';
 // shape: [{ id, quantity }]
 const _state = {
   items: [],
+  meta: false,
   filtered: [],
   detailItem: false,
 };
@@ -17,9 +18,13 @@ const _getters = {
 const actions = {
 
   getAllItems({ commit }) {
-    ngw.getLayerGeoJson(items => {
-      commit('setItems', items);
+    ngw.getLayerMeta(meta => {
+      commit('setMeta', meta);
+      ngw.getLayerGeoJson(items => {
+        commit('setItems', items);
+      });
     });
+
   },
 
   setFilter({ commit, state }, items) {
@@ -58,6 +63,10 @@ const mutations = {
   setDetail(state, item) {
     state.detailItem = item;
   },
+
+  setMeta(state, meta) {
+    state.meta = meta;
+  }
 
 };
 

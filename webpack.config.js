@@ -1,15 +1,10 @@
-const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const TSLintPlugin = require('tslint-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const utils = require('./build/utils');
-
-function resolve(dir) {
-  return path.join(__dirname, '.', dir)
-}
-
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = (env, argv) => {
 
@@ -46,6 +41,31 @@ module.exports = (env, argv) => {
     extract: false
   }));
 
+  let plugins = [
+    new VueLoaderPlugin(),
+    new HtmlWebpackPlugin({
+      template: 'index.html',
+      filename: 'index.html'
+    }),
+    new TSLintPlugin({
+      files: ['./src/**/*.ts']
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(argv.mode || 'development')
+    }),
+    new CopyWebpackPlugin([
+      { from: './.htaccess', to: './dist' },
+    ])
+  ];
+
+  if (isProd) {
+    plugins = plugins.concat([
+      new CompressionPlugin({
+        test: /\.js(\?.*)?$/i
+      })
+    ])
+  }
+
   const config = {
 
     mode: argv.mode || 'development',
@@ -55,7 +75,7 @@ module.exports = (env, argv) => {
     entry: './src/index.ts',
 
     output: {
-      filename: '[name][hash:7].js',
+      filename: '[name]-[hash:7].js',
     },
 
     resolve: {
@@ -72,29 +92,31 @@ module.exports = (env, argv) => {
       historyApiFallback: true,
       noInfo: true
     },
-    plugins: [
-      new VueLoaderPlugin(),
-      new HtmlWebpackPlugin({
-        template: 'index.html',
-        filename: 'index.html'
-      }),
-      new TSLintPlugin({
-        files: ['./src/**/*.ts']
-      }),
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(argv.mode || 'development')
-      })
-    ],
+    plugins,
     performance: {
       hints: false
     },
     optimization: {
+      runtimeChunk: 'single',
       splitChunks: {
-        minSize: 1,
-        chunks: "initial",
-        name: "vendor"
-      }
-    }
+        chunks: 'all',
+        maxInitialRequests: Infinity,
+        minSize: 0,
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name(module) {
+              // get the name. E.g. node_modules/packageName/not/this/part.js
+              // or node_modules/packageName
+              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+
+              // npm package names are URL-safe, but some servers don't like @ symbols
+              return `npm.${packageName.replace('@', '')}`;
+            },
+          },
+        },
+      },
+    },
   }
   return config;
 }
