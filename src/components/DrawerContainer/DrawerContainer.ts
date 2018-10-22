@@ -8,6 +8,10 @@ export class DrawerContainer extends Vue {
     return this.hasSlot('footer');
   }
 
+  get hasHeaderSlot() {
+    return this.hasSlot('header');
+  }
+
   hasSlot(name = 'default') {
     return !!this.$slots[ name ] || !!this.$scopedSlots[ name ];
   }

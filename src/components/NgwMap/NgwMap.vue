@@ -1,5 +1,7 @@
 <template>
-  <div id="map"></div>
+  <div id="map">
+    <slot v-if="ready"/>
+  </div>
 </template>
 
 <script lang="ts">
@@ -7,7 +9,7 @@ export { NgwMap as default } from './NgwMap';
 </script>
 
 <style lang="scss">
-  #map {
+  #map, .map-container {
     position: relative;
     top: 0;
     bottom: 0;

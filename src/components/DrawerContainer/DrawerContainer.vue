@@ -1,8 +1,10 @@
 <template>
   <div class='drawer-container'>
-      <div class='drawer-titlebar' v-if="header">
+      <div class='drawer-titlebar' v-if="hasHeaderSlot">
         <v-toolbar>
-          <v-toolbar-title>{{header}}</v-toolbar-title>
+          <v-toolbar-title class="drawer-title">
+            <slot name="header"></slot>
+          </v-toolbar-title>
         </v-toolbar>
 
         <v-divider></v-divider>
@@ -40,5 +42,9 @@ export { DrawerContainer as default } from './DrawerContainer';
     flex-grow: 1;
     overflow-y: auto;
     overflow-x: hidden;
+  }
+
+  .drawer-title {
+    width: 100%
   }
 </style>

@@ -14,7 +14,6 @@ import '../../images/marker-icon_selected.png';
 import '../../images/marker-icon-2x_selected.png';
 
 import { BdMainItem } from '../../api/ngw';
-import { Panel } from './controls/Panel';
 
 export interface NgwMapOptions {
   mapOptions: MapOptions;
@@ -60,14 +59,20 @@ export class NgwMap extends Vue {
     starterKits: [new QmsKit()],
   });
 
+  ready: boolean = false;
+
+  mapObject;
+
   options: NgwMapOptions = { mapOptions: { target: 'map' } };
 
   markers: { [name: string]: boolean } = {};
   selected: GeoJSON;
 
   mounted() {
+    this.mapObject = this.webMap.map.map;
     const target = this.$el as HTMLElement;
     this.createWebMap({ target, center: this.center, zoom: this.zoom }).then(() => {
+      this.ready = true;
       const items = this.$store.state.bdMain.filtered;
       if (items && items.length) {
         this.addMarkers(items);
@@ -89,7 +94,7 @@ export class NgwMap extends Vue {
     this.options.mapOptions = { ...this.options.mapOptions, ...options };
     return webMap.create(options).then(() => {
 
-      webMap.map.addControl('ZOOM', 'top-left');
+      webMap.map.addControl('ZOOM', 'top-right');
       webMap.map.addControl('ATTRIBUTION', 'bottom-right', {
         customAttribution: [
           '<a href="http://nextgis.ru" target="_blank">©NextGIS</a>',
@@ -99,44 +104,60 @@ export class NgwMap extends Vue {
       // const panel = this.createDrawerSwitcher();
       // webMap.map.addControl(panel, 'top-left');
 
+
       webMap.addBaseLayer('sputnik', 'QMS', {
         qmsid: 487
       }).then((layer) => {
         webMap.map.showLayer(layer.name);
       });
 
-      // webMap.map.addControl('ZOOM', 'top-left');
-
     });
   }
 
-  createDrawerSwitcher() {
-    const panel = new Panel();
+  // createDrawerSwitcher() {
+  //   const panel = new Panel();
 
-    const switcher = document.createElement('div');
-    switcher.id = '1234';
-    panel.updateBody(switcher);
+  //   const switcher = document.createElement('div');
+  //   panel.updateBody(switcher);
 
-    Vue.component('button-counter', {
-      data: () => {
-        return {
-          count: 0
-        };
-      },
-      template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
-    });
+  //   const buttonCounter = Vue.component('button-counter', {
+  //     data: () => {
+  //       return {
+  //         count: 0
+  //       };
+  //     },
+  //     template: `
+  //       <v-btn fab dark small color="pink">
+  //         <v-icon dark>favorite</v-icon>
+  //       </v-btn>`
+  //   });
 
-    const s = new Vue({
-      template: `
-        <button-counter></button-counter>
-      `
-    });
+  //   const s = new Vue({
+  //     components: {
+  //       buttonCounter
+  //     },
+  //     template: `
+  //       <button-counter></button-counter>
+  //     `
+  //   });
 
-    setTimeout(() => {
-      s.$mount(switcher);
-    }, 1000);
+  //   setTimeout(() => {
+  //     s.$mount(switcher);
+  //   }, 1000);
 
-    return panel;
+  //   return panel;
+  // }
+
+  findFirsVueParent(firstVueParent) {
+    let found = false;
+    while (!found) {
+      if (firstVueParent.mapObject === undefined) {
+        firstVueParent = firstVueParent.$parent;
+      } else {
+        found = true;
+      }
+    }
+    return firstVueParent;
   }
 
   addMarkers(items: BdMainItem[]) {

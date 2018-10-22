@@ -5,9 +5,10 @@ import ItemsFilter from './components/ItemsFilter/ItemsFilter.vue';
 import Detail from './components/Detail/Detail.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import { BdMainItemProperties } from './api/ngw';
+import MapControl from './components/NgwMap/controls/Panel.vue';
 
 @Component({
-  components: {List, NgwMap, ItemsFilter, Detail, DrawerContainer},
+  components: {List, NgwMap, ItemsFilter, Detail, DrawerContainer, MapControl},
 })
 export class App extends Vue {
 
@@ -25,6 +26,10 @@ export class App extends Vue {
 
   get detail(): BdMainItemProperties {
     return this.$store.state.bdMain.detailItem && this.$store.state.bdMain.detailItem.properties;
+  }
+
+  set detail(value: BdMainItemProperties) {
+    this.$store.dispatch('bdMain/setDetail', value);
   }
 
   created() {
