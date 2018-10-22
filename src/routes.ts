@@ -5,12 +5,13 @@ import TestRouter from './components/NextGIS/TestRouter.vue';
 import Main from './Main.vue';
 
 const routes: RouteConfig[] = [
-  { path: '/', component: Main },
   // { path: '/test', component: TestRouter }
   { path: '/table', component: Table },
-  { path: '/about', component: About }
+  { path: './about', component: About },
+  { path: '*', component: Main },
 ];
 export const router: VueRouter = new VueRouter({
+  base: './',
   mode: 'history',
   routes
 });
