@@ -3,7 +3,7 @@
     <v-list dense>
       <v-list-tile v-for="item in meta" :key="item.value">
         <v-list-tile-content>
-          <v-list-tile-title>{{item.text}} - {{ detail[value] }}</v-list-tile-title>
+          <v-list-tile-title>{{item.text}} - {{ detail[item.value] }}</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
     </v-list>

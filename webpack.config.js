@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TSLintPlugin = require('tslint-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const utils = require('./build/utils');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = (env, argv) => {
@@ -53,9 +52,6 @@ module.exports = (env, argv) => {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(argv.mode || 'development')
     }),
-    new CopyWebpackPlugin([
-      { from: './.htaccess', to: './dist' },
-    ])
   ];
 
   if (isProd) {
