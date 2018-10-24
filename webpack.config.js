@@ -3,8 +3,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TSLintPlugin = require('tslint-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const utils = require('./build/utils');
-const CompressionPlugin = require('compression-webpack-plugin');
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
+// const CompressionPlugin = require('compression-webpack-plugin');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 
 module.exports = (env, argv) => {
@@ -53,15 +54,16 @@ module.exports = (env, argv) => {
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(argv.mode || 'development')
-    })
+    }),
+    new VuetifyLoaderPlugin(),
   ];
 
   if (isProd) {
     plugins = plugins.concat([
-      new CompressionPlugin({
-        test: /\.js(\?.*)?$/i
-      }),
-      new VuetifyLoaderPlugin()
+      // new CompressionPlugin({
+      //   test: /\.js(\?.*)?$/i
+      // }),
+      // new BundleAnalyzerPlugin()
     ])
   }
 
