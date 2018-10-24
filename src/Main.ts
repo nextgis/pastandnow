@@ -6,11 +6,20 @@ import Detail from './components/Detail/Detail.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import { BdMainItemProperties } from './api/ngw';
 import MapControl from './components/NgwMap/controls/Panel.vue';
+import { AppPages } from './store/modules/app';
 
 @Component({
   components: {List, NgwMap, ItemsFilter, Detail, DrawerContainer, MapControl},
 })
 export class Main extends Vue {
+
+  get page(): AppPages {
+    return this.$store.state.app.page;
+  }
+
+  set page(value: AppPages) {
+    this.$store.dispatch('app/setPage', value);
+  }
 
   get drawer(): boolean {
     return this.$store.state.app.drawer;

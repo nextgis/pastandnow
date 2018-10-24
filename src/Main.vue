@@ -35,6 +35,16 @@
           ></v-progress-circular>
         </div>
       </div>
+      <template slot="footer">
+        <v-btn-toggle class='bottom-button'>
+          <v-btn flat>
+            <v-icon>save_alt</v-icon>
+          </v-btn>
+          <v-btn flat @click="page = 'table'">
+            <v-icon @click="page = 'table'">table_chart</v-icon>
+          </v-btn>
+        </v-btn-toggle>
+      </template>
 
     </drawer-container>
 
@@ -56,6 +66,7 @@
           {{detail.name}}
         </div>
         <detail></detail>
+
       </drawer-container>
 
     </v-navigation-drawer>
@@ -85,6 +96,14 @@ export { Main as default } from './Main';
   &.active {
     -webkit-transform: rotate(-180deg);
     transform: rotate(-180deg);
+  }
+}
+
+.bottom-button {
+  display:flex;
+  justify-content: space-around;
+  .v-btn {
+    flex-grow: 1;
   }
 }
 

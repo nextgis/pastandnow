@@ -11,7 +11,7 @@ const routes: RouteConfig[] = [
   { path: '*', component: Main },
 ];
 export const router: VueRouter = new VueRouter({
-  base: './',
+  // base:  window.location.pathname,
   mode: 'history',
   routes
 });

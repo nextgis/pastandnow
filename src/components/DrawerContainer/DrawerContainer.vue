@@ -13,11 +13,11 @@
       <div class="drawer-content">
         <slot></slot>
       </div>
-      <div v-if="hasFooterSlot">
-        <v-footer>
-          <slot name="footer"></slot>
-        </v-footer>
-      </div>
+
+      <v-footer v-if="hasFooterSlot">
+        <slot name="footer"></slot>
+      </v-footer>
+
     </div>
 </template>
 

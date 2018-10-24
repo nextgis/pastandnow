@@ -1,7 +1,15 @@
 // initial state
 // shape: [{ id, quantity }]
-const _state = {
-  drawer: true
+
+export type AppPages = 'main' | 'table' | 'about';
+export interface AppState {
+  drawer?: boolean;
+  page?: AppPages;
+}
+
+const _state: AppState = {
+  drawer: true,
+  page: 'main',
 };
 
 // getters
@@ -25,9 +33,11 @@ const actions = {
     } else {
       commit('hideDrawer');
     }
+  },
+
+  setPage({commit}, page: AppPages) {
+    commit('setPage', page);
   }
-
-
 
 };
 
@@ -40,6 +50,10 @@ const mutations = {
 
   hideDrawer(state) {
     state.drawer = false;
+  },
+
+  setPage(state, page: AppPages) {
+    state.page = page;
   }
 
 };
