@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-app>
   <main-component></main-component>
   <v-dialog :value="page === 'table'" fullscreen  scrollable transition="dialog-bottom-transition">
       <v-card class="fullscreen-dialog">
@@ -23,7 +23,7 @@
 
       </v-card>
     </v-dialog>
-  </div>
+  </v-app>
 </template>
 
 <script lang="ts">

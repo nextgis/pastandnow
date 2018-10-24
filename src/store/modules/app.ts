@@ -5,11 +5,13 @@ export type AppPages = 'main' | 'table' | 'about';
 export interface AppState {
   drawer?: boolean;
   page?: AppPages;
+  center?: [number, number];
 }
 
 const _state: AppState = {
   drawer: true,
   page: 'main',
+  center: null,
 };
 
 // getters
@@ -37,6 +39,10 @@ const actions = {
 
   setPage({commit}, page: AppPages) {
     commit('setPage', page);
+  },
+
+  zoomTo({commit}, id: number) {
+    commit('setCenter', id);
   }
 
 };
@@ -54,6 +60,10 @@ const mutations = {
 
   setPage(state, page: AppPages) {
     state.page = page;
+  },
+
+  setCenter(state, id: number) {
+    state.center = id;
   }
 
 };

@@ -5,10 +5,18 @@
       stateless
       fixed
       app
+      width="350"
     >
 
     <drawer-container>
-      <div slot="header">Устная память Москвы</div>
+      <div slot="header">
+        <v-layout justify-space-between>
+          Устная память Москвы
+          <v-btn @click="drawer = false" flat icon class="pa-0 ma-0">
+            <v-icon>close</v-icon>
+          </v-btn>
+        </v-layout>
+      </div>
       <div v-if="items && items.length">
         <div>
           <v-expansion-panel
@@ -59,13 +67,26 @@
       right
     >
       <drawer-container v-if="detail">
-        <div slot="header">
+        <template slot="header">
           <v-btn @click="detail = false" flat icon class="pa-0 ma-0">
             <v-icon>close</v-icon>
           </v-btn>
-          {{detail.name}}
-        </div>
+          {{detail.properties.name}}
+        </template>
         <detail></detail>
+        <template slot="footer">
+          <v-btn-toggle class='bottom-button'>
+            <v-btn flat>
+              <v-icon>feedback</v-icon>
+            </v-btn>
+            <v-btn flat>
+              <v-icon>save_alt</v-icon>
+            </v-btn>
+            <v-btn flat @click="zoomTo = detail.id">
+              <v-icon>place</v-icon>
+            </v-btn>
+          </v-btn-toggle>
+        </template>
 
       </drawer-container>
 
@@ -74,9 +95,12 @@
     <v-content>
       <ngw-map :center="[55.75, 37.63]" :zoom="10">
         <map-control position="topleft">
+          <div v-if="!drawer">
           <v-btn @click="drawer = !drawer" fab small>
             <v-icon large class="drawe-icon" :class="{ active: drawer }">chevron_right</v-icon>
           </v-btn>
+          <span class="title">Устная память Москвы</span>
+          </div>
         </map-control>
       </ngw-map>
     </v-content>

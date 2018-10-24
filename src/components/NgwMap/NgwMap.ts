@@ -86,6 +86,10 @@ export class NgwMap extends Vue {
       this.$store.watch((state) => state.bdMain.detailItem, (detail: BdMainItem) => {
         this.setSelected(detail);
       });
+
+      this.$store.watch((state) => state.app.center, (id: number) => {
+        this.zoomTo(id);
+      });
     });
   }
 
@@ -101,10 +105,6 @@ export class NgwMap extends Vue {
         ]
       });
 
-      // const panel = this.createDrawerSwitcher();
-      // webMap.map.addControl(panel, 'top-left');
-
-
       webMap.addBaseLayer('sputnik', 'QMS', {
         qmsid: 487
       }).then((layer) => {
@@ -113,40 +113,6 @@ export class NgwMap extends Vue {
 
     });
   }
-
-  // createDrawerSwitcher() {
-  //   const panel = new Panel();
-
-  //   const switcher = document.createElement('div');
-  //   panel.updateBody(switcher);
-
-  //   const buttonCounter = Vue.component('button-counter', {
-  //     data: () => {
-  //       return {
-  //         count: 0
-  //       };
-  //     },
-  //     template: `
-  //       <v-btn fab dark small color="pink">
-  //         <v-icon dark>favorite</v-icon>
-  //       </v-btn>`
-  //   });
-
-  //   const s = new Vue({
-  //     components: {
-  //       buttonCounter
-  //     },
-  //     template: `
-  //       <button-counter></button-counter>
-  //     `
-  //   });
-
-  //   setTimeout(() => {
-  //     s.$mount(switcher);
-  //   }, 1000);
-
-  //   return panel;
-  // }
 
   findFirsVueParent(firstVueParent) {
     let found = false;
@@ -203,6 +169,16 @@ export class NgwMap extends Vue {
         }
       }
     });
+  }
+
+  zoomTo(id: number) {
+    // @ts-ignore
+    const layerMem = this.webMap.map._layers[id];
+    const layer = layerMem && layerMem.layer;
+    if (layer) {
+      const center = layer.getBounds().getCenter();
+      this.webMap.map.setCenter(center);
+    }
   }
 
   setSelected(item: BdMainItem) {

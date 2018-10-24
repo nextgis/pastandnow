@@ -21,6 +21,10 @@ export class Main extends Vue {
     this.$store.dispatch('app/setPage', value);
   }
 
+  set zoomTo(value: number) {
+    this.$store.dispatch('app/zoomTo', value);
+  }
+
   get drawer(): boolean {
     return this.$store.state.app.drawer;
   }
@@ -34,7 +38,7 @@ export class Main extends Vue {
   }
 
   get detail(): BdMainItemProperties {
-    return this.$store.state.bdMain.detailItem && this.$store.state.bdMain.detailItem.properties;
+    return this.$store.state.bdMain.detailItem;
   }
 
   set detail(value: BdMainItemProperties) {
