@@ -21,6 +21,10 @@ export class Main extends Vue {
     this.$store.dispatch('app/setPage', value);
   }
 
+  get zoomTo(): number {
+    return this.$store.state.app.zoomTo;
+  }
+
   set zoomTo(value: number) {
     this.$store.dispatch('app/zoomTo', value);
   }

@@ -4,7 +4,7 @@
   <v-dialog :value="page === 'table'" fullscreen  scrollable transition="dialog-bottom-transition">
       <v-card class="fullscreen-dialog">
         <v-toolbar dark color="primary" class="dialog-titlebar">
-          <v-btn icon dark @click.native="page = 'main'">
+          <v-btn icon dark @click.native="page = 'main'" >
             <v-icon>close</v-icon>
           </v-btn>
           <v-toolbar-title>Таблица</v-toolbar-title>

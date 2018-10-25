@@ -44,14 +44,14 @@
         </div>
       </div>
       <template slot="footer">
-        <v-btn-toggle class='bottom-button'>
-          <v-btn flat>
+        <v-item-group class='bottom-button'>
+          <v-btn flat color="grey">
             <v-icon>save_alt</v-icon>
           </v-btn>
-          <v-btn flat @click="page = 'table'">
+          <v-btn flat @click="page = 'table'" color="grey">
             <v-icon @click="page = 'table'">table_chart</v-icon>
           </v-btn>
-        </v-btn-toggle>
+        </v-item-group>
       </template>
 
     </drawer-container>
@@ -75,17 +75,17 @@
         </template>
         <detail></detail>
         <template slot="footer">
-          <v-btn-toggle class='bottom-button'>
-            <v-btn flat>
+          <v-item-group class='bottom-button'>
+            <v-btn flat  color="grey">
               <v-icon>feedback</v-icon>
             </v-btn>
-            <v-btn flat>
+            <v-btn flat  color="grey">
               <v-icon>save_alt</v-icon>
             </v-btn>
-            <v-btn flat @click="zoomTo = detail.id">
+            <v-btn flat @click="zoomTo = detail.id" color="grey">
               <v-icon>place</v-icon>
             </v-btn>
-          </v-btn-toggle>
+          </v-item-group>
         </template>
 
       </drawer-container>
@@ -128,6 +128,7 @@ export { Main as default } from './Main';
   justify-content: space-around;
   .v-btn {
     flex-grow: 1;
+    margin: 0;
   }
 }
 

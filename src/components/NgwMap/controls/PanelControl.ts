@@ -62,11 +62,17 @@ export class PanelControl {
     return this;
   }
 
+  remove() {
+    if (this.onRemove) {
+      this.onRemove();
+    }
+  }
+
   removeFrom() {
-    // const parentNode = this._container && this._container.parentNode;
-    // if (parentNode) {
-    //   parentNode.removeChild(this._container);
-    // }
+    const parentNode = this._container && this._container.parentNode;
+    if (parentNode) {
+      parentNode.removeChild(this._container);
+    }
   }
 
   updateBody(content: string | HTMLElement) {

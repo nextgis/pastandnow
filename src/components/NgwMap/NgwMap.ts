@@ -75,7 +75,8 @@ export class NgwMap extends Vue {
       this.ready = true;
       const items = this.$store.state.bdMain.filtered;
       if (items && items.length) {
-        this.addMarkers(items);
+        const _items = JSON.parse(JSON.stringify(items));
+        this.addMarkers(_items);
       }
 
       this.$store.watch((state) => state.bdMain.filtered, (_items) => {
