@@ -5,7 +5,7 @@ import { Vue, Component } from 'vue-property-decorator';
 export class List extends Vue {
 
   get items(): BdMainItemProperties[] {
-    return this.$store.state.bdMain.filtered.map((x) => x.properties);
+    return this.$store.getters['bdMain/sortFeatures'].map((x) => x.properties);
   }
 
   get detail(): BdMainItem {

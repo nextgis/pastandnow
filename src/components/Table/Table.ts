@@ -30,7 +30,7 @@ export class Table extends Vue {
   ];
 
   get items(): BdMainItemProperties[] {
-    return this.$store.state.bdMain.items.map((x) => x.properties);
+    return this.$store.getters['bdMain/sortFeatures'].map((x) => x.properties);
   }
 
 }

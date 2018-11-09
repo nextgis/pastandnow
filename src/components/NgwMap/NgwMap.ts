@@ -68,8 +68,8 @@ export class NgwMap extends Vue {
     mapOptions: {
       target: 'map',
       controlsOptions: {
-        ZOOM: { position: 'bottom-right' },
-        ATTRIBUTION: { position: 'bottom-left' },
+        ZOOM: { position: 'top-right' },
+        ATTRIBUTION: { position: 'bottom-right' },
       }
     }
   };

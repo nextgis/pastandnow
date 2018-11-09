@@ -11,7 +11,13 @@ const _state = {
 
 // getters
 const _getters = {
-  features: (state, getters, rootState) => state.filtered
+  features: (state, getters, rootState) => state.filtered,
+  sortFeatures: (state, getters, rootState) => {
+    const filtered = [...state.filtered] as BdMainItem[];
+    return filtered.sort((a, b) => {
+      return a.properties.name.toUpperCase() > b.properties.name.toUpperCase() ? 1 : -1;
+    });
+  }
 };
 
 // actions

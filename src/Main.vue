@@ -108,14 +108,11 @@
 </template>
 
 <script lang="ts">
-
 export { Main as default } from './Main';
-
 </script>
 
 
 <style lang="scss">
-
 .drawe-icon {
   &.active {
     -webkit-transform: rotate(-180deg);
@@ -124,12 +121,12 @@ export { Main as default } from './Main';
 }
 
 .bottom-button {
-  display:flex;
+  width: 100%;
+  display: flex;
   justify-content: space-around;
   .v-btn {
     flex-grow: 1;
     margin: 0;
   }
 }
-
 </style>
