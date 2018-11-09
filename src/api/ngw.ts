@@ -1,7 +1,8 @@
 import { NgwConnector } from '../../nextgisweb_frontend/packages/ngw-connector/src/ngw-connector';
 import { FeatureCollection, Point, Feature } from 'geojson';
+import config from '../../config.json';
 
-const connector = new NgwConnector({ baseUrl: 'http://pastandnow.nextgis.com' });
+const connector = new NgwConnector({ baseUrl: config.baseUrl });
 
 export interface BdMainItemProperties {
 

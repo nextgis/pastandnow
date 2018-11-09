@@ -10,7 +10,7 @@ import app from './modules/app';
 // https://github.com/utahta/vue-vuex-typescript-example
 
 Vue.use(Vuex);
-
+// @ts-ignore
 const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({

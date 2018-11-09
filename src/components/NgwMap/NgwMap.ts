@@ -1,8 +1,11 @@
-import { WebMap, MapOptions } from '../../../nextgisweb_frontend/packages/webmap/src/webmap';
-import { LeafletMapAdapter } from '../../../nextgisweb_frontend/packages/leaflet-map-adapter/src/leaflet-map-adapter';
-import { QmsKit } from '../../../nextgisweb_frontend/packages/qms-kit/src/qms-kit';
+import { WebMap, MapOptions } from '@nextgis/webmap';
+import { LeafletMapAdapter } from '@nextgis/leaflet-map-adapter';
+
+
 import { Vue, Component, Prop } from 'vue-property-decorator';
+import config from '../../../config.json';
 import { Projection, Point, Marker, Icon, GeoJSON } from 'leaflet';
+import Ngw from '@nextgis/ngw-map';
 
 import 'leaflet/dist/leaflet.css';
 
@@ -54,22 +57,27 @@ export class NgwMap extends Vue {
   @Prop() center: [number, number];
   @Prop() zoom: number;
 
-  webMap = new WebMap({
-    mapAdapter: new LeafletMapAdapter(),
-    starterKits: [new QmsKit()],
-  });
+  webMap: WebMap;
+  ngw: Ngw;
 
   ready: boolean = false;
 
   mapObject;
 
-  options: NgwMapOptions = { mapOptions: { target: 'map' } };
+  options: NgwMapOptions = {
+    mapOptions: {
+      target: 'map',
+      controlsOptions: {
+        ZOOM: { position: 'bottom-right' },
+        ATTRIBUTION: { position: 'bottom-left' },
+      }
+    }
+  };
 
   markers: { [name: string]: boolean } = {};
   selected: GeoJSON;
 
   mounted() {
-    this.mapObject = this.webMap.map.map;
     const target = this.$el as HTMLElement;
     this.createWebMap({ target, center: this.center, zoom: this.zoom }).then(() => {
       this.ready = true;
@@ -95,23 +103,25 @@ export class NgwMap extends Vue {
   }
 
   createWebMap(options?: MapOptions) {
-    const webMap = this.webMap;
+
     this.options.mapOptions = { ...this.options.mapOptions, ...options };
-    return webMap.create(options).then(() => {
 
-      webMap.map.addControl('ZOOM', 'top-right');
-      webMap.map.addControl('ATTRIBUTION', 'bottom-right', {
-        customAttribution: [
-          '<a href="http://nextgis.ru" target="_blank">©NextGIS</a>',
-        ]
+    return new Promise((resolve) => {
+
+      // @ts-ignore
+      this.ngw = new Ngw(new LeafletMapAdapter(), {
+        baseUrl: config.baseUrl,
+        qmsId: 487,
+        ...this.options.mapOptions
+      });
+      // @ts-ignore;
+      this.webMap = this.ngw.webMap;
+      this.mapObject = this.webMap.map.map;
+      this.ngw.webMap.emitter.once('map:created', () => {
+        resolve();
       });
 
-      webMap.addBaseLayer('sputnik', 'QMS', {
-        qmsid: 487
-      }).then((layer) => {
-        webMap.map.showLayer(layer.name);
-      });
-
+      this.ngw.addNgwLayer({id: 9});
     });
   }
 
