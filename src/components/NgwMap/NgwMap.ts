@@ -1,8 +1,9 @@
-import { WebMap, MapOptions } from '@nextgis/webmap';
-import { LeafletMapAdapter } from '@nextgis/leaflet-map-adapter';
+import WebMap, { MapOptions } from '@nextgis/webmap';
+import LeafletMapAdapter from '@nextgis/leaflet-map-adapter';
 
 
 import { Vue, Component, Prop } from 'vue-property-decorator';
+// @ts-ignore
 import config from '../../../config.json';
 import { Projection, Point, Marker, Icon, GeoJSON } from 'leaflet';
 import Ngw from '@nextgis/ngw-map';
@@ -15,6 +16,15 @@ import '../../images/marker-shadow.png';
 
 import '../../images/marker-icon_selected.png';
 import '../../images/marker-icon-2x_selected.png';
+
+// import '../../images/residential-community-15.svg';
+// import '../../images/residential-community-15-yellow.svg';
+
+// import '../../images/circle-15.svg';
+// import '../../images/circle-15-yellow.svg';
+
+// import '../../images/marker-15.svg';
+// import '../../images/marker-15-yellow.svg';
 
 import { BdMainItem } from '../../api/ngw';
 
@@ -39,6 +49,20 @@ const selectedOptions = {
     iconRetinaUrl: 'marker-icon-2x_selected.png',
   }
 };
+// const markerOptions = {
+//   iconUrl: 'marker-15.svg',
+
+//   // shadowUrl: 'marker-shadow.png',
+//   iconSize: [26, 26],
+//   iconAnchor: [13, 26],
+//   // shadowSize: [26, 26]
+// };
+
+// const selectedOptions = {
+//   ...markerOptions, ...{
+//     iconUrl: 'marker-15-yellow.svg',
+//   }
+// };
 
 const _customIcon = Icon.extend({
   options: markerOptions
@@ -114,14 +138,13 @@ export class NgwMap extends Vue {
         qmsId: 487,
         ...this.options.mapOptions
       });
-      // @ts-ignore;
       this.webMap = this.ngw.webMap;
-      this.mapObject = this.webMap.map.map;
-      this.ngw.webMap.emitter.once('map:created', () => {
+      this.mapObject = this.webMap.mapAdapter.map;
+      this.webMap.onMapLoad().then(() => {
         resolve();
       });
 
-      this.ngw.addNgwLayer({id: 9});
+      this.ngw.addNgwLayer({ id: 9 });
     });
   }
 
@@ -145,9 +168,9 @@ export class NgwMap extends Vue {
         const [x, y] = item.geometry.coordinates;
         const { lat, lng } = Projection.SphericalMercator.unproject(new Point(x, y));
         item.geometry.coordinates = [lng, lat];
-        return this.webMap.map.addLayer('GEOJSON', { data: item, id }).then((l) => {
+        return this.webMap.addLayer('GEOJSON', { data: item, id, paint: { icon: true } }).then((l) => {
           // @ts-ignore
-          const layerMem = this.webMap.map._layers[l.name];
+          const layerMem = this.webMap.getLayer(l.name);
           const layer: GeoJSON = layerMem.layer;
           layer.on('click', () => {
             this.$store.dispatch('bdMain/setDetail', Number(id));
@@ -169,12 +192,12 @@ export class NgwMap extends Vue {
           if (ids.indexOf(m) !== -1) {
             if (!this.markers[m]) {
               this.markers[m] = true;
-              this.webMap.map.showLayer(m);
+              this.webMap.showLayer(m);
             }
           } else {
             if (this.markers[m]) {
               this.markers[m] = false;
-              this.webMap.map.hideLayer(m);
+              this.webMap.hideLayer(m);
             }
           }
         }
@@ -184,19 +207,19 @@ export class NgwMap extends Vue {
 
   zoomTo(id: number) {
     // @ts-ignore
-    const layerMem = this.webMap.map._layers[id];
+    const layerMem = this.webMap.getLayer(id);
     const layer = layerMem && layerMem.layer;
     if (layer) {
-      const center = layer.getBounds().getCenter();
-      this.webMap.map.setCenter(center);
+      const [lat, lng] = layer.getBounds().getCenter();
+      this.webMap.setCenter([lng, lat]);
     }
   }
 
   setSelected(item: BdMainItem) {
 
     if (item) {
-      // @ts-ignore
-      const layerMem = this.webMap.map._layers[item.id];
+
+      const layerMem = this.webMap.getLayer(String(item.id));
       const layerToSelect = layerMem && layerMem.layer;
       if (layerToSelect && layerToSelect !== this.selected) {
         if (this.selected) {

@@ -13,6 +13,6 @@ export const panel = {
     propsBinder(this, this.mapObject, this.$options.props);
     this.parentContainer = findRealParent(this.$parent);
     this.mapObject.setElement(this.$el);
-    this.mapObject.addTo(this.parentContainer.webMap.map.map);
+    this.mapObject.addTo(this.parentContainer.webMap.mapAdapter.map);
   }
 };

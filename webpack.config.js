@@ -4,6 +4,10 @@ const TSLintPlugin = require('tslint-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const utils = require('./build/utils');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
+const { getAliases } = require('./nextgisweb_frontend/build/aliases');
+
+const alias = getAliases();
+
 // const CompressionPlugin = require('compression-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -81,9 +85,9 @@ module.exports = (env, argv) => {
 
     resolve: {
       extensions: ['.ts', '.js', '.vue', '.json'],
-      alias: {
+      alias: {...alias, ...{
         'vue$': 'vue/dist/vue.esm.js'
-      }
+      }},
     },
     module: {
       rules

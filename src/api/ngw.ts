@@ -1,5 +1,6 @@
-import { NgwConnector } from '../../nextgisweb_frontend/packages/ngw-connector/src/ngw-connector';
+import NgwConnector from '@nextgis/ngw-connector';
 import { FeatureCollection, Point, Feature } from 'geojson';
+// @ts-ignore
 import config from '../../config.json';
 
 const connector = new NgwConnector({ baseUrl: config.baseUrl });

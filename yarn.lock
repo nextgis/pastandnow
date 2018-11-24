@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@mapbox/maki@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@mapbox/maki/-/maki-5.0.0.tgz#e607cd5ac4f45d1ba0d808aa22b13f59e492e44a"
+  integrity sha512-H7y+ENZlLMvbeVW3C62K0mUGejHQRna+SevDf/crbPYz8JEAVEe4W28xkU7P52qsEsfRTuxEPkuICJRtvUj32Q==
+
 "@nextgis/leaflet-map-adapter@^0.4.4":
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/@nextgis/leaflet-map-adapter/-/leaflet-map-adapter-0.4.4.tgz#873101398322026ad1a773d4a060c1ef4822e542"

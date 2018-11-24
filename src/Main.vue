@@ -93,7 +93,7 @@
     </v-navigation-drawer>
 
     <v-content>
-      <ngw-map :center="[55.75, 37.63]" :zoom="10">
+      <ngw-map :center="[37.63, 55.75]" :zoom="10">
         <map-control position="topleft">
           <div v-if="!drawer">
           <v-btn @click="drawer = !drawer" fab small>
