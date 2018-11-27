@@ -2,7 +2,7 @@ import { GeoJsonAdapterLayerPaint } from '@nextgis/webmap';
 import './icons.css';
 
 export interface NgwIconOptions {
-  shape?: 'circle';
+  shape?: 'circle' | 'brill' | 'rect';
   color?: string;
   size: number;
   strokeColor?: string;
@@ -33,7 +33,7 @@ const OPTIONS: NgwIconOptions = {
 
 function getBril(opt: NgwIconOptions) {
   const s = opt.size;
-  const d = s * (1 - STROKE);
+  const d = (s / 2) * (1 - STROKE);
   const t = [[s / 2, 0], [s / 2, d]];
   const r = [[s, s / 2], [s - d, s / 2]];
   const b = [[s / 2, s], [s / 2, s - d]];

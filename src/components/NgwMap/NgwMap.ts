@@ -112,7 +112,7 @@ export class NgwMap extends Vue {
             return this.getHistoryIcon(feature);
           },
           selectedPaint: (feature) => {
-            return this.getHistoryIcon(feature, { size: 20 });
+            return this.getHistoryIcon(feature, { size: 20, strokeColor: 'orange' });
           }
         }).then((l) => {
           const layerMem = this.webMap.getLayer(l.name);
@@ -186,7 +186,6 @@ export class NgwMap extends Vue {
   }
 
   private getHistoryIcon(feature: Feature, options?: NgwIconOptions) {
-    console.log(feature.properties.type);
 
     const colors = {
       водоем: 'blue',
@@ -197,6 +196,12 @@ export class NgwMap extends Vue {
       другое: 'black'
     };
 
-    return getNgwIcon({...options, color: colors[feature.properties.type] || 'black'});
+    const shapes: any = ['circle', 'brill', 'rect'];
+
+    return getNgwIcon({
+      ...options,
+      color: colors[feature.properties.type] || 'black',
+      shape: shapes[Math.floor(Math.random() * shapes.length)]
+    });
   }
 }
