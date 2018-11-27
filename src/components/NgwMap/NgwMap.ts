@@ -130,22 +130,16 @@ export class NgwMap extends Vue {
 
     this.options.mapOptions = { ...this.options.mapOptions, ...options };
 
-    return new Promise((resolve) => {
-
-      // @ts-ignore
-      this.ngw = new Ngw(new LeafletMapAdapter(), {
-        baseUrl: config.baseUrl,
-        qmsId: 487,
-        ...this.options.mapOptions
-      });
-      this.webMap = this.ngw.webMap;
-      this.mapObject = this.webMap.mapAdapter.map;
-      this.webMap.onMapLoad().then(() => {
-        resolve();
-      });
-
-      this.ngw.addNgwLayer({ id: 9 });
+    this.ngw = new Ngw(new LeafletMapAdapter(), {
+      baseUrl: config.baseUrl,
+      qmsId: 487,
+      ...this.options.mapOptions
     });
+    this.webMap = this.ngw.webMap;
+    this.mapObject = this.webMap.mapAdapter.map;
+    this.ngw.addNgwLayer({ id: 9 });
+    return this.webMap.onMapLoad();
+
   }
 
   findFirsVueParent(firstVueParent) {
