@@ -1,3 +1,4 @@
+// tslint:disable:max-line-length
 import { GeoJsonAdapterLayerPaint } from '@nextgis/webmap';
 import './icons.css';
 
@@ -82,6 +83,21 @@ function getCircle(opt: NgwIconOptions) {
   `;
 }
 
+function getMarker(opt: NgwIconOptions) {
+
+  const defSize = 12;
+  const d = opt.size - defSize;
+
+  return `
+  <path
+    d="m6 0c-1.85 0-4 1.19-4 4.22 0 2.05 3.08 6.59 4 7.78 0.821-1.19 4-5.62 4-7.78 0-3.03-2.15-4.22-4-4.22z"
+    fill="${opt.color}"
+    stroke="${opt.strokeColor}"
+    stroke-width="${STROKE}"
+  />
+  `;
+}
+
 
 export function getNgwIcon(opt?: NgwIconOptions): GeoJsonAdapterLayerPaint {
   opt = { ...OPTIONS, ...opt };
@@ -91,7 +107,8 @@ export function getNgwIcon(opt?: NgwIconOptions): GeoJsonAdapterLayerPaint {
   const svgPath = {
     brill: getBril,
     circle: getCircle,
-    rect: getRect
+    rect: getRect,
+    marker: getMarker,
   };
 
   return {
