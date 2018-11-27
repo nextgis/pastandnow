@@ -1,11 +1,9 @@
 import WebMap, { MapOptions, LayerMem } from '@nextgis/webmap';
 import LeafletMapAdapter from '@nextgis/leaflet-map-adapter';
-
-
 import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
 import config from '../../../config.json';
-import { Projection, Point, Marker, Icon, GeoJSON } from 'leaflet';
+import { Projection, Point, GeoJSON } from 'leaflet';
 import Ngw from '@nextgis/ngw-map';
 
 import 'leaflet/dist/leaflet.css';
