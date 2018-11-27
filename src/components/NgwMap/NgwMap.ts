@@ -11,7 +11,8 @@ import Ngw from '@nextgis/ngw-map';
 import 'leaflet/dist/leaflet.css';
 
 import { BdMainItem } from '../../api/ngw';
-import { getNgwIcon } from './icons';
+import { getNgwIcon, NgwIconOptions } from './icons';
+import { Feature } from 'geojson';
 
 export interface NgwMapOptions {
   mapOptions: MapOptions;
@@ -108,10 +109,10 @@ export class NgwMap extends Vue {
           data: item,
           id,
           paint: (feature) => {
-            return getNgwIcon();
+            return this.getHistoryIcon(feature);
           },
           selectedPaint: (feature) => {
-            return getNgwIcon({size: 20});
+            return this.getHistoryIcon(feature, { size: 20 });
           }
         }).then((l) => {
           const layerMem = this.webMap.getLayer(l.name);
@@ -178,17 +179,24 @@ export class NgwMap extends Vue {
 
   private _selectMarker(layer: LayerMem) {
     this.webMap.selectLayer(layer.id);
-    // layer.eachLayer((x: Marker) => {
-    //   x.setIcon(selectedIcon);
-    //   x.setZIndexOffset(100);
-    // });
   }
 
   private _unselectMarker(layer: LayerMem) {
     this.webMap.unSelectLayer(layer.id);
-    // layer.eachLayer((x: Marker) => {
-    //   x.setIcon(customIcon);
-    //   x.setZIndexOffset(10);
-    // });
+  }
+
+  private getHistoryIcon(feature: Feature, options?: NgwIconOptions) {
+    console.log(feature.properties.type);
+
+    const colors = {
+      водоем: 'blue',
+      памятник: 'red',
+      строение: 'orange',
+      улица: 'yellow',
+      район: 'gray',
+      другое: 'black'
+    };
+
+    return getNgwIcon({...options, color: colors[feature.properties.type] || 'black'});
   }
 }
