@@ -3,7 +3,7 @@ import { GeoJsonAdapterLayerPaint } from '@nextgis/webmap';
 import './icons.css';
 
 export interface NgwIconOptions {
-  shape?: 'circle' | 'brill' | 'rect';
+  shape?: 'circle' | 'brill' | 'rect' | 'marker';
   color?: string;
   size: number;
   strokeColor?: string;
