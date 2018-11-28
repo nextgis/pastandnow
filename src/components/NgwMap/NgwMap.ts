@@ -110,7 +110,7 @@ export class NgwMap extends Vue {
             return this.getHistoryIcon(feature);
           },
           selectedPaint: (feature) => {
-            return this.getHistoryIcon(feature, { size: 20, strokeColor: 'orange' });
+            return this.getHistoryIcon(feature, { size: 40, strokeColor: 'orange' });
           }
         }).then((l) => {
           const layerMem = this.webMap.getLayer(l.name);
@@ -194,7 +194,8 @@ export class NgwMap extends Vue {
       другое: 'black'
     };
 
-    const shapes: any = ['circle', 'brill', 'rect', 'marker'];
+    const shapes: any = ['circle', 'brill', 'rect', 'marker', 'cross', 'star', 'asterisk', 'triangle'];
+    // const shapes: any = ['triangle'];
 
     return getNgwIcon({
       ...options,
