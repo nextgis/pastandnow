@@ -1,6 +1,5 @@
 // tslint:disable:max-line-length
 import { GeoJsonAdapterLayerPaint } from '@nextgis/webmap';
-import './icons.css';
 
 const svgPath: {[name: string]: string | GetPathCb} = {
   brill: '<path d="m6 0-5 6 5 6 5-6z"/>',
@@ -10,11 +9,13 @@ const svgPath: {[name: string]: string | GetPathCb} = {
   cross: '<path d="M 2.4,12 6,8.4 9.6,12 12,9.6 8.4,6 12,2.4 9.6,0 6,3.6 2.4,0 0,2.4 3.6,6 0,9.6 Z"/>',
   star: '<path d="m6 0.25 1.71 4.18 4.29-1.04e-4 -3.43 3.14 0.857 4.18-3.43-3.14-3.43 3.14 0.857-4.18-3.43-3.14 4.29-0.209z"/>',
   triangle: '<path d="m12 11.7h-12l6-11.2z"/>',
+  pluse: '<path d="m7.5 12v-4.5h4.5v-3h-4.5v-4.5h-3v4.5h-4.5v3h4.5v4.5z"/>',
+  minuse: '<path d="m12 7.5v-3h-12v3z"/>',
   asterisk: '<path d="m7.59 12v-3.27l2.83 1.64 1.58-2.74-2.85-1.64 2.83-1.64-1.56-2.74-2.83 1.64v-3.24h-3.17v3.24l-2.85-1.64-1.57 2.74 2.84 1.64-2.84 1.64 1.57 2.74 2.85-1.64v3.27z"/>',
 };
 
 export interface NgwIconOptions {
-  shape?: 'circle' | 'brill' | 'rect' | 'marker' | 'star' | 'asterisk' | 'triangle';
+  shape?: 'circle' | 'brill' | 'rect' | 'marker' | 'star' | 'asterisk' | 'triangle' | 'pluse' | 'minuse';
   color?: string;
   size: number;
   strokeColor?: string;
@@ -42,8 +43,6 @@ const OPTIONS: NgwIconOptions = {
   size: 12
 };
 
-
-
 type GetPathCb = (opt?: NgwIconOptions) => string;
 
 export function getNgwIcon(opt?: NgwIconOptions): GeoJsonAdapterLayerPaint {
@@ -53,7 +52,7 @@ export function getNgwIcon(opt?: NgwIconOptions): GeoJsonAdapterLayerPaint {
   const defSize = 12;
   const stroke = STROKE; // size * (1 - STROKE);
 
-  const pathAlias = svgPath[opt.shape];
+  const pathAlias = svgPath[opt.shape] || 'circle';
 
   const path = typeof pathAlias === 'string' ? pathAlias : pathAlias(opt);
   const svg = insertSvg(size, size, path);
