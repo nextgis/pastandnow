@@ -195,7 +195,7 @@ export class NgwMap extends Vue {
     };
 
     const shapes: any = ['circle', 'brill', 'rect', 'marker', 'cross', 'star',
-      'asterisk', 'triangle', 'pluse', 'minuse'];
+      'asterisk', 'triangle', 'plus', 'minus'];
     // const shapes: any = ['triangle'];
 
     return getNgwIcon({
