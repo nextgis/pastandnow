@@ -9,7 +9,7 @@ import Ngw from '@nextgis/ngw-map';
 import 'leaflet/dist/leaflet.css';
 
 import { BdMainItem } from '../../api/ngw';
-import { getNgwIcon, NgwIconOptions } from './icons';
+import { getIcon, IconOptions } from '@nextgis/icons';
 import { Feature } from 'geojson';
 
 export interface NgwMapOptions {
@@ -152,7 +152,7 @@ export class NgwMap extends Vue {
     const layerMem = this.webMap.getLayer(String(id));
     const layer = layerMem && layerMem.layer;
     if (layer) {
-      const [lat, lng] = layer.getBounds().getCenter();
+      const { lat, lng } = layer.getBounds().getCenter();
       this.webMap.setCenter([lng, lat]);
     }
   }
@@ -183,7 +183,7 @@ export class NgwMap extends Vue {
     this.webMap.unSelectLayer(layer.id);
   }
 
-  private getHistoryIcon(feature: Feature, options?: NgwIconOptions) {
+  private getHistoryIcon(feature: Feature, options?: IconOptions) {
 
     const colors = {
       водоем: 'blue',
@@ -198,7 +198,7 @@ export class NgwMap extends Vue {
       'asterisk', 'triangle', 'plus', 'minus'];
     // const shapes: any = ['triangle'];
 
-    return getNgwIcon({
+    return getIcon({
       ...options,
       color: colors[feature.properties.type] || 'black',
       shape: shapes[Math.floor(Math.random() * shapes.length)]
