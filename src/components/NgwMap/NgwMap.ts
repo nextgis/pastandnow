@@ -113,10 +113,10 @@ export class NgwMap extends Vue {
       return this.webMap.addLayer('GEOJSON', {
         data: collection,
         paint: (feature) => {
-          return this.getHistoryIcon(feature, { size: 15 });
+          return this.getHistoryIcon(feature, { size: 20 });
         },
         selectedPaint: (feature) => {
-          return this.getHistoryIcon(feature, { size: 30 });
+          return this.getHistoryIcon(feature, { size: 40 });
         },
         selectable: true,
         unselectOnSecondClick: true
@@ -146,8 +146,11 @@ export class NgwMap extends Vue {
         const layer = layers.find((x) => x.feature.properties.id === id);
         const l = layer && layer.layer;
         if (l) {
-          const { lat, lng } = l.getBounds ? l.getBounds().getCenter() : l.getLatLng();
-          this.webMap.setCenter([lng, lat]);
+          // const { lat, lng } = l.getBounds ? l.getBounds().getCenter() : l.getLatLng();
+          // this.webMap.setCenter([lng, lat]);
+
+          const latLng = l.getBounds ? l.getBounds().getCenter() : l.getLatLng();
+          this.webMap.mapAdapter.map.setView(latLng, 14);
 
           // reset zoomTo storage value
           this.$store.dispatch('app/zoomTo', null);

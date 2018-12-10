@@ -26,6 +26,7 @@ export class List extends Vue {
 
   setDetail(id: string) {
     this.$store.dispatch('bdMain/setDetail', id);
+    this.$store.dispatch('app/zoomTo', id);
   }
 
   addPortion() {
