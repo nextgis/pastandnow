@@ -22,14 +22,14 @@
       @change ="updateFilter"
     ></v-select>
 
-    <v-checkbox class="pa-0 ma-0" v-for="mos in moscow" :key="mos.param"
+    <!-- <v-checkbox class="pa-0 ma-0" v-for="mos in moscow" :key="mos.param"
       v-model="mos.value"
       @change ="updateFilter"
     >
       <template slot="label">
         {{ mos.name }}
       </template>
-    </v-checkbox>
+    </v-checkbox> -->
   </v-form>
 
 </template>
