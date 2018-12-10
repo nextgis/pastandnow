@@ -36,12 +36,11 @@ export class ItemsFilter extends Vue {
 
   updateFilterAreas(items) {
     const areas = {};
-    const properties: BdMainItemProperties[] = items.map((x) => {
+    items.forEach((x) => {
       const prop = x.properties;
       areas[prop.rayon] = true;
-      return prop;
     });
-    this.areas = this.areas.concat(Object.keys(areas));
+    this.areas = this.areas.concat(Object.keys(areas).sort());
   }
 
   updateFilter() {

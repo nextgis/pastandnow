@@ -15,12 +15,20 @@
       @change ="updateFilter"
     ></v-range-slider> -->
 
-    <v-select
+    <!-- <v-select
       :items="areas"
       v-model="rayon"
       label="Район"
       @change ="updateFilter"
-    ></v-select>
+    ></v-select> -->
+
+    <v-autocomplete
+      v-model="rayon"
+      :items="areas"
+      label="Район"
+      @change="updateFilter"
+      no-data-text="Не найдено"
+    ></v-autocomplete>
 
     <!-- <v-checkbox class="pa-0 ma-0" v-for="mos in moscow" :key="mos.param"
       v-model="mos.value"
