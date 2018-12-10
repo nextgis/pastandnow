@@ -107,10 +107,10 @@ export class NgwMap extends Vue {
           data: item,
           id,
           paint: (feature) => {
-            return this.getHistoryIcon(feature);
+            return this.getHistoryIcon(feature, {size: 15});
           },
           selectedPaint: (feature) => {
-            return this.getHistoryIcon(feature, { size: 40, strokeColor: 'orange' });
+            return this.getHistoryIcon(feature, { size: 30 });
           }
         }).then((l) => {
           const layerMem = this.webMap.getLayer(l.name);
@@ -185,23 +185,29 @@ export class NgwMap extends Vue {
 
   private getHistoryIcon(feature: Feature, options?: IconOptions) {
 
-    const colors = {
-      водоем: 'blue',
-      памятник: 'red',
-      строение: 'orange',
-      улица: 'yellow',
-      район: 'gray',
-      другое: 'black'
+    const featureStyles = {
+      'водоем': {color: '#0000ff', shape: 'marker'},
+      'ландшафт': {color: '#008000', shape: 'marker'},
+      'памятник': {color: '#ff0000', shape: 'marker'},
+      'строение': {color: '#ffa500', shape: 'marker'},
+      'улица': {color: '#ffff00', shape: 'marker'},
+      'зона': {color: '#bbbbbb', shape: 'marker'},
+      'населенный пункт': {color: '#49423d', shape: 'marker'},
+      'район': {color: '#808080', shape: 'marker'},
+      'другой': {color: '#000000', shape: 'marker'},
+      'метро': {color: '#ffa500', shape: 'brill'},
+      'метро-2': {color: '#ff0000', shape: 'brill'},
+      'другие подземные объекты': {color: '#808080', shape: 'brill'},
     };
 
-    const shapes: any = ['circle', 'brill', 'rect', 'marker', 'cross', 'star',
-      'asterisk', 'triangle', 'plus', 'minus'];
-    // const shapes: any = ['triangle'];
+    // const shapes: any = ['circle', 'brill', 'rect', 'marker', 'cross', 'star',
+    //   'asterisk', 'triangle', 'plus', 'minus'];
+    const featureType: string = feature.properties.type;
+    const styleId = Object.keys(featureStyles).find((x) => featureType.search(x) !== -1);
+    const style = featureStyles[styleId] || {color: '#fff', size: 10};
 
     return getIcon({
-      ...options,
-      color: colors[feature.properties.type] || 'black',
-      shape: shapes[Math.floor(Math.random() * shapes.length)]
+      ...options, ...style
     });
   }
 }
