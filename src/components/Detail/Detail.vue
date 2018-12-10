@@ -8,6 +8,9 @@
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
+    <div class="text-xs-center">
+      <v-btn flat small>Подробнее</v-btn>
+    </div>
   </div>
 </template>
 
