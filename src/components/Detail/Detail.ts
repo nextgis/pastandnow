@@ -1,5 +1,6 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { BdMainItemProperties } from '../../api/ngw';
+import ShowMoreField from './ShowMoreField/ShowMoreField.vue';
 
 interface Alias {
   text: string;
@@ -13,6 +14,10 @@ export class Detail extends Vue {
 
   url: string = '';
   more = false;
+
+  components = {
+    Story: ShowMoreField
+  };
 
   get detail(): BdMainItemProperties {
     return this.$store.state.bdMain.detailItem && this.$store.state.bdMain.detailItem.properties;
@@ -52,8 +57,9 @@ export class Detail extends Vue {
         >close
         </i>`;
       }
-    } else {
-      return this.detail[alias.value];
     }
+
+    return this.detail[alias.value];
+
   }
 }
