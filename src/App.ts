@@ -9,6 +9,8 @@ import MainComponent from './Main.vue';
 })
 export class App extends Vue {
 
+  tableSearch: string = '';
+
   get page(): AppPages {
     return this.$store.state.app.page;
   }

@@ -4,14 +4,12 @@
     <v-data-table
       :headers="headers"
       :items="items"
+      :search="search"
       hide-actions
     >
       <template slot="headerCell" slot-scope="props">
         <v-tooltip bottom>
           <span slot="activator">
-            {{ props.header.text }}
-          </span>
-          <span>
             {{ props.header.text }}
           </span>
         </v-tooltip>
@@ -30,5 +28,8 @@ export { Table as default } from './Table';
 
 <style lang="scss">
 
-
+.v-table__overflow {
+  overflow-x: inherit;
+  overflow-y: inherit;
+}
 </style>

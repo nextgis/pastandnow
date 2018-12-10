@@ -11,6 +11,7 @@ export interface BdMainItemProperties {
 
   status: string;
   narrator: string;
+  nar_codes: string;
   description?: string;
   mos2?: string;
   mos5?: string;
@@ -62,7 +63,7 @@ export default {
       { text: 'Семейные истории', value: 'narrativ_b' },
       { text: 'Практики горожан', value: 'narrativ_p' },
       { text: 'Характеристика места', value: 'descript2' },
-      { text: 'Рассказчик', value: 'narrator' },
+      { text: 'Рассказчик', value: 'narrator', type: 'NarratorLink' },
       { text: 'Визуальные материалы', value: 'visual' },
       { text: 'Москва дворовая', value: 'mos1' },
       { text: 'Москва церковная', value: 'mos2' },

@@ -7,7 +7,16 @@
           <v-btn icon dark @click.native="page = 'main'" >
             <v-icon>close</v-icon>
           </v-btn>
-          <v-toolbar-title>Таблица</v-toolbar-title>
+        <span class="title ml-3 mr-5">Устная память Москвы&nbsp;<span class="font-weight-light">Таблица</span></span>
+        <v-text-field
+          v-model="tableSearch"
+          solo-inverted
+          flat
+          hide-details
+          label="Поиск"
+          prepend-inner-icon="search"
+        ></v-text-field>
+
           <v-spacer></v-spacer>
           <v-toolbar-items>
             <v-btn dark flat>Сохранить</v-btn>
@@ -16,7 +25,7 @@
 
 
         <div class='dialog-body'>
-          <table-component v-if="page === 'table'"></table-component>
+          <table-component v-if="page === 'table'" :search="tableSearch"></table-component>
           <about-component v-else-if="page === 'about'"></about-component>
         </div>
 
@@ -55,7 +64,7 @@ html, body {
   .dialog-body {
     flex-grow: 1;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
   }
 }
 

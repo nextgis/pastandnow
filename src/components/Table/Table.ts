@@ -1,9 +1,11 @@
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import { BdMainItemProperties } from '../../api/ngw';
 
 
 @Component
 export class Table extends Vue {
+
+  @Prop() search: string;
 
   headers = [
     { text: 'Адрес', value: 'addr' },
