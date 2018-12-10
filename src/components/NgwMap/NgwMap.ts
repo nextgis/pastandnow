@@ -59,6 +59,7 @@ export class NgwMap extends Vue {
       });
 
       this.$store.watch((state) => state.bdMain.detailItem, (detail: BdMainItem) => {
+        this.webMap.mapAdapter.map.invalidateSize();
         this.setSelected(detail);
       });
 
@@ -139,16 +140,18 @@ export class NgwMap extends Vue {
   }
 
   zoomTo(id: number) {
-    const layers = this.layer && this.layer.getLayers();
-    if (layers && layers.length) {
-      const layer = layers.find((x) => x.feature.properties.id === id);
-      const l = layer && layer.layer;
-      if (l) {
-        const { lat, lng } = l.getBounds ? l.getBounds().getCenter() : l.getLatLng();
-        this.webMap.setCenter([lng, lat]);
+    if (id) {
+      const layers = this.layer && this.layer.getLayers();
+      if (layers && layers.length) {
+        const layer = layers.find((x) => x.feature.properties.id === id);
+        const l = layer && layer.layer;
+        if (l) {
+          const { lat, lng } = l.getBounds ? l.getBounds().getCenter() : l.getLatLng();
+          this.webMap.setCenter([lng, lat]);
 
-        // reset zoomTo storage value
-        this.$store.dispatch('app/zoomTo', null);
+          // reset zoomTo storage value
+          this.$store.dispatch('app/zoomTo', null);
+        }
       }
     }
   }
@@ -183,10 +186,10 @@ export class NgwMap extends Vue {
     //   'asterisk', 'triangle', 'plus', 'minus'];
     const featureType: string = feature.properties.type;
     const styleId = Object.keys(featureStyles).find((x) => featureType.search(x) !== -1);
-    const style = featureStyles[styleId] || { color: '#fff', size: 10 };
+    const style = featureStyles[styleId] || { color: '#fff', shape: 'cross' };
 
     return getIcon({
-      ...options, ...style
+      ...style, ...options
     });
   }
 }

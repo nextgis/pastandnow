@@ -50,27 +50,28 @@ export default {
 
   getLayerMeta(cb) {
     cb([
-      { text: 'Адрес', value: 'addr' },
-      { text: 'долгота', value: 'lat' },
-      { text: 'широта', value: 'lon' },
-      { text: 'Название объекта', value: 'name' },
-      { text: 'Тип объекта', value: 'type' },
-      { text: 'Статус объекта', value: 'status' },
-      { text: 'Район', value: 'rayon' },
-      { text: 'Неофициальное название', value: 'unoff' },
-      { text: 'ОПИСАНИЕ', value: 'description' },
+      { text: 'Идентификатор', value: 'id1', noHide: true },
+      { text: 'Адрес', value: 'addr', noHide: true },
+      { text: 'долгота', value: 'lat', noHide: true },
+      { text: 'широта', value: 'lon', noHide: true },
+      { text: 'Название объекта', value: 'name', noHide: true },
+      { text: 'Тип объекта', value: 'type', noHide: true },
+      { text: 'Статус объекта', value: 'status', noHide: true },
+      { text: 'Район', value: 'rayon', noHide: true },
+      { text: 'Неофициальное название', value: 'unoff', noHide: true },
+      { text: 'ОПИСАНИЕ', value: 'description', noHide: true },
       { text: 'Истории о прошлом', value: 'narrativ_l' },
       { text: 'Семейные истории', value: 'narrativ_b' },
       { text: 'Практики горожан', value: 'narrativ_p' },
       { text: 'Характеристика места', value: 'descript2' },
       { text: 'Рассказчик', value: 'narrator', type: 'NarratorLink' },
       { text: 'Визуальные материалы', value: 'visual' },
-      { text: 'Москва дворовая', value: 'mos1' },
-      { text: 'Москва церковная', value: 'mos2' },
-      { text: 'Москва бездомная', value: 'mos3' },
-      { text: 'Москва подземная', value: 'mos4' },
-      { text: 'Москва субкультурная', value: 'mos5' },
-      { text: 'Москва легендарная', value: 'mos6' }
+      { text: 'Москва дворовая', value: 'mos1', type: 'Mos' },
+      { text: 'Москва церковная', value: 'mos2', type: 'Mos' },
+      { text: 'Москва бездомная', value: 'mos3', type: 'Mos' },
+      { text: 'Москва подземная', value: 'mos4', type: 'Mos' },
+      { text: 'Москва субкультурная', value: 'mos5', type: 'Mos' },
+      { text: 'Москва легендарная', value: 'mos6', type: 'Mos' }
     ]);
   }
 };

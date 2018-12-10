@@ -1,5 +1,19 @@
 <template>
   <v-app>
+
+    <v-content>
+      <ngw-map :center="[37.63, 55.75]" :zoom="10">
+        <map-control position="topleft">
+          <div v-if="!drawer">
+          <v-btn @click="drawer = !drawer" fab small>
+            <v-icon large class="drawe-icon" :class="{ active: drawer }">chevron_right</v-icon>
+          </v-btn>
+          <span class="title">Устная память Москвы</span>
+          </div>
+        </map-control>
+      </ngw-map>
+    </v-content>
+
     <v-navigation-drawer
       v-model="drawer"
       stateless
@@ -60,6 +74,7 @@
       :value="!!detail"
       stateless
       width="400"
+      absolute
       app
       right
     >
@@ -88,18 +103,7 @@
       </drawer-container>
     </v-navigation-drawer>
 
-    <v-content>
-      <ngw-map :center="[37.63, 55.75]" :zoom="10">
-        <map-control position="topleft">
-          <div v-if="!drawer">
-          <v-btn @click="drawer = !drawer" fab small>
-            <v-icon large class="drawe-icon" :class="{ active: drawer }">chevron_right</v-icon>
-          </v-btn>
-          <span class="title">Устная память Москвы</span>
-          </div>
-        </map-control>
-      </ngw-map>
-    </v-content>
+
   </v-app>
 </template>
 
