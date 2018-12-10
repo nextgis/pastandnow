@@ -1,4 +1,4 @@
-import WebMap, { MapOptions, LayerMem } from '@nextgis/webmap';
+import WebMap, { MapOptions, LayerMem, LayerAdapter } from '@nextgis/webmap';
 import LeafletMapAdapter from '@nextgis/leaflet-map-adapter';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
@@ -28,7 +28,7 @@ export class NgwMap extends Vue {
   ready: boolean = false;
 
   mapObject;
-  layer;
+  layer: LayerAdapter;
 
   options: NgwMapOptions = {
     mapOptions: {
@@ -117,21 +117,21 @@ export class NgwMap extends Vue {
         selectedPaint: (feature) => {
           return this.getHistoryIcon(feature, { size: 30 });
         },
-        selectable: true
+        selectable: true,
+        unselectOnSecondClick: true
       }).then((l) => {
         this.layer = l;
         this.webMap.showLayer(l.name);
-        this.webMap.emitter.on('layer:click', ({ adapter, feature }) => {
+        this.webMap.emitter.on('layer:click', ({ adapter, feature, selected }) => {
           if (adapter.name === l.name) {
-            console.log(feature.properties.id);
-            this.$store.dispatch('bdMain/setDetail', Number(feature.properties.id));
+            this.$store.dispatch('bdMain/setDetail', selected ? Number(feature.properties.id) : null);
           }
         });
       });
     } else {
       this.layer.filter(({ feature }) => {
         const id = feature.properties.id;
-        return items.find((x) => x.properties.id === id);
+        return items.some((x) => x.properties.id === id);
       });
     }
 
@@ -139,38 +139,27 @@ export class NgwMap extends Vue {
   }
 
   zoomTo(id: number) {
-    const layerMem = this.webMap.getLayer(String(id));
-    const layer = layerMem && layerMem.layer;
-    if (layer) {
-      const { lat, lng } = layer.getBounds().getCenter();
-      this.webMap.setCenter([lng, lat]);
+    const layers = this.layer && this.layer.getLayers();
+    if (layers && layers.length) {
+      const layer = layers.find((x) => x.feature.properties.id === id);
+      const l = layer && layer.layer;
+      if (l) {
+        const { lat, lng } = l.getBounds ? l.getBounds().getCenter() : l.getLatLng();
+        this.webMap.setCenter([lng, lat]);
+
+        // reset zoomTo storage value
+        this.$store.dispatch('app/zoomTo', null);
+      }
     }
   }
 
   setSelected(item: BdMainItem) {
-
-    // if (item) {
-
-    //   const layerMem = this.webMap.getLayer(String(item.id));
-    //   const layerToSelect = layerMem;
-    //   if (layerToSelect && layerToSelect !== this.selected) {
-    //     if (this.selected) {
-    //       this._unselectMarker(this.selected);
-    //     }
-    //     this.selected = layerToSelect;
-    //     this._selectMarker(layerMem);
-    //   }
-    // } else if (this.selected) {
-    //   this._unselectMarker(this.selected);
-    // }
-  }
-
-  private _selectMarker(layer: LayerMem) {
-    this.webMap.selectLayer(layer.id);
-  }
-
-  private _unselectMarker(layer: LayerMem) {
-    this.webMap.unSelectLayer(layer.id);
+    if (item) {
+      this.layer.select(({ feature }) => feature.properties.id === (item && item.id));
+    } else {
+      // unselect all
+      this.layer.unselect();
+    }
   }
 
   private getHistoryIcon(feature: Feature, options?: IconOptions) {

@@ -35,7 +35,7 @@
           </div>
         </div>
         <div v-else>
-          <div class="text-xs-center">
+          <div class="pa-3 text-xs-center">
             <v-progress-circular
               indeterminate
               color="primary"
