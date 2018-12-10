@@ -1,4 +1,4 @@
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 import { BdMainItemProperties } from '../../api/ngw';
 
 
@@ -6,6 +6,11 @@ import { BdMainItemProperties } from '../../api/ngw';
 export class Table extends Vue {
 
   @Prop() search: string;
+  @Prop() paginationSync;
+
+  pagination = {
+    rowsPerPage: 30
+  };
 
   headers = [
     { text: 'Адрес', value: 'addr' },
@@ -33,6 +38,11 @@ export class Table extends Vue {
 
   get items(): BdMainItemProperties[] {
     return this.$store.getters['bdMain/sortFeatures'].map((x) => x.properties);
+  }
+
+  @Watch('pagination')
+  setPagination(value) {
+    this.paginationSync(value);
   }
 
 }

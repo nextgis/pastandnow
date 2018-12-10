@@ -25,10 +25,15 @@
 
 
         <div class='dialog-body'>
-          <table-component v-if="page === 'table'" :search="tableSearch"></table-component>
+          <table-component v-if="page === 'table'" :search="tableSearch" :paginationSync="paginationSync"></table-component>
           <about-component v-else-if="page === 'about'"></about-component>
         </div>
 
+        <v-footer class="pt-3 pb-4" v-if="pagination && pagination.page">
+          <div class="text-xs-center pt-1" >
+            <v-pagination v-model="pagination.page" :length="pages" :total-visible="7"></v-pagination>
+          </div>
+        </v-footer>
 
       </v-card>
     </v-dialog>

@@ -10,6 +10,7 @@ import MainComponent from './Main.vue';
 export class App extends Vue {
 
   tableSearch: string = '';
+  pagination: any = null;
 
   get page(): AppPages {
     return this.$store.state.app.page;
@@ -19,4 +20,17 @@ export class App extends Vue {
     this.$store.dispatch('app/setPage', value);
   }
 
+
+  get pages() {
+    if (this.pagination && (this.pagination.rowsPerPage === null ||
+      this.pagination.totalItems === null)) {
+      return 0;
+    }
+
+    return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
+  }
+
+  paginationSync(value) {
+    this.pagination = value;
+  }
 }
