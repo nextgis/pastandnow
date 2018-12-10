@@ -6,9 +6,8 @@
         </v-list-tile-content>
 
         <v-list-tile-action class="pa-0">
-          <v-btn icon ripple>
+          <v-btn @click="setDetail(item.id)" icon ripple>
             <v-icon
-              @click="setDetail(item.id)"
               color="lighten-1"
               v-bind:style="{ color: item.id === (detail && detail.id) ? 'orange' : 'grey' }"
             >

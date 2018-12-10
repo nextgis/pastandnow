@@ -13,6 +13,7 @@ export class List extends Vue {
   }
 
   setDetail(id: string) {
+    console.log(1243);
     this.$store.dispatch('bdMain/setDetail', id);
   }
 
