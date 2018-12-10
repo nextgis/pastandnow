@@ -3,9 +3,9 @@
   <v-form
     ref="form"
     v-model="form"
-    class="pa-3 pb-0"
+    class="pl-3 pr-3 pt-0 pb-0"
   >
-    <v-range-slider
+    <!-- <v-range-slider
       v-model="years"
       thumb-label="always"
       thumb-size="26"
@@ -13,7 +13,7 @@
       :min="minYear"
       :step="1"
       @change ="updateFilter"
-    ></v-range-slider>
+    ></v-range-slider> -->
 
     <v-select
       :items="areas"
