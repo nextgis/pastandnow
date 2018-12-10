@@ -50,10 +50,10 @@ export default {
 
   getLayerMeta(cb) {
     cb([
-      { text: 'Идентификатор', value: 'id1', noHide: true },
+      // { text: 'Идентификатор', value: 'id1', noHide: true },
+      // { text: 'долгота', value: 'lat', noHide: true },
+      // { text: 'широта', value: 'lon', noHide: true },
       { text: 'Адрес', value: 'addr', noHide: true },
-      { text: 'долгота', value: 'lat', noHide: true },
-      { text: 'широта', value: 'lon', noHide: true },
       { text: 'Название объекта', value: 'name', noHide: true },
       { text: 'Тип объекта', value: 'type', noHide: true },
       { text: 'Статус объекта', value: 'status', noHide: true },
