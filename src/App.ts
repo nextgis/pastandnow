@@ -19,8 +19,4 @@ export class App extends Vue {
     this.$store.dispatch('app/setPage', value);
   }
 
-  created() {
-    this.$store.dispatch('bdMain/getAllItems');
-  }
-
 }

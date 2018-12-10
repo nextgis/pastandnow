@@ -3,14 +3,14 @@ import LeafletMapAdapter from '@nextgis/leaflet-map-adapter';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
 import config from '../../../config.json';
-import { Projection, Point, GeoJSON } from 'leaflet';
+import { Projection, Point } from 'leaflet';
 import Ngw from '@nextgis/ngw-map';
 
 import 'leaflet/dist/leaflet.css';
 
 import { BdMainItem } from '../../api/ngw';
 import { getIcon, IconOptions } from '@nextgis/icons';
-import { Feature } from 'geojson';
+import { Feature, FeatureCollection } from 'geojson';
 
 export interface NgwMapOptions {
   mapOptions: MapOptions;
@@ -28,6 +28,7 @@ export class NgwMap extends Vue {
   ready: boolean = false;
 
   mapObject;
+  layer;
 
   options: NgwMapOptions = {
     mapOptions: {
@@ -96,56 +97,45 @@ export class NgwMap extends Vue {
   }
 
   addMarkers(items: BdMainItem[]) {
-    const promises: Array<Promise<any>> = items.map((item) => {
-      const id = String(item.properties.id);
-      if (this.markers[id] === undefined) {
-        this.markers[id] = false;
-        const [x, y] = item.geometry.coordinates;
-        const { lat, lng } = Projection.SphericalMercator.unproject(new Point(x, y));
-        item.geometry.coordinates = [lng, lat];
-        return this.webMap.addLayer('GEOJSON', {
-          data: item,
-          id,
-          paint: (feature) => {
-            return this.getHistoryIcon(feature, {size: 15});
-          },
-          selectedPaint: (feature) => {
-            return this.getHistoryIcon(feature, { size: 30 });
+
+    const features = items.map((item) => {
+      const [x, y] = item.geometry.coordinates;
+      const { lat, lng } = Projection.SphericalMercator.unproject(new Point(x, y));
+      item.geometry.coordinates = [lng, lat];
+      return item;
+    });
+    const collection: FeatureCollection = {
+      type: 'FeatureCollection',
+      features
+    };
+    if (!this.layer) {
+      return this.webMap.addLayer('GEOJSON', {
+        data: collection,
+        paint: (feature) => {
+          return this.getHistoryIcon(feature, { size: 15 });
+        },
+        selectedPaint: (feature) => {
+          return this.getHistoryIcon(feature, { size: 30 });
+        },
+        selectable: true
+      }).then((l) => {
+        this.layer = l;
+        this.webMap.showLayer(l.name);
+        this.webMap.emitter.on('layer:click', ({ adapter, feature }) => {
+          if (adapter.name === l.name) {
+            console.log(feature.properties.id);
+            this.$store.dispatch('bdMain/setDetail', Number(feature.properties.id));
           }
-        }).then((l) => {
-          const layerMem = this.webMap.getLayer(l.name);
-          const layer: GeoJSON = layerMem.layer;
-          layer.on('click', () => {
-            this.$store.dispatch('bdMain/setDetail', Number(id));
-          });
-          this._unselectMarker(layerMem);
         });
-      } else {
-        return Promise.resolve();
-      }
+      });
+    } else {
+      this.layer.filter(({ feature }) => {
+        const id = feature.properties.id;
+        return items.find((x) => x.properties.id === id);
+      });
+    }
 
-    });
-
-    const ids: string[] = items.map((x) => String(x.properties.id));
-
-    Promise.all(promises).then(() => {
-      for (const m in this.markers) {
-        if (this.markers.hasOwnProperty(m)) {
-
-          if (ids.indexOf(m) !== -1) {
-            if (!this.markers[m]) {
-              this.markers[m] = true;
-              this.webMap.showLayer(m);
-            }
-          } else {
-            if (this.markers[m]) {
-              this.markers[m] = false;
-              this.webMap.hideLayer(m);
-            }
-          }
-        }
-      }
-    });
+    return this.layer;
   }
 
   zoomTo(id: number) {
@@ -159,20 +149,20 @@ export class NgwMap extends Vue {
 
   setSelected(item: BdMainItem) {
 
-    if (item) {
+    // if (item) {
 
-      const layerMem = this.webMap.getLayer(String(item.id));
-      const layerToSelect = layerMem;
-      if (layerToSelect && layerToSelect !== this.selected) {
-        if (this.selected) {
-          this._unselectMarker(this.selected);
-        }
-        this.selected = layerToSelect;
-        this._selectMarker(layerMem);
-      }
-    } else if (this.selected) {
-      this._unselectMarker(this.selected);
-    }
+    //   const layerMem = this.webMap.getLayer(String(item.id));
+    //   const layerToSelect = layerMem;
+    //   if (layerToSelect && layerToSelect !== this.selected) {
+    //     if (this.selected) {
+    //       this._unselectMarker(this.selected);
+    //     }
+    //     this.selected = layerToSelect;
+    //     this._selectMarker(layerMem);
+    //   }
+    // } else if (this.selected) {
+    //   this._unselectMarker(this.selected);
+    // }
   }
 
   private _selectMarker(layer: LayerMem) {
@@ -186,25 +176,25 @@ export class NgwMap extends Vue {
   private getHistoryIcon(feature: Feature, options?: IconOptions) {
 
     const featureStyles = {
-      'водоем': {color: '#0000ff', shape: 'marker'},
-      'ландшафт': {color: '#008000', shape: 'marker'},
-      'памятник': {color: '#ff0000', shape: 'marker'},
-      'строение': {color: '#ffa500', shape: 'marker'},
-      'улица': {color: '#ffff00', shape: 'marker'},
-      'зона': {color: '#bbbbbb', shape: 'marker'},
-      'населенный пункт': {color: '#49423d', shape: 'marker'},
-      'район': {color: '#808080', shape: 'marker'},
-      'другой': {color: '#000000', shape: 'marker'},
-      'метро': {color: '#ffa500', shape: 'brill'},
-      'метро-2': {color: '#ff0000', shape: 'brill'},
-      'другие подземные объекты': {color: '#808080', shape: 'brill'},
+      'водоем': { color: '#0000ff', shape: 'marker' },
+      'ландшафт': { color: '#008000', shape: 'marker' },
+      'памятник': { color: '#ff0000', shape: 'marker' },
+      'строение': { color: '#ffa500', shape: 'marker' },
+      'улица': { color: '#ffff00', shape: 'marker' },
+      'зона': { color: '#bbbbbb', shape: 'marker' },
+      'населенный пункт': { color: '#49423d', shape: 'marker' },
+      'район': { color: '#808080', shape: 'marker' },
+      'другой': { color: '#000000', shape: 'marker' },
+      'метро': { color: '#ffa500', shape: 'brill' },
+      'метро-2': { color: '#ff0000', shape: 'brill' },
+      'другие подземные объекты': { color: '#808080', shape: 'brill' },
     };
 
     // const shapes: any = ['circle', 'brill', 'rect', 'marker', 'cross', 'star',
     //   'asterisk', 'triangle', 'plus', 'minus'];
     const featureType: string = feature.properties.type;
     const styleId = Object.keys(featureStyles).find((x) => featureType.search(x) !== -1);
-    const style = featureStyles[styleId] || {color: '#fff', size: 10};
+    const style = featureStyles[styleId] || { color: '#fff', size: 10 };
 
     return getIcon({
       ...options, ...style

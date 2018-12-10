@@ -7,57 +7,54 @@
       app
       width="350"
     >
-
-    <drawer-container>
-      <div slot="header">
-        <v-layout justify-space-between>
-          Устная память Москвы
-          <v-btn @click="drawer = false" flat icon class="pa-0 ma-0">
-            <v-icon>close</v-icon>
-          </v-btn>
-        </v-layout>
-      </div>
-      <div v-if="items && items.length">
-        <div>
-          <v-expansion-panel
-            expand
-          >
-            <v-expansion-panel-content>
-              <div slot="header">Фильтр</div>
-              <items-filter></items-filter>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-
-          <v-divider></v-divider>
+      <drawer-container>
+        <div slot="header">
+          <v-layout justify-space-between>
+            Устная память Москвы
+            <v-btn @click="drawer = false" flat icon class="pa-0 ma-0">
+              <v-icon>close</v-icon>
+            </v-btn>
+          </v-layout>
         </div>
+        <div v-if="items && items.length">
+          <div>
+            <v-expansion-panel
+              expand
+            >
+              <v-expansion-panel-content>
+                <div slot="header">Фильтр</div>
+                <items-filter></items-filter>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
 
-        <div>
-          <list></list>
+            <v-divider></v-divider>
+          </div>
+
+          <div>
+            <list></list>
+          </div>
         </div>
-      </div>
-      <div v-else>
-        <div class="text-xs-center">
-          <v-progress-circular
-            indeterminate
-            color="primary"
-          ></v-progress-circular>
+        <div v-else>
+          <div class="text-xs-center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </div>
         </div>
-      </div>
-      <template slot="footer">
-        <v-item-group class='bottom-button'>
-          <v-btn flat color="grey">
-            <v-icon>save_alt</v-icon>
-          </v-btn>
-          <v-btn flat @click="page = 'table'" color="grey">
-            <v-icon @click="page = 'table'">table_chart</v-icon>
-          </v-btn>
-        </v-item-group>
-      </template>
+        <template slot="footer">
+          <v-item-group class='bottom-button'>
+            <v-btn flat color="grey">
+              <v-icon>save_alt</v-icon>
+            </v-btn>
+            <v-btn flat @click="page = 'table'" color="grey">
+              <v-icon @click="page = 'table'">table_chart</v-icon>
+            </v-btn>
+          </v-item-group>
+        </template>
 
-    </drawer-container>
-
+      </drawer-container>
     </v-navigation-drawer>
-
 
     <v-navigation-drawer
       :value="!!detail"
@@ -89,7 +86,6 @@
         </template>
 
       </drawer-container>
-
     </v-navigation-drawer>
 
     <v-content>

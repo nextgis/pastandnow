@@ -39,7 +39,7 @@ export type BdMainItem = Feature<Point, BdMainItemProperties>;
 export default {
   getLayerGeoJson(cb) {
     connector.request('feature_layer.geojson', {
-      id: 4
+      id: 10
     }).then((data: FeatureCollection<Point, BdMainItemProperties>) => {
       data.features.forEach((x, i) => {
         x.properties.id = Number(x.id || i);

@@ -1,6 +1,7 @@
 <template>
+  <div>
     <v-list dense>
-      <v-list-tile v-for="item in items" :key="item.id">
+      <v-list-tile v-for="item in portion" :key="item.id">
         <v-list-tile-content>
           <v-list-tile-title :title="item.name">{{ item.name }}</v-list-tile-title>
         </v-list-tile-content>
@@ -17,6 +18,10 @@
         </v-list-tile-action>
       </v-list-tile>
     </v-list>
+    <div v-if="items.length > portion.length" class="text-xs-center">
+      <v-btn flat small @click="addPortion">Показать ещё</v-btn>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
