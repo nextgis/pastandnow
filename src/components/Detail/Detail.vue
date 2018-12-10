@@ -14,7 +14,7 @@
       </v-list-tile>
     </v-list>
     <div class="text-xs-center">
-      <v-btn flat small v-if="needMore" @click="more = !more">
+      <v-btn color="info" small v-if="needMore" @click="more = !more">
         <span v-if="!more">Подробнее</span>
         <span v-else>Свернуть</span>
       </v-btn>
