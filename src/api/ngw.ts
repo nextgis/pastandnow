@@ -55,7 +55,7 @@ export default {
       // { text: 'широта', value: 'lon', noHide: true },
       { text: 'Адрес', value: 'addr', noHide: true },
       { text: 'Название объекта', value: 'name', noHide: true },
-      { text: 'Тип объекта', value: 'type', noHide: true },
+      // { text: 'Тип объекта', value: 'type', noHide: true },
       { text: 'Статус объекта', value: 'status', noHide: true },
       { text: 'Район', value: 'rayon', noHide: true },
       { text: 'Неофициальное название', value: 'unoff', noHide: true },
