@@ -3,7 +3,7 @@ import LeafletMapAdapter from '@nextgis/leaflet-map-adapter';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
 import config from '../../../config.json';
-import { Projection, Point } from 'leaflet';
+import { Projection, Point, FeatureGroup, Map } from 'leaflet';
 import Ngw from '@nextgis/ngw-map';
 
 import 'leaflet/dist/leaflet.css';
@@ -22,7 +22,7 @@ export class NgwMap extends Vue {
   @Prop() center: [number, number];
   @Prop() zoom: number;
 
-  webMap: WebMap;
+  webMap: WebMap<Map>;
   ngw: Ngw;
 
   ready: boolean = false;
@@ -56,6 +56,7 @@ export class NgwMap extends Vue {
       this.$store.watch((state) => state.bdMain.filtered, (_items) => {
         _items = JSON.parse(JSON.stringify(_items));
         this.addMarkers(_items);
+        this.zoomToFiltered();
       });
 
       this.$store.watch((state) => state.bdMain.detailItem, (detail: BdMainItem) => {
@@ -165,6 +166,18 @@ export class NgwMap extends Vue {
     } else {
       // unselect all
       this.layer.unselect();
+    }
+  }
+
+  zoomToFiltered() {
+    if (this.layer) {
+      const layers = this.layer.getLayers().filter((x) => {
+        return x.layer._map;
+      }).map((x) => x.layer);
+      if (layers.length) {
+        const featureGroup = new FeatureGroup(layers);
+        this.webMap.mapAdapter.map.fitBounds(featureGroup.getBounds());
+      }
     }
   }
 
