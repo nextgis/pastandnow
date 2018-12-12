@@ -32,16 +32,27 @@
         </div>
         <div v-if="items && items.length">
           <div>
-            <v-expansion-panel
+            <!-- <v-expansion-panel
               expand
             >
               <v-expansion-panel-content>
                 <div slot="header">Фильтр</div>
-                <items-filter></items-filter>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
 
-            <v-divider></v-divider>
+              </v-expansion-panel-content>
+            </v-expansion-panel> -->
+            <items-filter></items-filter>
+
+            <div class="pl-3 pr-3">
+              <v-text-field
+                class="pa-0"
+                v-model="listSearchText"
+                hide-details
+                solo
+                label="Поиск"
+                prepend-inner-icon="search"
+              ></v-text-field>
+            </div>
+            <!-- <v-divider></v-divider> -->
           </div>
 
           <div>

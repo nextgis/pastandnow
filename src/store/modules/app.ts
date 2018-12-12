@@ -1,3 +1,5 @@
+import throttle from '../utils/throttle';
+
 // initial state
 // shape: [{ id, quantity }]
 
@@ -6,12 +8,14 @@ export interface AppState {
   drawer?: boolean;
   page?: AppPages;
   center?: [number, number];
+  listSearchText?: string;
 }
 
 const _state: AppState = {
   drawer: true,
   page: 'main',
   center: null,
+  listSearchText: ''
 };
 
 // getters
@@ -29,7 +33,11 @@ const actions = {
     commit('hideDrawer');
   },
 
-  toggleDrawer({commit}, value: boolean) {
+  setListSearchText({ commit }, value: string) {
+    return commit('setListSearchText', value);
+  },
+
+  toggleDrawer({ commit }, value: boolean) {
     if (value) {
       commit('showDrawer');
     } else {
@@ -37,11 +45,11 @@ const actions = {
     }
   },
 
-  setPage({commit}, page: AppPages) {
+  setPage({ commit }, page: AppPages) {
     commit('setPage', page);
   },
 
-  zoomTo({commit}, id: number) {
+  zoomTo({ commit }, id: number) {
     commit('setCenter', id);
   }
 
@@ -64,6 +72,10 @@ const mutations = {
 
   setCenter(state, id: number) {
     state.center = id;
+  },
+
+  setListSearchText(state, value: string) {
+    state.listSearchText = value;
   }
 
 };

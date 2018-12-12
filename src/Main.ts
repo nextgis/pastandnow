@@ -7,11 +7,22 @@ import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import { BdMainItemProperties } from './api/ngw';
 import MapControl from './components/NgwMap/controls/Panel.vue';
 import { AppPages } from './store/modules/app';
+import throttle from './store/utils/throttle';
 
 @Component({
   components: {List, NgwMap, ItemsFilter, Detail, DrawerContainer, MapControl},
 })
 export class Main extends Vue {
+
+  throtleSave;
+
+  get listSearchText(): string {
+    return this.$store.state.app.listSearchText;
+  }
+
+  set listSearchText(value: string) {
+    this.throtleSave(value);
+  }
 
   get page(): AppPages {
     return this.$store.state.app.page;
@@ -49,8 +60,16 @@ export class Main extends Vue {
     this.$store.dispatch('bdMain/setDetail', value);
   }
 
+  mounted() {
+    this.throtleSave = throttle(this.setListSearchText, 1000, this);
+  }
+
   created() {
     this.$store.dispatch('bdMain/getAllItems');
+  }
+
+  setListSearchText(value) {
+    this.$store.dispatch('app/setListSearchText', value);
   }
 
 }
