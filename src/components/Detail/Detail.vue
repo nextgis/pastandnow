@@ -1,5 +1,49 @@
 <template>
   <div v-if="detail && meta">
+<!-- араж использовался как автобусный парк [1960-е, ГИГ] -->
+    <div v-if="photos && photos.length">
+      <a v-for="photo in photos" :key="photo.id" @click="dialog = true; bigImgSrc = photo.link_big">
+        <v-img
+          :src="photo.link_small"
+          max-height="130"
+          class="grey lighten-2"
+        >
+        </v-img>
+      </a>
+
+    <v-dialog v-model="dialog" scrollable>
+      <v-card v-if="bigImgSrc">
+        <v-card-text>
+          <div class="title grey--text" style="padding: 0 7px">
+            <v-img
+              :src="bigImgSrc"
+              class="grey lighten-2"
+            >
+            </v-img>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat @click.stop="dialog = false;">Закрыть</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+      <!-- <v-dialog  v-if="bigImgSrc" v-model="dialog">
+        <v-layout>
+          <v-flex>
+              <a @click="dialog = false;">
+                <v-img
+                  :src="bigImgSrc"
+                  class="grey lighten-2"
+                >
+                </v-img>
+              </a>
+          </v-flex>
+        </v-layout>
+      </v-dialog> -->
+    </div>
+
     <v-list dense>
       <v-list-tile
         v-for="item in meta"

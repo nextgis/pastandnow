@@ -1,5 +1,5 @@
 import { Vue, Component } from 'vue-property-decorator';
-import { BdMainItemProperties } from '../../api/ngw';
+import { BdMainItemProperties, BdPhotoProperties } from '../../api/ngw';
 import ShowMoreField from '../ShowMoreField/ShowMoreField.vue';
 
 interface Alias {
@@ -14,10 +14,16 @@ export class Detail extends Vue {
 
   url: string = '';
   more = false;
+  bigImgSrc: string = '';
+  dialog = false;
 
   components = {
     Story: ShowMoreField
   };
+
+  get photos(): BdPhotoProperties[] {
+    return this.$store.state.bdMain.photos.filter((x: BdPhotoProperties) => x.id_obj === this.detail.id1);
+  }
 
   get detail(): BdMainItemProperties {
     return this.$store.state.bdMain.detailItem && this.$store.state.bdMain.detailItem.properties;

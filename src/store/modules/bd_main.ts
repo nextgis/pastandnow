@@ -4,6 +4,7 @@ import ngw, { BdMainItem } from '../../api/ngw';
 // shape: [{ id, quantity }]
 const _state = {
   items: [],
+  photos: [],
   meta: false,
   filtered: [],
   detailItem: false,
@@ -30,7 +31,12 @@ const actions = {
         commit('setItems', items);
       });
     });
+  },
 
+  getPhotos({ commit }) {
+    ngw.getPhotos((photos) => {
+      commit('setPhotos', photos);
+    });
   },
 
   setFilter({ commit, state }, items) {
@@ -72,6 +78,10 @@ const mutations = {
 
   setMeta(state, meta) {
     state.meta = meta;
+  },
+
+  setPhotos(state, photos) {
+    state.photos = photos;
   }
 
 };

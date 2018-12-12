@@ -66,6 +66,7 @@ export class Main extends Vue {
 
   created() {
     this.$store.dispatch('bdMain/getAllItems');
+    this.$store.dispatch('bdMain/getPhotos');
   }
 
   setListSearchText(value) {

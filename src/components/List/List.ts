@@ -26,14 +26,14 @@ export class List extends Vue {
       this.resetPortions();
     });
     this.$store.watch((state) => state.app.listSearchText, (value) => {
-      if (value && value.length > 2) {
+      if (value && value.length > 1) {
         this.resetPortions();
       }
     });
   }
 
   getDisplayItems(): BdMainItemProperties[] {
-    if (this.listSearchText && this.listSearchText.length > 2) {
+    if (this.listSearchText && this.listSearchText.length > 1) {
       const filteredItems = this.items.filter((item) => {
         for (const p in item) {
           if (item.hasOwnProperty(p)) {

@@ -9,6 +9,8 @@ export interface BdMainItemProperties {
 
   id: number;
 
+  id1: number;
+
   status: string;
   narrator: string;
   nar_codes: string;
@@ -34,6 +36,17 @@ export interface BdMainItemProperties {
   type: string;
 }
 
+export interface BdPhotoProperties {
+  id: number;
+
+  link_big: string;
+  link_small: string;
+  id_obj: number;
+  descript: string;
+  link: string;
+  details: string;
+}
+
 export type BdMainItem = Feature<Point, BdMainItemProperties>;
 
 export default {
@@ -45,6 +58,17 @@ export default {
         x.properties.id = Number(x.id || i);
       });
       cb(data.features);
+    });
+  },
+
+  getPhotos(cb) {
+    connector.request('feature_layer.geojson', {
+      id: 12
+    }).then((data: FeatureCollection<Point, BdPhotoProperties>) => {
+      cb(data.features.map((x) => {
+        x.properties.id = Number(x.id);
+        return x.properties;
+      }));
     });
   },
 
