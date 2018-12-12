@@ -1,15 +1,18 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 import { BdMainItemProperties } from '../../api/ngw';
+import ShowMoreField from '../ShowMoreField/ShowMoreField.vue';
 
 
-@Component
+@Component({
+  components: {ShowMoreField}
+})
 export class Table extends Vue {
 
   @Prop() search: string;
   @Prop() paginationSync;
 
   pagination = {
-    rowsPerPage: 30
+    rowsPerPage: 20
   };
 
   headers = [

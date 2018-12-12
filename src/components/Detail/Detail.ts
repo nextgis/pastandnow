@@ -1,6 +1,6 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { BdMainItemProperties } from '../../api/ngw';
-import ShowMoreField from './ShowMoreField/ShowMoreField.vue';
+import ShowMoreField from '../ShowMoreField/ShowMoreField.vue';
 
 interface Alias {
   text: string;

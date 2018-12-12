@@ -16,7 +16,10 @@
         </v-tooltip>
       </template>
       <template slot="items" slot-scope="props">
-        <td v-for="h in headers" :key="h.value">{{ props.item[h.value] }}</td>
+        <td v-for="h in headers" :key="h.value">
+          <span v-if="props.item[h.value] && props.item[h.value].length < 40">{{ props.item[h.value] }}</span>
+          <span v-else><show-more-field :text="props.item[h.value]" :charCount="40"></show-more-field></span>
+        </td>
       </template>
     </v-data-table>
 
