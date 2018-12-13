@@ -5,7 +5,6 @@
       <a v-for="photo in photos" :key="photo.id" @click="dialog = true; bigImgSrc = photo.link_big">
         <v-img
           :src="photo.link_small"
-          max-height="130"
           class="grey lighten-2"
         >
         </v-img>

@@ -48,6 +48,7 @@
                 v-model="listSearchText"
                 hide-details
                 solo
+                clearable
                 label="Поиск"
                 prepend-inner-icon="search"
               ></v-text-field>
