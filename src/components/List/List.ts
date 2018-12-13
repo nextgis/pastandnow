@@ -26,10 +26,12 @@ export class List extends Vue {
       this.resetPortions();
     });
     this.$store.watch((state) => state.app.listSearchText, (value) => {
-      if (value && value.length > 1) {
-        this.resetPortions();
-      }
+      this.resetPortions();
     });
+  }
+
+  get displayItems() {
+    return this.getDisplayItems();
   }
 
   getDisplayItems(): BdMainItemProperties[] {
