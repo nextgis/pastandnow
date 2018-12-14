@@ -11,32 +11,16 @@
         </v-img>
       </a>
 
-      <!-- <v-carousel>
-        <a v-for="photo in photos" :key="photo.id" @click="dialog = true; bigImgSrc = photo.link_big">
-          <v-carousel-item
-            :src="photo.link_small"
-            class="grey lighten-2"
-          >
-          </v-carousel-item>
-        </a>
-      </v-carousel> -->
+      <v-dialog v-model="dialog" scrollable content-class="photo-dialog">
+        <v-btn class="close-img-dialog-btn" color="info" @click="dialog = false">
+          Закрыть
+        </v-btn>
+        <v-img
+          :src="bigImgSrc"
+          contain
+        >
+        </v-img>
 
-      <v-dialog v-model="dialog" scrollable>
-        <v-card v-if="bigImgSrc">
-          <v-card-text>
-            <div class="title grey--text" style="padding: 0 7px">
-              <v-img
-                :src="bigImgSrc"
-                class="grey lighten-2"
-              >
-              </v-img>
-            </div>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn flat @click.stop="dialog = false;">Закрыть</v-btn>
-          </v-card-actions>
-        </v-card>
       </v-dialog>
     </div>
 
@@ -73,8 +57,21 @@ export { Detail as default } from './Detail';
 
 <style lang="scss">
 
-.detail-prop-list .v-list__tile {
-  height: auto!important;
+.show-photo-card .v-card__text {
+  padding: 0;
+}
+
+.photo-dialog {
+  box-shadow: none;
+  max-height: 100% !important;
+  margin: 0;
+}
+
+.close-img-dialog-btn {
+  position: absolute !important;
+  right: 0;
+  z-index: 500;
+  overflow: visible;
 }
 
 </style>

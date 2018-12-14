@@ -22,7 +22,9 @@ export class Detail extends Vue {
   };
 
   get photos(): BdPhotoProperties[] {
-    const photo = this.$store.state.bdMain.photos.find((x: BdPhotoProperties) => x.id_obj === this.detail.id1);
+    const photo = this.$store.state.bdMain.photos.find((x: BdPhotoProperties) => {
+      return x.link_small && (x.id_obj === this.detail.id1);
+    });
     return photo ? [photo] : [];
     // return this.$store.state.bdMain.photos.filter((x: BdPhotoProperties) => x.id_obj === this.detail.id1);
   }
