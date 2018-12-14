@@ -64,7 +64,7 @@ export { Detail as default } from './Detail';
 .photo-dialog {
   box-shadow: none;
   max-height: 100% !important;
-  margin: 0;
+  margin: 0 !important;
 }
 
 .close-img-dialog-btn {
