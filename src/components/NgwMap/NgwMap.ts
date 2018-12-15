@@ -1,12 +1,14 @@
 import WebMap, { MapOptions, LayerMem, LayerAdapter } from '@nextgis/webmap';
-import LeafletMapAdapter from '@nextgis/leaflet-map-adapter';
+// import MapAdapter from '@nextgis/leaflet-map-adapter';
+import MapAdapter from '@nextgis/mapboxgl-map-adapter';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
 import config from '../../../config.json';
 import { Projection, Point, FeatureGroup, Map } from 'leaflet';
 import Ngw from '@nextgis/ngw-map';
 
-import 'leaflet/dist/leaflet.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
+// import 'leaflet/dist/leaflet.css';
 
 import { BdMainItem } from '../../api/ngw';
 import { getIcon, IconOptions } from '@nextgis/icons';
@@ -60,7 +62,7 @@ export class NgwMap extends Vue {
       });
 
       this.$store.watch((state) => state.bdMain.detailItem, (detail: BdMainItem) => {
-        this.webMap.mapAdapter.map.invalidateSize();
+        // this.webMap.mapAdapter.map.invalidateSize();
         this.setSelected(detail);
       });
 
@@ -74,16 +76,19 @@ export class NgwMap extends Vue {
 
     this.options.mapOptions = { ...this.options.mapOptions, ...options };
 
-    this.ngw = new Ngw(new LeafletMapAdapter(), {
+    this.ngw = new Ngw(new MapAdapter(), {
       baseUrl: config.baseUrl,
       qmsId: 487,
       ...this.options.mapOptions
     });
-    this.webMap = this.ngw.webMap;
-    this.mapObject = this.webMap.mapAdapter.map;
-    this.ngw.addNgwLayer({ id: 9 });
-    return this.webMap.onMapLoad();
-
+    return new Promise((resolve) => {
+      this.ngw.emitter.once('map:created', () => {
+        this.webMap = this.ngw.webMap;
+        this.mapObject = this.webMap.mapAdapter.map;
+        this.ngw.addNgwLayer({ id: 9 });
+        this.webMap.onMapLoad(resolve);
+      });
+    });
   }
 
   findFirsVueParent(firstVueParent) {
@@ -170,15 +175,15 @@ export class NgwMap extends Vue {
   }
 
   zoomToFiltered() {
-    if (this.layer) {
-      const layers = this.layer.getLayers().filter((x) => {
-        return x.layer._map;
-      }).map((x) => x.layer);
-      if (layers.length) {
-        const featureGroup = new FeatureGroup(layers);
-        this.webMap.mapAdapter.map.fitBounds(featureGroup.getBounds());
-      }
-    }
+    // if (this.layer) {
+    //   const layers = this.layer.getLayers().filter((x) => {
+    //     return x.layer._map;
+    //   }).map((x) => x.layer);
+    //   if (layers.length) {
+    //     const featureGroup = new FeatureGroup(layers);
+    //     this.webMap.mapAdapter.map.fitBounds(featureGroup.getBounds());
+    //   }
+    // }
   }
 
   private getHistoryIcon(feature: Feature, options?: IconOptions) {
