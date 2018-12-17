@@ -57,6 +57,10 @@ export { Detail as default } from './Detail';
 
 <style lang="scss">
 
+.detail-prop-list .v-list__tile {
+  height: auto!important;
+}
+
 .show-photo-card .v-card__text {
   padding: 0;
 }
