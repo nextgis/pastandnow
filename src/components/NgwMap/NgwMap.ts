@@ -4,7 +4,7 @@ import MapAdapter from '@nextgis/mapboxgl-map-adapter';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
 import config from '../../../config.json';
-import { Projection, Point, FeatureGroup, Map } from 'leaflet';
+import geojsonExtent from '@mapbox/geojson-extent';
 import Ngw from '@nextgis/ngw-map';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -12,7 +12,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { BdMainItem } from '../../api/ngw';
 import { getIcon, IconOptions } from '@nextgis/icons';
-import { Feature, FeatureCollection } from 'geojson';
+import { Feature, FeatureCollection, Point } from 'geojson';
 
 export interface NgwMapOptions {
   mapOptions: MapOptions;
@@ -24,7 +24,7 @@ export class NgwMap extends Vue {
   @Prop() center: [number, number];
   @Prop() zoom: number;
 
-  webMap: WebMap<Map>;
+  webMap: WebMap;
   ngw: Ngw;
 
   ready: boolean = false;
@@ -62,7 +62,6 @@ export class NgwMap extends Vue {
       });
 
       this.$store.watch((state) => state.bdMain.detailItem, (detail: BdMainItem) => {
-        // this.webMap.mapAdapter.map.invalidateSize();
         this.setSelected(detail);
       });
 
@@ -103,21 +102,15 @@ export class NgwMap extends Vue {
     return firstVueParent;
   }
 
-  addMarkers(items: BdMainItem[]) {
-
-    const features = items.map((item) => {
-      const [x, y] = item.geometry.coordinates;
-      const { lat, lng } = Projection.SphericalMercator.unproject(new Point(x, y));
-      item.geometry.coordinates = [lng, lat];
-      return item;
-    });
+  addMarkers(features: BdMainItem[]) {
     const collection: FeatureCollection = {
       type: 'FeatureCollection',
       features
     };
+    const data = Ngw.toWgs84(collection);
     if (!this.layer) {
-      return this.webMap.addLayer('GEOJSON', {
-        data: collection,
+      return this.ngw.addGeoJsonLayer({
+        data,
         paint: (feature) => {
           return this.getHistoryIcon(feature, { size: 20 });
         },
@@ -126,11 +119,12 @@ export class NgwMap extends Vue {
         },
         selectable: true,
         unselectOnSecondClick: true
-      }).then((l) => {
-        this.layer = l;
-        this.webMap.showLayer(l.name);
+      }).then((layerId) => {
+        const l = this.webMap.getLayer(layerId);
+        this.layer = l.adapter;
+        this.webMap.showLayer(l.adapter.name);
         this.webMap.emitter.on('layer:click', ({ adapter, feature, selected }) => {
-          if (adapter.name === l.name) {
+          if (adapter.name === l.adapter.name) {
             this.$store.dispatch('bdMain/setDetail', selected ? Number(feature.properties.id) : null);
           }
         });
@@ -138,7 +132,7 @@ export class NgwMap extends Vue {
     } else {
       this.layer.filter(({ feature }) => {
         const id = feature.properties.id;
-        return items.some((x) => x.properties.id === id);
+        return features.some((x) => x.properties.id === id);
       });
     }
 
@@ -150,14 +144,10 @@ export class NgwMap extends Vue {
       const layers = this.layer && this.layer.getLayers();
       if (layers && layers.length) {
         const layer = layers.find((x) => x.feature.properties.id === id);
-        const l = layer && layer.layer;
-        if (l) {
-          // const { lat, lng } = l.getBounds ? l.getBounds().getCenter() : l.getLatLng();
-          // this.webMap.setCenter([lng, lat]);
-
-          const latLng = l.getBounds ? l.getBounds().getCenter() : l.getLatLng();
-          this.webMap.mapAdapter.map.setView(latLng, 14);
-
+        const feature = layer && layer.feature as Feature<Point>;
+        const lngLat = feature && feature.geometry.coordinates as [number, number];
+        if (lngLat) {
+          this.webMap.setView(lngLat, 14);
           // reset zoomTo storage value
           this.$store.dispatch('app/zoomTo', null);
         }
@@ -175,15 +165,18 @@ export class NgwMap extends Vue {
   }
 
   zoomToFiltered() {
-    // if (this.layer) {
-    //   const layers = this.layer.getLayers().filter((x) => {
-    //     return x.layer._map;
-    //   }).map((x) => x.layer);
-    //   if (layers.length) {
-    //     const featureGroup = new FeatureGroup(layers);
-    //     this.webMap.mapAdapter.map.fitBounds(featureGroup.getBounds());
-    //   }
-    // }
+    if (this.layer) {
+      const features = this.layer.getLayers().filter((x) => {
+        return x.visible;
+      }).map((x) => x.feature);
+      if (features.length) {
+        const extent = geojsonExtent({
+          type: 'FeatureCollection',
+          features
+        });
+        this.webMap.fit(extent, {maxZoom: 16});
+      }
+    }
   }
 
   private getHistoryIcon(feature: Feature, options?: IconOptions) {
