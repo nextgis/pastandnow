@@ -1,9 +1,10 @@
 import { EventEmitter } from 'events';
+import {ControlPositions} from '@nextgis/webmap';
 
 export interface PanelOptions {
   headerText?: string;
   addClass?: string;
-  position: string;
+  position: ControlPositions;
 }
 
 export class PanelControl {
@@ -35,37 +36,8 @@ export class PanelControl {
     this.element = el;
   }
 
-  // onAdd() {
-  //   return this._container;
-  // }
-
   onRemove() {
     this.removeFrom();
-  }
-
-  addTo(map) {
-    // this.remove();
-    // this._map = map;
-
-    const container = this._container = this.onAdd();
-    const pos = this.options.position;
-    const corner = map._controlCorners[pos];
-
-    container.classList.add('leaflet-control');
-
-    if (pos.indexOf('bottom') !== -1) {
-      corner.insertBefore(container, corner.firstChild);
-    } else {
-      corner.appendChild(container);
-    }
-
-    return this;
-  }
-
-  remove() {
-    if (this.onRemove) {
-      this.onRemove();
-    }
   }
 
   removeFrom() {
