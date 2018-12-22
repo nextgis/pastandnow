@@ -3,12 +3,14 @@
 
     <v-content>
       <ngw-map :center="[37.63, 55.75]" :zoom="10">
-        <map-control position="topleft">
+        <map-control position="top-left">
           <div v-if="!drawer">
-          <v-btn @click="drawer = !drawer" fab small>
-            <v-icon large class="drawe-icon" :class="{ active: drawer }">chevron_right</v-icon>
-          </v-btn>
-          <span class="title">Устная память Москвы</span>
+            <v-layout align-center justify-start row fill-height>
+            <v-btn @click="drawer = !drawer" fab small>
+              <v-icon large class="drawe-icon" :class="{ active: drawer }">chevron_right</v-icon>
+            </v-btn>
+            <span class="title">Устная память Москвы</span>
+            </v-layout>
           </div>
         </map-control>
       </ngw-map>
