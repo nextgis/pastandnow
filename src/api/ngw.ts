@@ -3,7 +3,12 @@ import { FeatureCollection, Point, Feature } from 'geojson';
 // @ts-ignore
 import config from '../../config.json';
 
-const connector = new NgwConnector({ baseUrl: config.baseUrl });
+const protomatch = /^(https?|ftp):\/\//; // NB: not '.*'
+
+export const url = (location.protocol === 'https:' ? 'https' : 'http') + '://' +
+  config.baseUrl.replace(protomatch, '');
+
+const connector = new NgwConnector({ baseUrl: url });
 
 export interface BdMainItemProperties {
 
@@ -84,7 +89,7 @@ export default {
       { text: 'Район', value: 'rayon', noHide: true },
       { text: 'Неофициальное название', value: 'unoff', noHide: true },
       { text: 'ОПИСАНИЕ', value: 'description', noHide: true },
-      { text: 'Истории о прошлом', value: 'narrativ_l', type: 'Story'},
+      { text: 'Истории о прошлом', value: 'narrativ_l', type: 'Story' },
       { text: 'Семейные истории', value: 'narrativ_b', type: 'Story' },
       { text: 'Практики горожан', value: 'narrativ_p', type: 'Story' },
       { text: 'Характеристика места', value: 'descript2', type: 'Story' },

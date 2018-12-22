@@ -2,7 +2,7 @@ import WebMap, { MapOptions, LayerMem, LayerAdapter } from '@nextgis/webmap';
 import LeafletMapAdapter from '@nextgis/leaflet-map-adapter';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
-import config from '../../../config.json';
+import { url } from '../../api/ngw';
 import { Projection, Point, FeatureGroup, Map } from 'leaflet';
 import Ngw from '@nextgis/ngw-map';
 
@@ -75,7 +75,7 @@ export class NgwMap extends Vue {
     this.options.mapOptions = { ...this.options.mapOptions, ...options };
 
     this.ngw = new Ngw(new LeafletMapAdapter(), {
-      baseUrl: config.baseUrl,
+      baseUrl: url,
       qmsId: 487,
       ...this.options.mapOptions
     });
