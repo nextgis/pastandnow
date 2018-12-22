@@ -3,10 +3,10 @@ import { FeatureCollection, Point, Feature } from 'geojson';
 // @ts-ignore
 import config from '../../config.json';
 
-const protomatch = /^(https?|ftp):\/\//; // NB: not '.*'
-
-export const url = (location.protocol === 'https:' ? 'https' : 'http') + '://' +
-  config.baseUrl.replace(protomatch, '');
+export const url = config.baseUrl.replace(
+  /^(https?|ftp):\/\//,
+  (location.protocol === 'https:' ? 'https' : 'http') + '://'
+);
 
 const connector = new NgwConnector({ baseUrl: url });
 

@@ -76,7 +76,7 @@ export class NgwMap extends Vue {
 
     this.ngw = new Ngw(new MapAdapter(), {
       baseUrl: url,
-      qmsId: 487,
+      qmsId: 443, // 487,
       ...this.options.mapOptions
     });
     return new Promise((resolve) => {
