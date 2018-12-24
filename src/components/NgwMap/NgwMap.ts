@@ -1,13 +1,14 @@
 import WebMap, { MapOptions, LayerMem, LayerAdapter } from '@nextgis/webmap';
-// import MapAdapter from '@nextgis/leaflet-map-adapter';
-import MapAdapter from '@nextgis/mapboxgl-map-adapter';
+import MapAdapter from '@nextgis/leaflet-map-adapter';
+// import MapAdapter from '@nextgis/mapboxgl-map-adapter';
+// import 'mapbox-gl/dist/mapbox-gl.css';
+import 'leaflet/dist/leaflet.css';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
 import geojsonExtent from '@mapbox/geojson-extent';
 import Ngw from '@nextgis/ngw-map';
 import { url } from '../../api/ngw';
-import 'mapbox-gl/dist/mapbox-gl.css';
-// import 'leaflet/dist/leaflet.css';
+
 
 import { BdMainItem } from '../../api/ngw';
 import { getIcon, IconOptions } from '@nextgis/icons';
