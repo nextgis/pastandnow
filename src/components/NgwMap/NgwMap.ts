@@ -28,7 +28,7 @@ export class NgwMap extends Vue {
 
   ready: boolean = false;
 
-  mapObject;
+  mapObject: any;
   layer: LayerAdapter;
 
   options: NgwMapOptions = {
@@ -72,13 +72,15 @@ export class NgwMap extends Vue {
 
   createWebMap(options?: MapOptions) {
 
-    this.options.mapOptions = { ...this.options.mapOptions, ...options };
+    const mapOptions = { ...JSON.parse(JSON.stringify(this.options.mapOptions)), ...options };
 
     this.ngw = new Ngw(new MapAdapter(), {
       baseUrl: url,
       qmsId: 443, // 487,
-      ...this.options.mapOptions
+      // to remove observal
+      ...mapOptions
     });
+    this.options.mapOptions = mapOptions;
     return new Promise((resolve) => {
       this.ngw.emitter.once('map:created', () => {
         this.webMap = this.ngw.webMap;
