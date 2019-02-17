@@ -1,4 +1,4 @@
-import WebMap, { MapOptions, LayerMem, LayerAdapter } from '@nextgis/webmap';
+import WebMap, { MapOptions, VectorLayerAdapter } from '@nextgis/webmap';
 import MapAdapter from '@nextgis/mapboxgl-map-adapter';
 import 'mapbox-gl/dist/mapbox-gl.css';
 // import MapAdapter from '@nextgis/leaflet-map-adapter';
@@ -6,6 +6,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
 import geojsonExtent from '@mapbox/geojson-extent';
+import config from '../../../config.json';
 import Ngw from '@nextgis/ngw-map';
 import { url } from '../../api/ngw';
 
@@ -30,7 +31,7 @@ export class NgwMap extends Vue {
   ready: boolean = false;
 
   mapObject: any;
-  layer: LayerAdapter;
+  layer: VectorLayerAdapter;
 
   options: NgwMapOptions = {
     mapOptions: {
@@ -43,7 +44,7 @@ export class NgwMap extends Vue {
   };
 
   markers: { [name: string]: boolean } = {};
-  selected: LayerMem;
+  selected: VectorLayerAdapter;
 
   mounted() {
     const target = this.$el as HTMLElement;
@@ -77,7 +78,7 @@ export class NgwMap extends Vue {
 
     this.ngw = new Ngw(new MapAdapter(), {
       baseUrl: url,
-      qmsId: 443, // 487,
+      qmsId: config.qmsId, // 487,
       // to remove observal
       ...mapOptions
     });
@@ -86,7 +87,7 @@ export class NgwMap extends Vue {
       this.ngw.emitter.once('map:created', () => {
         this.webMap = this.ngw.webMap;
         this.mapObject = this.webMap.mapAdapter.map;
-        this.ngw.addNgwLayer({ id: 9 });
+        this.ngw.addNgwLayer({ resourceId: 9 });
         this.webMap.onMapLoad(resolve);
       });
     });
@@ -123,10 +124,10 @@ export class NgwMap extends Vue {
         unselectOnSecondClick: true
       }).then((layerId) => {
         const l = this.webMap.getLayer(layerId);
-        this.layer = l.adapter;
-        this.webMap.showLayer(l.adapter.name);
-        this.webMap.emitter.on('layer:click', ({ adapter, feature, selected }) => {
-          if (adapter.name === l.adapter.name) {
+        this.layer = l;
+        this.webMap.showLayer(l);
+        this.webMap.emitter.on('layer:click', ({ layer, feature, selected }) => {
+          if (layer.id === l.id) {
             this.$store.dispatch('bdMain/setDetail', selected ? Number(feature.properties.id) : null);
           }
         });

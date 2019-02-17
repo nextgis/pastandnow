@@ -3,7 +3,7 @@ import findRealParent from './utils/findRealParent';
 import { optionsMerger } from './utils/optionsUtils';
 import Control from './mixins/Control';
 import { PanelControl, PanelOptions } from './PanelControl';
-import WebMap from 'nextgisweb_frontend/packages/webmap/src';
+import WebMap from '@nextgis/webmap';
 
 export const panel = {
   name: 'LControl',
