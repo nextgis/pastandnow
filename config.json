@@ -1,4 +1,5 @@
 {
   "baseUrl": "http://pastandnow.nextgis.com",
-  "qmsId": "2577"
+  "qmsId": "2577",
+  "ngwMarkerLayerId": 1013
 }

@@ -7,7 +7,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
 import geojsonExtent from '@mapbox/geojson-extent';
 import config from '../../../config.json';
-import Ngw from '@nextgis/ngw-map';
+import NgwMap, {NgwMapOptions} from '@nextgis/ngw-map';
 import { url } from '../../api/ngw';
 
 
@@ -15,25 +15,24 @@ import { BdMainItem } from '../../api/ngw';
 import { getIcon, IconOptions } from '@nextgis/icons';
 import { Feature, FeatureCollection, Point } from 'geojson';
 
-export interface NgwMapOptions {
-  mapOptions: MapOptions;
+export interface NgwMapComponentOptions {
+  mapOptions: NgwMapOptions;
 }
 
 @Component
-export class NgwMap extends Vue {
+export class NgwMapComponent extends Vue {
 
   @Prop() center: [number, number];
   @Prop() zoom: number;
 
-  webMap: WebMap;
-  ngw: Ngw;
+  ngwMap: NgwMap;
 
   ready: boolean = false;
 
   mapObject: any;
   layer: VectorLayerAdapter;
 
-  options: NgwMapOptions = {
+  options: NgwMapComponentOptions = {
     mapOptions: {
       target: 'map',
       controlsOptions: {
@@ -76,7 +75,7 @@ export class NgwMap extends Vue {
 
     const mapOptions = { ...JSON.parse(JSON.stringify(this.options.mapOptions)), ...options };
 
-    this.ngw = new Ngw(new MapAdapter(), {
+    this.ngwMap = new NgwMap(new MapAdapter(), {
       baseUrl: url,
       qmsId: config.qmsId, // 487,
       // to remove observal
@@ -84,11 +83,10 @@ export class NgwMap extends Vue {
     });
     this.options.mapOptions = mapOptions;
     return new Promise((resolve) => {
-      this.ngw.emitter.once('map:created', () => {
-        this.webMap = this.ngw.webMap;
-        this.mapObject = this.webMap.mapAdapter.map;
-        this.ngw.addNgwLayer({ resourceId: 9 });
-        this.webMap.onMapLoad(resolve);
+      this.ngwMap.emitter.once('map:created', () => {
+        this.mapObject = this.ngwMap.mapAdapter.map;
+        this.ngwMap.addNgwLayer({ resourceId: config.ngwMarkerLayerId });
+        this.ngwMap.onMapLoad(resolve);
       });
     });
   }
@@ -110,9 +108,9 @@ export class NgwMap extends Vue {
       type: 'FeatureCollection',
       features
     };
-    const data = Ngw.toWgs84(collection);
+    const data = NgwMap.toWgs84(collection);
     if (!this.layer) {
-      return this.ngw.addGeoJsonLayer({
+      return this.ngwMap.addGeoJsonLayer({
         data,
         paint: (feature) => {
           return this.getHistoryIcon(feature, { size: 20 });
@@ -123,10 +121,10 @@ export class NgwMap extends Vue {
         selectable: true,
         unselectOnSecondClick: true
       }).then((layerId) => {
-        const l = this.webMap.getLayer(layerId);
+        const l = this.ngwMap.getLayer(layerId);
         this.layer = l;
-        this.webMap.showLayer(l);
-        this.webMap.emitter.on('layer:click', ({ layer, feature, selected }) => {
+        this.ngwMap.showLayer(l);
+        this.ngwMap.emitter.on('layer:click', ({ layer, feature, selected }) => {
           if (layer.id === l.id) {
             this.$store.dispatch('bdMain/setDetail', selected ? Number(feature.properties.id) : null);
           }
@@ -150,7 +148,7 @@ export class NgwMap extends Vue {
         const feature = layer && layer.feature as Feature<Point>;
         const lngLat = feature && feature.geometry.coordinates as [number, number];
         if (lngLat) {
-          this.webMap.setView(lngLat, 14);
+          this.ngwMap.setView(lngLat, 14);
           // reset zoomTo storage value
           this.$store.dispatch('app/zoomTo', null);
         }
@@ -177,7 +175,7 @@ export class NgwMap extends Vue {
           type: 'FeatureCollection',
           features
         });
-        this.webMap.fit(extent, {maxZoom: 16});
+        this.ngwMap.fitBounds(extent, {maxZoom: 16});
       }
     }
   }

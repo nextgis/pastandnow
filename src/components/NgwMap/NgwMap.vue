@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-export { NgwMap as default } from './NgwMap';
+export { NgwMapComponent as default } from './NgwMap';
 </script>
 
 <style lang="scss">
