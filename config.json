@@ -1,5 +1,7 @@
 {
   "baseUrl": "http://pastandnow.nextgis.com",
-  "qmsId": "2577",
-  "ngwMarkerLayerId": 1013
+  "qmsId": 2577,
+  "ngwMarkerLayerId": 14,
+  "layerWithPhotos": 12,
+  "districtsLayer": 9
 }

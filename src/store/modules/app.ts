@@ -1,5 +1,3 @@
-import throttle from '../utils/throttle';
-
 // initial state
 // shape: [{ id, quantity }]
 

@@ -57,7 +57,7 @@ export type BdMainItem = Feature<Point, BdMainItemProperties>;
 export default {
   getLayerGeoJson(cb) {
     connector.request('feature_layer.geojson', {
-      id: 10
+      id: config.ngwMarkerLayerId
     }).then((data: FeatureCollection<Point, BdMainItemProperties>) => {
       data.features.forEach((x, i) => {
         x.properties.id = Number(x.id || i);
@@ -68,7 +68,7 @@ export default {
 
   getPhotos(cb) {
     connector.request('feature_layer.geojson', {
-      id: 12
+      id: config.layerWithPhotos
     }).then((data: FeatureCollection<Point, BdPhotoProperties>) => {
       cb(data.features.map((x) => {
         x.properties.id = Number(x.id);

@@ -1,4 +1,4 @@
-import WebMap, { MapOptions, VectorLayerAdapter } from '@nextgis/webmap';
+import { MapOptions, VectorLayerAdapter } from '@nextgis/webmap';
 import MapAdapter from '@nextgis/mapboxgl-map-adapter';
 import 'mapbox-gl/dist/mapbox-gl.css';
 // import MapAdapter from '@nextgis/leaflet-map-adapter';
@@ -7,7 +7,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 // @ts-ignore
 import geojsonExtent from '@mapbox/geojson-extent';
 import config from '../../../config.json';
-import NgwMap, {NgwMapOptions} from '@nextgis/ngw-map';
+import NgwMap, { NgwMapOptions } from '@nextgis/ngw-map';
 import { url } from '../../api/ngw';
 
 
@@ -82,12 +82,9 @@ export class NgwMapComponent extends Vue {
       ...mapOptions
     });
     this.options.mapOptions = mapOptions;
-    return new Promise((resolve) => {
-      this.ngwMap.emitter.once('map:created', () => {
-        this.mapObject = this.ngwMap.mapAdapter.map;
-        this.ngwMap.addNgwLayer({ resourceId: config.ngwMarkerLayerId });
-        this.ngwMap.onMapLoad(resolve);
-      });
+    return this.ngwMap.onLoad().then((x) => {
+      this.mapObject = this.ngwMap.mapAdapter.map;
+      this.ngwMap.addNgwLayer({ resourceId: config.districtsLayer });
     });
   }
 
@@ -113,6 +110,7 @@ export class NgwMapComponent extends Vue {
       return this.ngwMap.addGeoJsonLayer({
         data,
         paint: (feature) => {
+          console.log(feature);
           return this.getHistoryIcon(feature, { size: 20 });
         },
         selectedPaint: (feature) => {
@@ -121,7 +119,7 @@ export class NgwMapComponent extends Vue {
         selectable: true,
         unselectOnSecondClick: true
       }).then((layerId) => {
-        const l = this.ngwMap.getLayer(layerId);
+        const l = this.ngwMap.getLayer(layerId) as VectorLayerAdapter;
         this.layer = l;
         this.ngwMap.showLayer(l);
         this.ngwMap.emitter.on('layer:click', ({ layer, feature, selected }) => {
@@ -175,7 +173,7 @@ export class NgwMapComponent extends Vue {
           type: 'FeatureCollection',
           features
         });
-        this.ngwMap.fitBounds(extent, {maxZoom: 16});
+        this.ngwMap.fitBounds(extent, { maxZoom: 16 });
       }
     }
   }
@@ -197,11 +195,14 @@ export class NgwMapComponent extends Vue {
       'другие подземные объекты': { color: '#808080', shape: 'brill' },
     };
 
-    // const shapes: any = ['circle', 'brill', 'rect', 'marker', 'cross', 'star',
-    //   'asterisk', 'triangle', 'plus', 'minus'];
-    const featureType: string = feature.properties.type;
-    const styleId = Object.keys(featureStyles).find((x) => featureType.search(x) !== -1);
-    const style = featureStyles[styleId] || { color: '#fff', shape: 'cross' };
+    let style: IconOptions = { color: '#fff', shape: 'marker' };
+    if (feature.properties.type) {
+      const featureType: string = feature.properties.type;
+      const styleId = Object.keys(featureStyles).find((x) => featureType.search(x) !== -1);
+      if (featureStyles[styleId]) {
+        style = featureStyles[styleId];
+      }
+    }
 
     return getIcon({
       ...style, ...options
