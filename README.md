@@ -2,6 +2,10 @@
 
 Устная история Москвы
 
+Demo: https://nextgis.ru/demo/oralhistory/dist/
+
+Production: https://pastandnow.ru
+
 ## Install
 
 ```bash
