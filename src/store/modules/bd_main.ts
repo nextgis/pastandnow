@@ -43,7 +43,10 @@ const actions = {
     commit('setFilter', items);
     const detail = state.detailItem;
     if (detail) {
-      const item = items.find((x: BdMainItem) => x.id === detail.id);
+      const item = items.find((x: BdMainItem) => {
+        const id = x.properties.id;
+        return id === detail.id;
+      });
       if (!item) {
         commit('setDetail', false);
       }
@@ -51,7 +54,10 @@ const actions = {
   },
 
   setDetail({ commit, state }, id: number) {
-    let item = state.filtered.find((x: BdMainItem) => x.id === id);
+    let item = state.filtered.find((x: BdMainItem) => {
+      const _id = x.properties.id;
+      return _id === id;
+    });
     const detail = state.detailItem;
     if (detail && detail.id === id) {
       item = false;

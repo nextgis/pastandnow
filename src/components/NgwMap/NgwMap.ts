@@ -110,7 +110,6 @@ export class NgwMapComponent extends Vue {
       return this.ngwMap.addGeoJsonLayer({
         data,
         paint: (feature) => {
-          console.log(feature);
           return this.getHistoryIcon(feature, { size: 20 });
         },
         selectedPaint: (feature) => {

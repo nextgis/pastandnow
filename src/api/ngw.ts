@@ -57,10 +57,11 @@ export type BdMainItem = Feature<Point, BdMainItemProperties>;
 export default {
   getLayerGeoJson(cb) {
     connector.request('feature_layer.geojson', {
-      id: config.ngwMarkerLayerId
+      id: config.ngwMarkerLayerId,
+      fid: 'id'
     }).then((data: FeatureCollection<Point, BdMainItemProperties>) => {
       data.features.forEach((x, i) => {
-        x.properties.id = Number(x.id || i);
+        x.id = x.properties.id;
       });
       cb(data.features);
     });
@@ -68,10 +69,11 @@ export default {
 
   getPhotos(cb) {
     connector.request('feature_layer.geojson', {
-      id: config.layerWithPhotos
+      id: config.layerWithPhotos,
+      fid: 'id'
     }).then((data: FeatureCollection<Point, BdPhotoProperties>) => {
       cb(data.features.map((x) => {
-        x.properties.id = Number(x.id);
+        x.id = x.properties.id;
         return x.properties;
       }));
     });
