@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[22],{14:function(o,n){o.exports=function(o,n){var p="function"==typeof o.exports?o.exports.extendOptions:o.options;for(var t in"function"==typeof o.exports&&(p.components=o.exports.options.components),p.components=p.components||{},n)p.components[t]=p.components[t]||n[t]}}}]);
-//# sourceMappingURL=npm.vuetify-loader-c374d44.js.map
