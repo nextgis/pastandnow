@@ -1,11 +1,10 @@
-const webpack = require('webpack')
+const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TSLintPlugin = require('tslint-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-const utils = require('./build/utils');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
 
-let alias = {}
+let alias = {};
 try {
   const { getAliases } = require('./nextgisweb_frontend/build/aliases');
   alias = getAliases();
@@ -16,20 +15,27 @@ try {
 // const CompressionPlugin = require('compression-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
+const sassLoaderOptions = {
+  implementation: require('sass')
+  // indentedSyntax: true // optional
+};
 
 module.exports = (env, argv) => {
-
   const isProd = argv.mode === 'production';
 
   const rules = [
     {
       test: /\.vue$/,
-      loader: 'vue-loader',
+      loader: 'vue-loader'
+    },
+    {
+      enforce: 'pre',
+      test: /\.(t|j)sx?$/,
+      loader: 'eslint-loader',
+      exclude: /node_modules/,
+      include: [path.join(__dirname, 'src')],
       options: {
-        loaders: utils.cssLoaders({
-          sourceMap: isProd ? false : true,
-          extract: false
-        })
+        fix: true
       }
     },
     {
@@ -37,7 +43,7 @@ module.exports = (env, argv) => {
       loader: 'ts-loader',
       exclude: /node_modules/,
       options: {
-        appendTsSuffixTo: [/\.vue$/],
+        appendTsSuffixTo: [/\.vue$/]
       }
     },
     {
@@ -46,11 +52,33 @@ module.exports = (env, argv) => {
       options: {
         name: '[name].[ext]?[hash]'
       }
+    },
+    {
+      test: /\.(png|woff|woff2|eot|ttf)$/,
+      use: {
+        loader: 'url-loader',
+        options: {
+          limit: 50000,
+          name: './fonts/[name].[ext]' // Output below ./fonts
+        }
+      }
+    },
+    {
+      test: /\.css$/i,
+      use: ['style-loader', 'css-loader']
+    },
+    {
+      test: /\.s(c|a)ss$/,
+      use: [
+        'vue-style-loader',
+        'css-loader',
+        {
+          loader: 'sass-loader',
+          options: sassLoaderOptions
+        }
+      ]
     }
-  ].concat(utils.styleLoaders({
-    sourceMap: true,
-    extract: false
-  }));
+  ];
 
   let plugins = [
     new VueLoaderPlugin(),
@@ -58,13 +86,10 @@ module.exports = (env, argv) => {
       template: 'index.html',
       filename: 'index.html'
     }),
-    new TSLintPlugin({
-      files: ['./src/**/*.ts']
-    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(argv.mode || 'development')
     }),
-    new VuetifyLoaderPlugin(),
+    new VuetifyLoaderPlugin()
   ];
 
   if (isProd) {
@@ -73,11 +98,10 @@ module.exports = (env, argv) => {
       //   test: /\.js(\?.*)?$/i
       // }),
       // new BundleAnalyzerPlugin()
-    ])
+    ]);
   }
 
   const config = {
-
     mode: argv.mode || 'development',
 
     devtool: isProd ? '#source-map' : 'eval-source-map',
@@ -85,16 +109,17 @@ module.exports = (env, argv) => {
     entry: './src/index.ts',
 
     output: {
-      filename: '[name]-[hash:7].js',
+      filename: '[name]-[hash:7].js'
     },
 
     resolve: {
       extensions: ['.ts', '.js', '.vue', '.json'],
       alias: {
-        ...alias, ...{
-          'vue$': 'vue/dist/vue.esm.js'
+        ...alias,
+        ...{
+          vue$: 'vue/dist/vue.esm.js'
         }
-      },
+      }
     },
     module: {
       rules
@@ -112,23 +137,10 @@ module.exports = (env, argv) => {
       runtimeChunk: 'single',
       splitChunks: {
         chunks: 'all',
-        maxInitialRequests: Infinity,
-        minSize: 0,
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name(module) {
-              // get the name. E.g. node_modules/packageName/not/this/part.js
-              // or node_modules/packageName
-              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-
-              // npm package names are URL-safe, but some servers don't like @ symbols
-              return `npm.${packageName.replace('@', '')}`;
-            },
-          },
-        },
-      },
-    },
-  }
+        minSize: 10000,
+        maxSize: 250000
+      }
+    }
+  };
   return config;
-}
+};

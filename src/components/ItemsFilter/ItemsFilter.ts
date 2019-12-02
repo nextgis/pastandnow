@@ -1,42 +1,40 @@
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 import { BdMainItemProperties } from '../../api/ngw';
+import { oralModule, OralFeature } from '../../store/modules/oral';
 
 @Component
 export class ItemsFilter extends Vue {
-
   form = false;
   years: [number, number] = [1900, 2018];
-  minYear: number = 1900;
-  maxYear: number = 2018;
-  moscow: Array<{ name: string, param: string, value?: boolean }> = [
+  minYear = 1900;
+  maxYear = 2018;
+  moscow: Array<{ name: string; param: string; value?: boolean }> = [
     { name: 'дворовая', param: 'mos1' },
     { name: 'легендарная', param: 'mos2' },
     { name: 'бездомная', param: 'mos3' },
     { name: 'подземная', param: 'mos4' },
     { name: 'церковная', param: 'mos5' },
-    { name: 'субкультурная', param: 'mos6', value: false },
+    { name: 'субкультурная', param: 'mos6', value: false }
   ];
   rayon = 'Все';
   areas: string[] = ['Все'];
 
-  mounted() {
+  get items() {
+    return oralModule.items;
+  }
 
-    this.moscow.forEach((x) => {
+  mounted() {
+    this.moscow.forEach(x => {
       x.value = x.value !== undefined ? x.value : true;
     });
 
-    if (this.$store.state.bdMain.items) {
-      this.updateFilterAreas(this.$store.state.bdMain.items);
-    }
-    this.$store.watch((state) => state.bdMain.items, (items) => {
-      this.updateFilterAreas(items);
-    });
-
+    this.updateFilterAreas(oralModule.items);
   }
 
-  updateFilterAreas(items) {
-    const areas = {};
-    items.forEach((x) => {
+  @Watch('items')
+  updateFilterAreas(items: OralFeature[]) {
+    const areas: Record<string, boolean> = {};
+    items.forEach(x => {
       const prop = x.properties;
       areas[prop.rayon] = true;
     });
@@ -44,9 +42,9 @@ export class ItemsFilter extends Vue {
   }
 
   updateFilter() {
-    const items = this.$store.state.bdMain.items.slice();
+    const items = this.items.slice();
 
-    const filtered = items.filter((x) => {
+    const filtered = items.filter(x => {
       const prop: BdMainItemProperties = x.properties;
 
       if (this.rayon && this.rayon !== 'Все' && prop.rayon !== this.rayon) {
@@ -55,8 +53,6 @@ export class ItemsFilter extends Vue {
       return true;
     });
 
-    this.$store.dispatch('bdMain/setFilter', filtered);
-
+    oralModule.setFilter(filtered);
   }
-
 }

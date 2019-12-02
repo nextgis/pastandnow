@@ -1,33 +1,30 @@
 <template>
   <div>
     <v-list dense>
-      <v-list-tile v-for="item in portion" :key="item.id">
-        <v-list-tile-content>
-          <v-list-tile-title :title="item.name">{{ item.name }}</v-list-tile-title>
-        </v-list-tile-content>
+      <v-list-item v-for="item in portion" :key="item.id">
+        <v-list-item-content>
+          <v-list-item-title :title="item.name">{{ item.name }}</v-list-item-title>
+        </v-list-item-content>
 
-        <v-list-tile-action class="pa-0">
+        <v-list-item-action class="pa-0">
           <v-btn @click="setDetail(item.id)" icon ripple>
             <v-icon
               color="lighten-1"
               v-bind:style="{ color: item.id === (detail && detail.id) ? 'orange' : 'grey' }"
-            >
-              info
-            </v-icon>
+            >info</v-icon>
           </v-btn>
-        </v-list-tile-action>
-      </v-list-tile>
+        </v-list-item-action>
+      </v-list-item>
     </v-list>
     <div v-if="displayItems.length > portion.length" class="text-xs-center">
-      <v-btn flat small @click="addPortion">Показать ещё</v-btn>
+      <v-btn text small @click="addPortion">Показать ещё</v-btn>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-export { List as default } from './List';
+export { List as default } from "./List";
 </script>
 
 <style lang="scss">
-
 </style>

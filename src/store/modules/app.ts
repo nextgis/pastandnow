@@ -1,87 +1,70 @@
-// initial state
-// shape: [{ id, quantity }]
+import {
+  VuexModule,
+  Mutation,
+  Action,
+  Module,
+  getModule
+} from 'vuex-module-decorators';
+import store from '../../store';
 
 export type AppPages = 'main' | 'table' | 'about';
-export interface AppState {
-  drawer?: boolean;
-  page?: AppPages;
-  center?: [number, number];
-  listSearchText?: string;
+
+@Module({ dynamic: true, store, name: 'app' })
+export class AppState extends VuexModule {
+  drawer = true;
+  page: AppPages = 'main';
+  centerId: number | null = null;
+  listSearchText = '';
+
+  @Action({ commit: '_toggleDrawer' })
+  showDrawer() {
+    return true;
+  }
+
+  @Action({ commit: '_toggleDrawer' })
+  hideDrawer() {
+    return false;
+  }
+
+  @Action({ commit: '_toggleDrawer' })
+  toggleDrawer(value: boolean) {
+    return value;
+  }
+
+  @Action({ commit: '_setListSearchText' })
+  setListSearchText(value: string) {
+    return value;
+  }
+
+  @Action({ commit: '_setPage' })
+  setPage(page: AppPages) {
+    return page;
+  }
+
+  @Action({ commit: '_setCenter' })
+  zoomTo(id: number | null) {
+    return id;
+  }
+
+  @Mutation
+  _toggleDrawer(status: boolean) {
+    this.drawer = status;
+  }
+
+  @Mutation
+  _setListSearchText(value: string) {
+    this.listSearchText = value;
+  }
+
+  @Mutation
+  _setCenter(center: number) {
+    this.centerId = center;
+  }
+
+  @Mutation
+  _setPage(page: AppPages) {
+    this.page = page;
+  }
 }
 
-const _state: AppState = {
-  drawer: true,
-  page: 'main',
-  center: null,
-  listSearchText: ''
-};
-
-// getters
-const _getters = {};
-
-// actions
-const actions = {
-
-
-  showDrawer({ commit }) {
-    commit('showDrawer');
-  },
-
-  hideDrawer({ commit }) {
-    commit('hideDrawer');
-  },
-
-  setListSearchText({ commit }, value: string) {
-    return commit('setListSearchText', value);
-  },
-
-  toggleDrawer({ commit }, value: boolean) {
-    if (value) {
-      commit('showDrawer');
-    } else {
-      commit('hideDrawer');
-    }
-  },
-
-  setPage({ commit }, page: AppPages) {
-    commit('setPage', page);
-  },
-
-  zoomTo({ commit }, id: number) {
-    commit('setCenter', id);
-  }
-
-};
-
-// mutations
-const mutations = {
-
-  showDrawer(state) {
-    state.drawer = true;
-  },
-
-  hideDrawer(state) {
-    state.drawer = false;
-  },
-
-  setPage(state, page: AppPages) {
-    state.page = page;
-  },
-
-  setCenter(state, id: number) {
-    state.center = id;
-  },
-
-  setListSearchText(state, value: string) {
-    state.listSearchText = value;
-  }
-
-};
-
-export default {
-  namespaced: true,
-  state: _state,
-  getters: _getters,
-  actions,
-  mutations
-};
+export const appModule = getModule(AppState);

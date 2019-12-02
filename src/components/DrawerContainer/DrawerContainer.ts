@@ -2,7 +2,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 
 @Component
 export class DrawerContainer extends Vue {
-  @Prop() header: string;
+  @Prop() header!: string;
 
   get hasFooterSlot() {
     return this.hasSlot('footer');
@@ -13,6 +13,6 @@ export class DrawerContainer extends Vue {
   }
 
   hasSlot(name = 'default') {
-    return !!this.$slots[ name ] || !!this.$scopedSlots[ name ];
+    return !!this.$slots[name] || !!this.$scopedSlots[name];
   }
 }

@@ -2,9 +2,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 
 @Component
 export class ShowMoreField extends Vue {
-
-  @Prop({default: ''}) text: string;
-  @Prop({default: 40}) charCount: number;
+  @Prop({ default: '' }) text!: string;
+  @Prop({ default: 40 }) charCount!: number;
 
   expand = false;
 

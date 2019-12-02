@@ -1,33 +1,32 @@
+import { Vue, Component, Watch } from 'vue-property-decorator';
 import { BdMainItem, BdMainItemProperties } from '../../api/ngw';
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { appModule } from '../../store/modules/app';
+import { oralModule } from '../../store/modules/oral';
 
 @Component
 export class List extends Vue {
-
   portionCount = 30;
 
-  portion = [];
+  portion: BdMainItemProperties[] = [];
 
   get listSearchText(): string {
-    return this.$store.state.app.listSearchText;
+    return appModule.listSearchText;
   }
 
   get items(): BdMainItemProperties[] {
-    return this.$store.getters['bdMain/sortFeatures'].map((x) => x.properties);
+    return oralModule.sortFeatures.map(x => x.properties);
+  }
+
+  get filtered() {
+    return oralModule.filtered;
   }
 
   get detail(): BdMainItem {
-    return this.$store.state.bdMain.detailItem;
+    return oralModule.detailItem;
   }
 
   mounted() {
     this.addPortion();
-    this.$store.watch((state) => state.bdMain.filtered, (_items) => {
-      this.resetPortions();
-    });
-    this.$store.watch((state) => state.app.listSearchText, (value) => {
-      this.resetPortions();
-    });
   }
 
   get displayItems() {
@@ -36,13 +35,14 @@ export class List extends Vue {
 
   getDisplayItems(): BdMainItemProperties[] {
     if (this.listSearchText && this.listSearchText.length > 1) {
-      const filteredItems = this.items.filter((item) => {
+      const filteredItems = this.items.filter(item => {
         for (const p in item) {
-          if (item.hasOwnProperty(p)) {
-            const ok = String(item[p]).toLowerCase().indexOf(this.listSearchText.toLowerCase()) !== -1;
-            if (ok) {
-              return true;
-            }
+          // @ts-ignore
+          const strItem = String(item[p]);
+          const searchText = this.listSearchText.toLowerCase();
+          const ok = strItem.toLowerCase().indexOf(searchText) !== -1;
+          if (ok) {
+            return true;
           }
         }
         return false;
@@ -53,11 +53,13 @@ export class List extends Vue {
     }
   }
 
-  setDetail(id: string) {
-    this.$store.dispatch('bdMain/setDetail', id);
-    this.$store.dispatch('app/zoomTo', id);
+  setDetail(id: number) {
+    oralModule.setDetail(id);
+    appModule.zoomTo(id);
   }
 
+  @Watch('listSearchText')
+  @Watch('filtered')
   resetPortions() {
     this.portion = [];
     this.addPortion();
@@ -71,9 +73,9 @@ export class List extends Vue {
       const addLength = portionsLength + this.portionCount;
       const len = addLength > itemsLength ? itemsLength : addLength;
       for (let fry = portionsLength; fry < len; fry++) {
-        this.portion.push(items[fry]);
+        const portion = items[fry];
+        this.portion.push(portion);
       }
     }
   }
-
 }

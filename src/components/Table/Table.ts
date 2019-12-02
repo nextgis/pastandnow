@@ -1,19 +1,16 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 import { BdMainItemProperties } from '../../api/ngw';
+import { oralModule } from '../../store/modules/oral';
 import ShowMoreField from '../ShowMoreField/ShowMoreField.vue';
 
-
 @Component({
-  components: {ShowMoreField}
+  components: { ShowMoreField }
 })
 export class Table extends Vue {
+  @Prop() search!: string;
+  @Prop() paginationSync!: any;
 
-  @Prop() search: string;
-  @Prop() paginationSync;
-
-  pagination = {
-    rowsPerPage: 20
-  };
+  itemsPerPage = 20;
 
   headers = [
     { text: 'Адрес', value: 'addr' },
@@ -36,20 +33,15 @@ export class Table extends Vue {
     { text: 'Москва бездомная', value: 'mos3' },
     { text: 'Москва подземная', value: 'mos4' },
     { text: 'Москва субкультурная', value: 'mos5' },
-    { text: 'Москва легендарная', value: 'mos6' },
+    { text: 'Москва легендарная', value: 'mos6' }
   ];
 
   get items(): BdMainItemProperties[] {
-    return this.$store.getters['bdMain/sortFeatures'].map((x) => x.properties);
+    return oralModule.sortFeatures.map(x => x.properties);
   }
 
   @Watch('pagination')
-  setPagination(value) {
+  setPagination(value: any) {
     this.paginationSync(value);
   }
-
 }
-
-
-
-

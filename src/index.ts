@@ -4,17 +4,16 @@ import Vue from 'vue';
 import store from './store';
 import App from './App.vue';
 import { version } from '../package.json';
-import Vuetify from 'vuetify/lib';
-import 'vuetify/src/stylus/app.styl';
-// import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
-Vue.use(Vuetify);
+import vuetify from './plugins/vuetify';
+
 // Vue.use(VueRouter);
 
 const app = new Vue({
   // router,
+  vuetify,
   store,
-  render: h => h(App),
+  render: h => h(App)
 });
 app.$mount('#app');
 

@@ -1,23 +1,17 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import bdMain from './modules/bd_main';
-import app from './modules/app';
-// import createLogger from '../../../src/plugins/logger';
-
-// Example projects
-// https://github.com/vuejs/vuex/tree/dev/examples/
-// Vuex and typescript
-// https://github.com/utahta/vue-vuex-typescript-example
+import { OralState } from './modules/oral';
+import { AppState } from './modules/app';
 
 Vue.use(Vuex);
-// @ts-ignore
-const debug = process.env.NODE_ENV !== 'production';
 
-export default new Vuex.Store({
-  modules: {
-    bdMain,
-    app,
-  },
-  strict: debug,
-  // plugins: debug ? [createLogger()] : []
-});
+// @ts-ignore
+const strict = process.env.NODE_ENV !== 'production';
+
+export interface RootState {
+  app: AppState;
+  oral: OralState;
+}
+
+// Declare empty store first, dynamically register all modules later.
+export default new Vuex.Store<RootState>({ strict });

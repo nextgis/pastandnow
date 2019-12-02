@@ -1,5 +1,6 @@
+import { Point, Feature } from 'geojson';
 import NgwConnector from '@nextgis/ngw-connector';
-import { FeatureCollection, Point, Feature } from 'geojson';
+import NgwKit from '@nextgis/ngw-kit';
 // @ts-ignore
 import config from '../../config.json';
 
@@ -8,10 +9,9 @@ export const url = config.baseUrl.replace(
   (location.protocol === 'https:' ? 'https' : 'http') + '://'
 );
 
-const connector = new NgwConnector({ baseUrl: url });
+export const connector = new NgwConnector({ baseUrl: url });
 
 export interface BdMainItemProperties {
-
   id: number;
 
   id1: number;
@@ -55,32 +55,41 @@ export interface BdPhotoProperties {
 export type BdMainItem = Feature<Point, BdMainItemProperties>;
 
 export default {
-  getLayerGeoJson(cb) {
-    connector.request('feature_layer.geojson', {
-      id: config.ngwMarkerLayerId,
-      fid: 'id'
-    }).then((data: FeatureCollection<Point, BdMainItemProperties>) => {
-      data.features.forEach((x, i) => {
-        x.id = x.properties.id;
+  async getLayerGeoJson() {
+    return NgwKit.utils
+      .getNgwLayerFeatures<Point, BdMainItemProperties>({
+        connector,
+        resourceId: config.ngwMarkerLayerId,
+        limit: 10
+      })
+      .then(data => {
+        data.features.forEach((x, i) => {
+          if (x.id) {
+            x.properties.id = Number(x.id);
+          }
+        });
+        return data;
       });
-      cb(data.features);
-    });
   },
 
-  getPhotos(cb) {
-    connector.request('feature_layer.geojson', {
-      id: config.layerWithPhotos,
-      fid: 'id'
-    }).then((data: FeatureCollection<Point, BdPhotoProperties>) => {
-      cb(data.features.map((x) => {
-        x.id = x.properties.id;
-        return x.properties;
-      }));
-    });
+  async getPhotos() {
+    return NgwKit.utils
+      .getNgwLayerFeatures<Point, BdPhotoProperties>({
+        connector,
+        resourceId: config.layerWithPhotos
+      })
+      .then(data => {
+        return data.features.map(x => {
+          if (x.id) {
+            x.properties.id = Number(x.id);
+          }
+          return x.properties;
+        });
+      });
   },
 
-  getLayerMeta(cb) {
-    cb([
+  getLayerMeta() {
+    return Promise.resolve([
       // { text: 'Идентификатор', value: 'id1', noHide: true },
       // { text: 'долгота', value: 'lat', noHide: true },
       // { text: 'широта', value: 'lon', noHide: true },
