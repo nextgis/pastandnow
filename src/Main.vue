@@ -2,13 +2,13 @@
   <v-app>
     <v-content>
       <oral-map :mapOptions="mapOptions" :fullFilling="true">
-        <vue-ngw-control position="top-left">
+        <vue-ngw-control position="top-left" :margin="true">
           <div v-if="!drawer">
-            <v-layout align-center justify-start row fill-height>
+            <v-layout align-center justify-start row fill-height class="ma-1">
               <v-btn @click="drawer = !drawer" fab small>
                 <v-icon large class="drawe-icon" :class="{ active: drawer }">chevron_right</v-icon>
               </v-btn>
-              <span class="title">Устная память Москвы</span>
+              <span class="title ml-1">Устная память</span>
             </v-layout>
           </div>
         </vue-ngw-control>
@@ -18,12 +18,14 @@
     <v-navigation-drawer v-model="drawer" stateless fixed app width="350">
       <drawer-container>
         <div slot="header">
-          <v-layout justify-space-between>
-            Устная память Москвы
-            <v-btn @click="drawer = false" text icon class="pa-0 ma-0">
-              <v-icon>close</v-icon>
-            </v-btn>
-          </v-layout>
+          <v-row align="center" justify="space-between">
+            <v-col>Устная память</v-col>
+            <v-col class="flex-grow-0">
+              <v-btn @click="drawer = false" text icon>
+                <v-icon>close</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
         </div>
         <div v-if="items && items.length">
           <div>

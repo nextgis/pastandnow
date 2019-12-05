@@ -15,7 +15,7 @@ export interface BdMainItemProperties {
   id: number;
 
   id1: number;
-
+  city: string;
   status: string;
   narrator: string;
   nar_codes: string;

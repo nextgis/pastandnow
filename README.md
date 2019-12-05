@@ -1,6 +1,6 @@
 # oralhistory
 
-Устная история Москвы
+Устная память
 
 Demo: https://nextgis.ru/demo/oralhistory/dist/
 

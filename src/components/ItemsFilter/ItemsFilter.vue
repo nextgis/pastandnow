@@ -23,6 +23,14 @@
     ></v-select> -->
 
     <v-autocomplete
+      v-model="city"
+      :items="cities"
+      label="Город"
+      @change="updateCity"
+      no-data-text="Не найдено"
+    ></v-autocomplete>
+
+    <v-autocomplete
       v-model="rayon"
       :items="areas"
       label="Район"

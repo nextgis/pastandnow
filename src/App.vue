@@ -8,7 +8,7 @@
             <v-icon>close</v-icon>
           </v-btn>
           <span class="title ml-3 mr-5">
-            Устная память Москвы&nbsp;
+            Устная память&nbsp;
             <span class="font-weight-light">Таблица</span>
           </span>
           <v-text-field

@@ -17,7 +17,11 @@ export class ItemsFilter extends Vue {
     { name: 'субкультурная', param: 'mos6', value: false }
   ];
   rayon = 'Все';
-  areas: string[] = ['Все'];
+  areas: string[] = [];
+  areasByCities: Record<string, string> = {};
+
+  city = 'Москва';
+  cities: string[] = [];
 
   get items() {
     return oralModule.items;
@@ -28,17 +32,47 @@ export class ItemsFilter extends Vue {
       x.value = x.value !== undefined ? x.value : true;
     });
 
-    this.updateFilterAreas(oralModule.items);
+    this.updateFilterValues(oralModule.items);
   }
 
   @Watch('items')
-  updateFilterAreas(items: OralFeature[]) {
-    const areas: Record<string, boolean> = {};
+  updateFilterValues(items: OralFeature[]) {
+    const areas: Record<string, string> = {};
+    const cities: Record<string, boolean> = {};
     items.forEach(x => {
       const prop = x.properties;
-      areas[prop.rayon] = true;
+      areas[prop.rayon] = prop.city;
+      cities[prop.city] = true;
     });
-    this.areas = this.areas.concat(Object.keys(areas).sort());
+
+    this.areasByCities = areas;
+
+    const sortCities = Object.keys(cities).sort();
+    if (!(this.city in cities)) {
+      this.city = sortCities[0];
+    }
+    this.cities = sortCities;
+    this.updateFilterAreas();
+  }
+
+  @Watch('city')
+  updateFilterAreas() {
+    const areas = this.areasByCities;
+    const areasByActiveCity = [];
+
+    for (const a in areas) {
+      const val = areas[a];
+      if (val === this.city) {
+        areasByActiveCity.push(a);
+      }
+    }
+
+    this.areas = ['Все', ...areasByActiveCity].sort();
+  }
+
+  updateCity() {
+    this.rayon !== 'Все';
+    this.updateFilter();
   }
 
   updateFilter() {
@@ -46,7 +80,9 @@ export class ItemsFilter extends Vue {
 
     const filtered = items.filter(x => {
       const prop: BdMainItemProperties = x.properties;
-
+      if (prop.city !== this.city) {
+        return false;
+      }
       if (this.rayon && this.rayon !== 'Все' && prop.rayon !== this.rayon) {
         return false;
       }
