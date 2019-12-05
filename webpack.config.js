@@ -12,7 +12,6 @@ try {
   // ignore
 }
 
-// const CompressionPlugin = require('compression-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const sassLoaderOptions = {
@@ -90,15 +89,11 @@ module.exports = (env, argv) => {
       'process.env.NODE_ENV': JSON.stringify(argv.mode || 'development')
     }),
     new VuetifyLoaderPlugin()
+    // new BundleAnalyzerPlugin()
   ];
 
   if (isProd) {
-    plugins = plugins.concat([
-      // new CompressionPlugin({
-      //   test: /\.js(\?.*)?$/i
-      // }),
-      // new BundleAnalyzerPlugin()
-    ]);
+    plugins = plugins.concat([]);
   }
 
   const config = {

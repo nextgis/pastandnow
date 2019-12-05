@@ -16,7 +16,7 @@
         </v-list-item-action>
       </v-list-item>
     </v-list>
-    <div v-if="displayItems.length > portion.length" class="text-xs-center">
+    <div v-if="displayItems.length > portion.length" class="text-center">
       <v-btn text small @click="addPortion">Показать ещё</v-btn>
     </div>
   </div>

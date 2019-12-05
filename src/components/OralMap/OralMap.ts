@@ -194,10 +194,11 @@ export class OralMap extends Mixins(VueNgwMapbox) {
         style = featureStyles[styleId];
       }
     }
-
-    return getIcon({
+    const iconOpt: IconOptions = {
       ...style,
       ...options
-    });
+    };
+    const icon = getIcon(iconOpt);
+    return icon;
   }
 }
