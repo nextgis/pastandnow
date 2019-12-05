@@ -57,6 +57,43 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     }
   }
 
+  @Watch('detailItem')
+  setSelected(item: BdMainItem) {
+    const layer = this.layer;
+    if (item && layer.select) {
+      layer.select(({ feature }) => {
+        if (feature && feature.properties) {
+          return feature.properties.id === (item && item.id);
+        }
+        return false;
+      });
+    } else if (layer.unselect) {
+      // unselect all
+      layer.unselect();
+    }
+  }
+
+  @Watch('centerId')
+  zoomTo(id: number) {
+    if (id && this.layer.getLayers) {
+      const layers = this.layer && this.layer.getLayers();
+      if (layers && layers.length) {
+        const layer = layers.find(
+          x =>
+            x.feature && x.feature.properties && x.feature.properties.id === id
+        );
+        const feature = layer && (layer.feature as Feature<Point>);
+        const lngLat =
+          feature && (feature.geometry.coordinates as [number, number]);
+        if (lngLat) {
+          this.ngwMap.setView(lngLat, 14);
+          // reset zoomTo storage value
+          appModule.zoomTo(null);
+        }
+      }
+    }
+  }
+
   addMarkers(features: OralFeature[]) {
     if (!this.layer) {
       const data: FeatureCollection = { type: 'FeatureCollection', features };
@@ -100,43 +137,6 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     }
 
     return this.layer;
-  }
-
-  @Watch('centerId')
-  zoomTo(id: number) {
-    if (id && this.layer.getLayers) {
-      const layers = this.layer && this.layer.getLayers();
-      if (layers && layers.length) {
-        const layer = layers.find(
-          x =>
-            x.feature && x.feature.properties && x.feature.properties.id === id
-        );
-        const feature = layer && (layer.feature as Feature<Point>);
-        const lngLat =
-          feature && (feature.geometry.coordinates as [number, number]);
-        if (lngLat) {
-          this.ngwMap.setView(lngLat, 14);
-          // reset zoomTo storage value
-          appModule.zoomTo(null);
-        }
-      }
-    }
-  }
-
-  @Watch('setSelected')
-  setSelected(item: BdMainItem) {
-    const layer = this.layer;
-    if (item && layer.select) {
-      layer.select(({ feature }) => {
-        if (feature && feature.properties) {
-          return feature.properties.id === (item && item.id);
-        }
-        return false;
-      });
-    } else if (layer.unselect) {
-      // unselect all
-      layer.unselect();
-    }
   }
 
   zoomToFiltered() {
