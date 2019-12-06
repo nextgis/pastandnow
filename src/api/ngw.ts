@@ -54,13 +54,52 @@ export interface BdPhotoProperties {
 
 export type BdMainItem = Feature<Point, BdMainItemProperties>;
 
+export const fieldsAvailable: Record<string, boolean> = {
+  addr: true,
+  city: true,
+  descript2: true,
+  description: true,
+  geo: true,
+  id1: true,
+  lat: true,
+  lon: true,
+  mos1: true,
+  mos2: true,
+  mos3: true,
+  mos4: true,
+  mos5: true,
+  mos6: true,
+  name: true,
+  nar_codes: true,
+  narrativ_b: true,
+  narrativ_l: true,
+  narrativ_p: true,
+  narrativ_t: true,
+  narrator: true,
+  rayon: true,
+  status: true,
+  type: true,
+  unoff: true,
+  visual: true
+};
+
+// const fields: string[] = [];
+// for (const f in fieldsAvailable) {
+//   if (fieldsAvailable[f]) {
+//     fields.push(f);
+//   }
+// }
+
 export default {
   async getLayerGeoJson() {
+    const meta = await this.getLayerMeta();
+    const fields = meta.map(x => x.value);
     return NgwKit.utils
       .getNgwLayerFeatures<Point, BdMainItemProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 20
+        limit: 3000,
+        fields
       })
       .then(data => {
         data.features.forEach((x, i) => {
@@ -94,11 +133,13 @@ export default {
       // { text: 'долгота', value: 'lat', noHide: true },
       // { text: 'широта', value: 'lon', noHide: true },
       { text: 'Адрес', value: 'addr', noHide: true },
+      { text: 'Город', value: 'city', noHide: false },
       { text: 'Название объекта', value: 'name', noHide: true },
       // { text: 'Тип объекта', value: 'type', noHide: true },
       { text: 'Статус объекта', value: 'status', noHide: true },
       { text: 'Район', value: 'rayon', noHide: true },
       { text: 'Неофициальное название', value: 'unoff', noHide: true },
+      { text: 'Тип', value: 'type' },
       { text: 'ОПИСАНИЕ', value: 'description', noHide: true },
       { text: 'Истории о прошлом', value: 'narrativ_l', type: 'Story' },
       { text: 'Семейные истории', value: 'narrativ_b', type: 'Story' },
