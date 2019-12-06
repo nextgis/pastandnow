@@ -6,6 +6,8 @@ import {
   Module,
   getModule
 } from 'vuex-module-decorators';
+import { IconOptions } from '@nextgis/webmap';
+
 import store from '..';
 import ngw, {
   BdMainItem,
@@ -23,6 +25,7 @@ export class OralState extends VuexModule {
   photos: BdPhotoProperties[] = [];
   meta: Alias[] = [];
   detailItem: any | false = false;
+  legendItems: Array<{ name: string; item: IconOptions }> = [];
 
   get features() {
     return this.filtered;
@@ -59,6 +62,11 @@ export class OralState extends VuexModule {
   @Action({ commit: '_setFilter' })
   setFilter(items: OralFeature[]) {
     return items;
+  }
+
+  @Action({ commit: '_setLegend' })
+  setLegend(legendItem: { name: string; item: IconOptions }) {
+    return legendItem;
   }
 
   @Action({ commit: '_setDetail' })
@@ -109,6 +117,14 @@ export class OralState extends VuexModule {
   @Mutation
   _setPhotos(photos: BdPhotoProperties[]) {
     this.photos = photos;
+  }
+
+  @Mutation
+  _setLegend(legendItem: { name: string; item: IconOptions }) {
+    const exist = this.legendItems.find(x => x.name === legendItem.name);
+    if (!exist) {
+      this.legendItems.push(legendItem);
+    }
   }
 }
 

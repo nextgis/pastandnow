@@ -102,7 +102,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
           data,
           type: 'icon',
           paint: feature => {
-            return this.getHistoryIcon(feature, { size: 20 });
+            return this.getHistoryIcon(feature, { size: 20 }, true);
           },
           selectedPaint: feature => {
             return this.getHistoryIcon(feature, { size: 40 });
@@ -168,7 +168,11 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     this.loaded = true;
   }
 
-  private getHistoryIcon(feature: Feature, options?: IconOptions) {
+  private getHistoryIcon(
+    feature: Feature,
+    options?: IconOptions,
+    forLegend = false
+  ) {
     const featureStyles: Record<string, IconOptions> = {
       водоем: { color: '#0000ff', shape: 'marker' },
       ландшафт: { color: '#008000', shape: 'marker' },
@@ -184,10 +188,12 @@ export class OralMap extends Mixins(VueNgwMapbox) {
       'другие подземные объекты': { color: '#808080', shape: 'brill' }
     };
 
-    let style: IconOptions = { color: '#fff', shape: 'marker' };
+    const defaultStyle: IconOptions = { color: '#fff', shape: 'marker' };
+    let style: IconOptions | undefined;
+    let styleId: string | undefined;
     if (feature.properties && feature.properties.type) {
       const featureType: string = feature.properties.type;
-      const styleId = Object.keys(featureStyles).find(
+      styleId = Object.keys(featureStyles).find(
         x => featureType.search(x) !== -1
       );
       if (styleId && featureStyles[styleId]) {
@@ -195,10 +201,14 @@ export class OralMap extends Mixins(VueNgwMapbox) {
       }
     }
     const iconOpt: IconOptions = {
+      ...defaultStyle,
       ...style,
       ...options
     };
     const icon = getIcon(iconOpt);
+    if (style && styleId && forLegend) {
+      oralModule.setLegend({ name: styleId, item: icon });
+    }
     return icon;
   }
 }

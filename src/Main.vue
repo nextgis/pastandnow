@@ -12,6 +12,9 @@
             </v-layout>
           </div>
         </vue-ngw-control>
+        <vue-ngw-control position="bottom-left" :margin="true">
+          <Legend></Legend>
+        </vue-ngw-control>
       </oral-map>
     </v-content>
 
@@ -86,15 +89,26 @@
         <detail></detail>
         <template slot="footer">
           <v-item-group class="bottom-button">
-            <v-btn text color="grey">
-              <v-icon>feedback</v-icon>
-            </v-btn>
-            <v-btn text color="grey">
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <v-btn text color="grey" @click="openFeedbackPage" v-on="on">
+                  <v-icon>feedback</v-icon>
+                </v-btn>
+              </template>
+              <span>Обратная связь</span>
+            </v-tooltip>
+
+            <!-- <v-btn text color="grey">
               <v-icon>save_alt</v-icon>
-            </v-btn>
-            <v-btn text @click="zoomTo = detail.id" color="grey">
-              <v-icon>place</v-icon>
-            </v-btn>
+            </v-btn>-->
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <v-btn text @click="zoomTo = detail.id" color="grey" v-on="on">
+                  <v-icon>place</v-icon>
+                </v-btn>
+              </template>
+              <span>Показать на карте</span>
+            </v-tooltip>
           </v-item-group>
         </template>
       </drawer-container>

@@ -5,20 +5,8 @@
   </div>
 </template>
 
-<script lang="ts">
-export { About as default } from './About';
-</script>
+<script lang="ts" src="./About.ts"></script>
 
-<style lang="scss">
-.my-app {
-  text-align: center;
-  h1 {
-    font-size: 24px;
-    color: darkcyan;
-  }
-  p {
-    font-size: 14px;
-    color: grey;
-  }
-}
+<style lang="scss" scoped>
+
 </style>

@@ -1,7 +1,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { NgwMapOptions } from '@nextgis/ngw-map';
 
-import { qmsId } from '../config.json';
+import { qmsId, feedbackUrl } from '../config.json';
 import { connector } from './api/ngw';
 import VueNgwControl from '../nextgisweb_frontend/packages/vue-ngw-map/src/components/VueNgwControl';
 
@@ -9,6 +9,7 @@ import List from './components/List/List.vue';
 import { OralMap } from './components/OralMap/OralMap';
 import ItemsFilter from './components/ItemsFilter/ItemsFilter.vue';
 import Detail from './components/Detail/Detail.vue';
+import Legend from './components/Legend/Legend.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import { BdMainItemProperties } from './api/ngw';
 import { appModule, AppPages } from './store/modules/app';
@@ -19,6 +20,7 @@ import throttle from './store/utils/throttle';
   components: {
     List,
     OralMap,
+    Legend,
     ItemsFilter,
     Detail,
     DrawerContainer,
@@ -95,5 +97,9 @@ export class Main extends Vue {
 
   setListSearchText(value: string) {
     appModule.setListSearchText(value);
+  }
+
+  openFeedbackPage() {
+    window.open(feedbackUrl, '_blank');
   }
 }

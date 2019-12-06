@@ -60,7 +60,7 @@ export default {
       .getNgwLayerFeatures<Point, BdMainItemProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 10
+        limit: 20
       })
       .then(data => {
         data.features.forEach((x, i) => {
