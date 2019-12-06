@@ -41,7 +41,13 @@ export class ItemsFilter extends Vue {
     const cities: Record<string, boolean> = {};
     items.forEach(x => {
       const prop = x.properties;
-      areas[prop.rayon] = prop.city;
+      const rayons = prop.rayon;
+      if (rayons) {
+        const rayonList = rayons.split(';').map(y => y.trim());
+        rayonList.forEach(y => {
+          areas[y] = prop.city;
+        });
+      }
       cities[prop.city] = true;
     });
 
@@ -66,8 +72,7 @@ export class ItemsFilter extends Vue {
         areasByActiveCity.push(a);
       }
     }
-
-    this.areas = ['Все', ...areasByActiveCity].sort();
+    this.areas = ['Все', ...areasByActiveCity.sort()];
   }
 
   updateCity() {
@@ -83,7 +88,9 @@ export class ItemsFilter extends Vue {
       if (prop.city !== this.city) {
         return false;
       }
-      if (this.rayon && this.rayon !== 'Все' && prop.rayon !== this.rayon) {
+      const rayons = prop.rayon.split(';').map(x => x.trim());
+
+      if (this.rayon && this.rayon !== 'Все' && !rayons.includes(this.rayon)) {
         return false;
       }
       return true;

@@ -43,7 +43,6 @@ export interface BdMainItemProperties {
 
 export interface BdPhotoProperties {
   id: number;
-
   link_big: string;
   link_small: string;
   id_obj: number;
@@ -98,7 +97,8 @@ export default {
       .getNgwLayerFeatures<Point, BdMainItemProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 3000,
+        limit: 100,
+        // limit: 3000,
         fields
       })
       .then(data => {
