@@ -30,7 +30,7 @@
       no-data-text="Не найдено"
     ></v-autocomplete>
 
-    <v-autocomplete
+    <v-autocomplete v-if="areas.length > 1"
       v-model="rayon"
       :items="areas"
       label="Район"

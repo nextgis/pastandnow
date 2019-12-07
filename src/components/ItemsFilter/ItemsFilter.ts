@@ -76,7 +76,7 @@ export class ItemsFilter extends Vue {
   }
 
   updateCity() {
-    this.rayon !== 'Все';
+    this.rayon = 'Все';
     this.updateFilter();
   }
 
@@ -88,10 +88,18 @@ export class ItemsFilter extends Vue {
       if (prop.city !== this.city) {
         return false;
       }
-      const rayons = prop.rayon.split(';').map(x => x.trim());
+      if (prop.rayon) {
+        const rayons = prop.rayon.split(';').map(x => x.trim());
 
-      if (this.rayon && this.rayon !== 'Все' && !rayons.includes(this.rayon)) {
-        return false;
+        if (
+          this.rayon &&
+          this.rayon !== 'Все' &&
+          !rayons.includes(this.rayon)
+        ) {
+          return false;
+        }
+      } else {
+        return this.rayon === 'Все';
       }
       return true;
     });

@@ -98,7 +98,7 @@ export default {
         connector,
         resourceId: config.ngwMarkerLayerId,
         // limit: 100,
-        limit: 3000,
+        // limit: 3000,
         fields
       })
       .then(data => {
