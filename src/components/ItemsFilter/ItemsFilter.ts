@@ -59,6 +59,7 @@ export class ItemsFilter extends Vue {
     }
     this.cities = sortCities;
     this.updateFilterAreas();
+    setTimeout(() => this.updateFilter(), 0);
   }
 
   @Watch('city')
