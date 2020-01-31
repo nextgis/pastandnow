@@ -129,7 +129,7 @@ export default {
 
   getLayerMeta() {
     return Promise.resolve([
-      // { text: 'Идентификатор', value: 'id1', noHide: true },
+      { text: 'Идентификатор', value: 'id1', noHide: false },
       // { text: 'долгота', value: 'lat', noHide: true },
       // { text: 'широта', value: 'lon', noHide: true },
       { text: 'Адрес', value: 'addr', noHide: true },
