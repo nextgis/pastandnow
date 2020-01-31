@@ -1,25 +1,17 @@
-import 'mapbox-gl/dist/mapbox-gl.css';
-
 import { Component, Mixins, Watch } from 'vue-property-decorator';
 
 import { Feature, Point, FeatureCollection } from 'geojson';
 // @ts-ignore
 import geojsonExtent from '@mapbox/geojson-extent';
 
-import { VectorLayerAdapter } from '@nextgis/webmap';
-import { NgwMapOptions } from '@nextgis/ngw-map';
 import { getIcon, IconOptions } from '@nextgis/icons';
+import { VectorLayerAdapter } from '@nextgis/webmap';
+import { VueNgwMapbox } from '@nextgis/vue-ngw-mapbox';
 
-import { VueNgwMapbox } from '../../../nextgisweb_frontend/packages/vue-ngw-map/src/components/VueNgwMapbox';
-// @ts-ignore
 import config from '../../../config.json';
 import { BdMainItem } from '../../api/ngw';
 import { oralModule, OralFeature } from '../../store/modules/oral';
 import { appModule } from '../../store/modules/app';
-
-export interface NgwMapComponentOptions {
-  mapOptions: NgwMapOptions;
-}
 
 @Component
 export class OralMap extends Mixins(VueNgwMapbox) {
@@ -61,12 +53,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   setSelected(item: BdMainItem) {
     const layer = this.layer;
     if (item && layer.select) {
-      layer.select(({ feature }) => {
-        if (feature && feature.properties) {
-          return feature.properties.id === (item && item.id);
-        }
-        return false;
-      });
+      layer.select([['$id', 'eq', item.id]]);
     } else if (layer.unselect) {
       // unselect all
       layer.unselect();
@@ -108,12 +95,12 @@ export class OralMap extends Mixins(VueNgwMapbox) {
             return this.getHistoryIcon(feature, { size: 40 });
           },
           selectable: true,
-          unselectOnSecondClick: true
+          unselectOnSecondClick: true,
+          visibility: true
         })
         .then(layerId => {
           const l = this.ngwMap.getLayer(layerId) as VectorLayerAdapter;
           this.layer = l;
-          this.ngwMap.showLayer(l);
           this.ngwMap.emitter.on(
             'layer:click',
             ({ layer, feature, selected }) => {
@@ -129,11 +116,8 @@ export class OralMap extends Mixins(VueNgwMapbox) {
             }
           );
         });
-    } else if (this.layer.filter) {
-      this.layer.filter(({ feature }) => {
-        const id = feature && feature.properties && feature.properties.id;
-        return features.some(x => x.properties.id === id);
-      });
+    } else if (this.layer.propertiesFilter) {
+      this.layer.propertiesFilter([['$id', 'in', features.map(x => x.id)]]);
     }
 
     return this.layer;
