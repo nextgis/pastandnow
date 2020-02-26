@@ -18,44 +18,24 @@
       </oral-map>
     </v-content>
 
-    <v-navigation-drawer v-model="drawer" stateless fixed app width="350">
+    <v-navigation-drawer v-model="drawer" stateless fixed app width="360">
       <drawer-container>
-        <div slot="header">
-          <v-row align="center" justify="space-between">
-            <v-col>Устная память</v-col>
-            <v-col class="flex-grow-0">
-              <v-btn @click="drawer = false" text icon>
-                <v-icon>close</v-icon>
-              </v-btn>
-            </v-col>
-          </v-row>
+        <div class="filter-block">
+          <items-filter></items-filter>
+
+          <div>
+            <v-text-field
+              class="mx-4 pt-2 pb-2"
+              v-model="listSearchText"
+              hide-details
+              solo
+              clearable
+              label="Поиск"
+              prepend-inner-icon="search"
+            ></v-text-field>
+          </div>
         </div>
         <div v-if="items && items.length">
-          <div>
-            <!-- <v-expansion-panel
-              expand
-            >
-              <v-expansion-panel-content>
-                <div slot="header">Фильтр</div>
-
-              </v-expansion-panel-content>
-            </v-expansion-panel>-->
-            <items-filter></items-filter>
-
-            <div class="pl-3 pr-3">
-              <v-text-field
-                class="pa-0"
-                v-model="listSearchText"
-                hide-details
-                solo
-                clearable
-                label="Поиск"
-                prepend-inner-icon="search"
-              ></v-text-field>
-            </div>
-            <!-- <v-divider></v-divider> -->
-          </div>
-
           <div>
             <list></list>
           </div>
@@ -122,6 +102,8 @@ export { Main as default } from "./Main";
 
 
 <style lang="scss">
+// @import "./style/variables.scss";
+
 .drawe-icon {
   &.active {
     -webkit-transform: rotate(-180deg);

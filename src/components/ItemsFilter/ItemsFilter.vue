@@ -1,10 +1,5 @@
 <template>
-
-  <v-form
-    ref="form"
-    v-model="form"
-    class="pl-3 pr-3 pt-0 pb-0"
-  >
+  <v-form ref="form" v-model="form" class="filter-form">
     <!-- <v-range-slider
       v-model="years"
       thumb-label="always"
@@ -13,27 +8,42 @@
       :min="minYear"
       :step="1"
       @change ="updateFilter"
-    ></v-range-slider> -->
+    ></v-range-slider>-->
 
     <!-- <v-select
       :items="areas"
       v-model="rayon"
       label="Район"
       @change ="updateFilter"
-    ></v-select> -->
+    ></v-select>-->
 
     <v-autocomplete
+      :loading="!cities.length"
+      dark
+      cache-items
+      class="mx-4 pt-2 pb-2"
+      flat
+      hide-no-data
+      hide-details
+      solo-inverted
       v-model="city"
       :items="cities"
-      label="Город"
       @change="updateCity"
       no-data-text="Не найдено"
     ></v-autocomplete>
-
-    <v-autocomplete v-if="areas.length > 1"
+    <!-- label="Город" -->
+      <!-- label="Район" -->
+    <v-autocomplete
+      :loading="!areas.length"
+      dark
+      cache-items
+      class="mx-4 pt-2 pb-2"
+      flat
+      hide-no-data
+      hide-details
+      solo-inverted
       v-model="rayon"
       :items="areas"
-      label="Район"
       @change="updateFilter"
       no-data-text="Не найдено"
     ></v-autocomplete>
@@ -45,15 +55,21 @@
       <template slot="label">
         {{ mos.name }}
       </template>
-    </v-checkbox> -->
+    </v-checkbox>-->
   </v-form>
-
 </template>
 
 <script lang="ts">
-export { ItemsFilter as default } from './ItemsFilter';
+export { ItemsFilter as default } from "./ItemsFilter";
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
+
+@import "../../style/variables.scss";
+
+.filter-form {
+  background: $dark;
+}
 
 </style>
