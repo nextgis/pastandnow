@@ -2,12 +2,16 @@ import { Vue, Component, Watch } from 'vue-property-decorator';
 import { BdMainItem, BdMainItemProperties } from '../../api/ngw';
 import { appModule } from '../../store/modules/app';
 import { oralModule } from '../../store/modules/oral';
+import SymbolComponent from '../Symbol/Symbol.vue';
+import { getHistoryPaint } from '../OralMap/OralMap';
 
-@Component
+@Component({ components: { SymbolComponent } })
 export class List extends Vue {
   portionCount = 30;
 
   portion: BdMainItemProperties[] = [];
+
+  item: number | false = false;
 
   get listSearchText(): string {
     return appModule.listSearchText;
@@ -33,6 +37,10 @@ export class List extends Vue {
     return this.getDisplayItems();
   }
 
+  getItemPaint(item: BdMainItemProperties) {
+    return getHistoryPaint(item);
+  }
+
   getDisplayItems(): BdMainItemProperties[] {
     if (this.listSearchText && this.listSearchText.length > 1) {
       const filteredItems = this.items.filter(item => {
@@ -53,10 +61,16 @@ export class List extends Vue {
     }
   }
 
+  @Watch('item')
   setDetail(id: number) {
     oralModule.setDetail(id);
     appModule.zoomTo(id);
   }
+
+  // @Watch('detail')
+  // onDetailChange(detail?: BdMainItem) {
+  //   this.item = detail !== undefined ? Number(detail.id) : false;
+  // }
 
   @Watch('listSearchText')
   @Watch('filtered')

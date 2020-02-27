@@ -2,6 +2,8 @@ import { Vue, Component, Watch } from 'vue-property-decorator';
 import { BdMainItemProperties } from '../../api/ngw';
 import { oralModule, OralFeature } from '../../store/modules/oral';
 
+const ALL_STR = 'Все районы';
+
 @Component
 export class ItemsFilter extends Vue {
   form = false;
@@ -16,7 +18,7 @@ export class ItemsFilter extends Vue {
     { name: 'церковная', param: 'mos5' },
     { name: 'субкультурная', param: 'mos6', value: false }
   ];
-  rayon = 'Все';
+  rayon = ALL_STR;
   areas: string[] = [];
   areasByCities: Record<string, string> = {};
 
@@ -73,11 +75,11 @@ export class ItemsFilter extends Vue {
         areasByActiveCity.push(a);
       }
     }
-    this.areas = ['Все', ...areasByActiveCity.sort()];
+    this.areas = [ALL_STR, ...areasByActiveCity.sort()];
   }
 
   updateCity() {
-    this.rayon = 'Все';
+    this.rayon = ALL_STR;
     this.updateFilter();
   }
 
@@ -94,13 +96,13 @@ export class ItemsFilter extends Vue {
 
         if (
           this.rayon &&
-          this.rayon !== 'Все' &&
+          this.rayon !== ALL_STR &&
           !rayons.includes(this.rayon)
         ) {
           return false;
         }
       } else {
-        return this.rayon === 'Все';
+        return this.rayon === ALL_STR;
       }
       return true;
     });

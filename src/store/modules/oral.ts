@@ -6,7 +6,7 @@ import {
   Module,
   getModule
 } from 'vuex-module-decorators';
-import { IconOptions } from '@nextgis/webmap';
+import { CirclePaint } from '@nextgis/webmap';
 
 import store from '..';
 import ngw, {
@@ -25,7 +25,7 @@ export class OralState extends VuexModule {
   photos: BdPhotoProperties[] = [];
   meta: Alias[] = [];
   detailItem: any | false = false;
-  legendItems: Array<{ name: string; item: IconOptions }> = [];
+  legendItems: Array<{ name: string; item: CirclePaint }> = [];
 
   get features() {
     return this.filtered;
@@ -65,7 +65,7 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_setLegend' })
-  setLegend(legendItem: { name: string; item: IconOptions }) {
+  setLegend(legendItem: { name: string; item: CirclePaint }) {
     return legendItem;
   }
 
@@ -120,7 +120,7 @@ export class OralState extends VuexModule {
   }
 
   @Mutation
-  _setLegend(legendItem: { name: string; item: IconOptions }) {
+  _setLegend(legendItem: { name: string; item: CirclePaint }) {
     const exist = this.legendItems.find(x => x.name === legendItem.name);
     if (!exist) {
       this.legendItems.push(legendItem);

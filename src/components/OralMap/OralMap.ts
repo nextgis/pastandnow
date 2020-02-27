@@ -4,14 +4,70 @@ import { Feature, Point, FeatureCollection } from 'geojson';
 // @ts-ignore
 import geojsonExtent from '@mapbox/geojson-extent';
 
-import { getIcon, IconOptions } from '@nextgis/icons';
-import { VectorLayerAdapter } from '@nextgis/webmap';
+import { VectorLayerAdapter, CirclePaint } from '@nextgis/webmap';
 import { VueNgwMapbox } from '@nextgis/vue-ngw-mapbox';
 
 import config from '../../../config.json';
 import { BdMainItem } from '../../api/ngw';
 import { oralModule, OralFeature } from '../../store/modules/oral';
 import { appModule } from '../../store/modules/app';
+
+export const featureStyles: Record<string, CirclePaint> = {
+  водоем: { color: '#4163aa' },
+  ландшафт: { color: '#93bf20' },
+  памятник: { color: '#e42a1b' },
+  строение: { color: '#289de4' },
+  территория: { color: '#e75dbd' },
+  улица: { color: '#fbd507' },
+  зона: { color: '#bbbbbb' },
+  'населенный пункт': { color: '#aaaaaa' },
+  район: { color: '#b1ae44' },
+  другой: { color: '#363636' },
+  метро: { color: '#8807ff' },
+  'метро-2': { color: '#8807ff' },
+  'другие подземные объекты': { color: '#8807ff' }
+};
+export const featureStyleKeys = Object.keys(featureStyles);
+
+export function getHistoryPaint(
+  properties?: Record<string, any> | null,
+  options?: CirclePaint,
+  forLegend = false
+) {
+  const defaultStyle: CirclePaint = {
+    color: '#363636',
+    fillOpacity: 0.8,
+    weight: 2,
+    stroke: true
+  };
+  let style: CirclePaint | undefined;
+  let styleId: string | undefined;
+  if (properties && properties.type) {
+    const featureType: string = properties.type;
+    styleId = featureStyleKeys.find(x => featureType.search(x) !== -1);
+    if (styleId && featureStyles[styleId]) {
+      style = featureStyles[styleId];
+    }
+  }
+  const paint: CirclePaint = {
+    ...defaultStyle,
+    ...style,
+    ...options
+  };
+  if (style && styleId && forLegend) {
+    oralModule.setLegend({ name: styleId, item: paint });
+  }
+  return paint;
+}
+
+function getHistoryIcon(
+  feature: Feature,
+  options?: CirclePaint,
+  forLegend = false
+) {
+  const paint = getHistoryPaint(feature.properties, options, forLegend);
+  return paint;
+}
 
 @Component
 export class OralMap extends Mixins(VueNgwMapbox) {
@@ -87,12 +143,12 @@ export class OralMap extends Mixins(VueNgwMapbox) {
       return this.ngwMap
         .addGeoJsonLayer({
           data,
-          type: 'icon',
+          type: 'circle',
           paint: feature => {
-            return this.getHistoryIcon(feature, { size: 20 }, true);
+            return getHistoryIcon(feature, { radius: 6 }, true);
           },
           selectedPaint: feature => {
-            return this.getHistoryIcon(feature, { size: 40 });
+            return getHistoryIcon(feature, { radius: 9 });
           },
           selectable: true,
           unselectOnSecondClick: true,
@@ -150,49 +206,5 @@ export class OralMap extends Mixins(VueNgwMapbox) {
       this.addMarkers(_items);
     }
     this.loaded = true;
-  }
-
-  private getHistoryIcon(
-    feature: Feature,
-    options?: IconOptions,
-    forLegend = false
-  ) {
-    const featureStyles: Record<string, IconOptions> = {
-      водоем: { color: '#0000ff', shape: 'marker' },
-      ландшафт: { color: '#008000', shape: 'marker' },
-      памятник: { color: '#ff0000', shape: 'marker' },
-      строение: { color: '#ffa500', shape: 'marker' },
-      улица: { color: '#ffff00', shape: 'marker' },
-      зона: { color: '#bbbbbb', shape: 'marker' },
-      'населенный пункт': { color: '#49423d', shape: 'marker' },
-      район: { color: '#808080', shape: 'marker' },
-      другой: { color: '#000000', shape: 'marker' },
-      метро: { color: '#ffa500', shape: 'brill' },
-      'метро-2': { color: '#ff0000', shape: 'brill' },
-      'другие подземные объекты': { color: '#808080', shape: 'brill' }
-    };
-
-    const defaultStyle: IconOptions = { color: '#fff', shape: 'marker' };
-    let style: IconOptions | undefined;
-    let styleId: string | undefined;
-    if (feature.properties && feature.properties.type) {
-      const featureType: string = feature.properties.type;
-      styleId = Object.keys(featureStyles).find(
-        x => featureType.search(x) !== -1
-      );
-      if (styleId && featureStyles[styleId]) {
-        style = featureStyles[styleId];
-      }
-    }
-    const iconOpt: IconOptions = {
-      ...defaultStyle,
-      ...style,
-      ...options
-    };
-    const icon = getIcon(iconOpt);
-    if (style && styleId && forLegend) {
-      oralModule.setLegend({ name: styleId, item: icon });
-    }
-    return icon;
   }
 }
