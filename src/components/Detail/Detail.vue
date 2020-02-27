@@ -13,7 +13,7 @@
     </div>
 
     <v-list dense>
-      <v-list-item v-for="item in noHideMeta" :key="item.value" class="detail-prop-list pb-3" style>
+      <v-list-item v-for="item in noHideMeta" :key="item.value" class="detail-prop-list pl-0 pb-2" style>
         <v-list-item-content>
           <v-list-item-subtitle>{{ item.text }}</v-list-item-subtitle>
 

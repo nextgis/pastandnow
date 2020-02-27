@@ -19,8 +19,8 @@
     </v-content>
 
     <v-navigation-drawer v-model="drawer" stateless fixed app width="360">
-      <drawer-container>
-        <div class="filter-block">
+      <div class="drawer-content d-flex flex-column">
+        <div class="drawer-header-content">
           <items-filter></items-filter>
 
           <div>
@@ -35,17 +35,19 @@
             ></v-text-field>
           </div>
         </div>
-        <div v-if="items && items.length">
-          <div>
-            <list></list>
+        <div class="flex-grow-1 drawer-body-content">
+          <div v-if="items && items.length">
+            <div>
+              <list></list>
+            </div>
+          </div>
+          <div v-else>
+            <div class="pa-3 text-center">
+              <v-progress-circular indeterminate color="primary"></v-progress-circular>
+            </div>
           </div>
         </div>
-        <div v-else>
-          <div class="pa-3 text-center">
-            <v-progress-circular indeterminate color="primary"></v-progress-circular>
-          </div>
-        </div>
-        <template slot="footer">
+        <!-- <div class="drawer-footer-content">
           <v-item-group class="bottom-button">
             <v-btn text color="grey">
               <v-icon>save_alt</v-icon>
@@ -54,20 +56,26 @@
               <v-icon @click="page = 'table'">table_chart</v-icon>
             </v-btn>
           </v-item-group>
-        </template>
-      </drawer-container>
+        </div>-->
+      </div>
     </v-navigation-drawer>
 
-    <v-navigation-drawer :value="!!detail" stateless width="400" absolute app right>
-      <drawer-container v-if="detail">
-        <template slot="header">
-          <v-btn @click="detail = false" text icon class="pa-0 ma-0">
-            <v-icon>close</v-icon>
-          </v-btn>
-          {{detail.properties.name}}
-        </template>
-        <detail></detail>
-        <template slot="footer">
+    <v-navigation-drawer :value="!!detail" stateless width="360" absolute app right>
+      <div v-if="detail" class="drawer-content d-flex flex-column pt-3 pb-0 pa-5">
+        <div class="drawer-header-content pb-5">
+          <div class="pb-3 d-flex justify-space-between">
+            <v-btn @click="detail = false" text icon>
+              <v-icon>close</v-icon>
+            </v-btn>
+            <v-chip class="ma-2" color="#7bd235" dark small label>{{detail.properties.status}}</v-chip>
+          </div>
+          <div>{{detail.properties.name}}</div>
+          <div class="subtitle subtitle-2">{{detail.properties.type}}</div>
+        </div>
+        <div class="flex-grow-1 drawer-body-content">
+          <detail></detail>
+        </div>
+        <div class="drawer-footer-content">
           <v-item-group class="bottom-button">
             <v-tooltip top>
               <template v-slot:activator="{ on }">
@@ -90,8 +98,8 @@
               <span>Показать на карте</span>
             </v-tooltip>
           </v-item-group>
-        </template>
-      </drawer-container>
+        </div>
+      </div>
     </v-navigation-drawer>
   </v-app>
 </template>
@@ -103,6 +111,18 @@ export { Main as default } from "./Main";
 
 <style lang="scss">
 // @import "./style/variables.scss";
+
+.drawer-content {
+  height: 100%;
+}
+
+.subtitle {
+  color: #a0a8ab;
+}
+
+.drawer-body-content {
+  overflow: auto;
+}
 
 .drawe-icon {
   &.active {

@@ -2,10 +2,6 @@
   <div>
     <v-list dense>
       <v-list-item v-for="item in portion" :key="item.id">
-        <v-list-item-content>
-          <v-list-item-title :title="item.name">{{ item.name }}</v-list-item-title>
-        </v-list-item-content>
-
         <v-list-item-action class="pa-0">
           <v-btn @click="setDetail(item.id)" icon ripple>
             <v-icon
@@ -14,6 +10,9 @@
             >info</v-icon>
           </v-btn>
         </v-list-item-action>
+        <v-list-item-content>
+          <div>{{ item.name }}</div>
+        </v-list-item-content>
       </v-list-item>
     </v-list>
     <div v-if="displayItems.length > portion.length" class="text-center">
