@@ -11,7 +11,7 @@ export class List extends Vue {
 
   portion: BdMainItemProperties[] = [];
 
-  item: number | false = false;
+  active: number | null = null;
 
   get listSearchText(): string {
     return appModule.listSearchText;
@@ -61,22 +61,22 @@ export class List extends Vue {
     }
   }
 
-  @Watch('item')
-  setDetail(id: number) {
-    oralModule.setDetail(id);
-    appModule.zoomTo(id);
+  @Watch('detail')
+  onDetailChange(detail?: BdMainItem) {
+    const index = detail ? this.items.findIndex(x => x.id === detail.id) : null;
+    this.active = index;
   }
-
-  // @Watch('detail')
-  // onDetailChange(detail?: BdMainItem) {
-  //   this.item = detail !== undefined ? Number(detail.id) : false;
-  // }
 
   @Watch('listSearchText')
   @Watch('filtered')
   resetPortions() {
     this.portion = [];
     this.addPortion();
+  }
+
+  setDetail(id: number) {
+    oralModule.setDetail(id);
+    appModule.zoomTo(id);
   }
 
   addPortion() {

@@ -1,16 +1,8 @@
 <template>
   <div>
     <v-list>
-      <v-list-item-group v-model="item">
-        <v-list-item v-for="item in portion" :key="item.id">
-          <!-- <v-list-item-action class="pa-0">
-          <v-btn @click="setDetail(item.id)" icon ripple>
-            <v-icon
-              color="lighten-1"
-              v-bind:style="{ color: item.id === (detail && detail.id) ? 'orange' : 'grey' }"
-            >info</v-icon>
-          </v-btn>
-          </v-list-item-action>-->
+      <v-list-item-group v-model="active">
+        <v-list-item v-for="item in portion" :key="item.id" @click="setDetail(item.id)">
           <SymbolComponent :paint="getItemPaint(item)" class="mr-2"></SymbolComponent>
           <v-list-item-content>
             <div>{{ item.name }}</div>
