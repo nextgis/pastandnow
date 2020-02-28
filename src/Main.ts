@@ -29,6 +29,7 @@ import throttle from './store/utils/throttle';
 })
 export class Main extends Vue {
   throttleSave!: (value: string) => void;
+  legendOpen = true;
 
   mapOptions: NgwMapOptions = {
     connector,
@@ -84,6 +85,10 @@ export class Main extends Vue {
 
   set detail(value: BdMainItemProperties) {
     oralModule.setDetail(value.id);
+  }
+
+  get module() {
+    return oralModule;
   }
 
   mounted() {

@@ -1,6 +1,5 @@
 <template>
   <div v-if="detail && meta">
-    <!-- араж использовался как автобусный парк [1960-е, ГИГ] -->
     <div v-if="photos && photos.length">
       <a v-for="photo in photos" :key="photo.id" @click="dialog = true; bigImgSrc = photo.link_big">
         <v-img :src="photo.link_small" class="grey lighten-2"></v-img>

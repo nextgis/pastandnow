@@ -3,39 +3,62 @@
     <v-content>
       <oral-map :mapOptions="mapOptions" :fullFilling="true">
         <vue-ngw-control position="top-left" :margin="true">
-          <div v-if="!drawer">
-            <v-layout align-center justify-start row fill-height class="ma-1">
-              <v-btn @click="drawer = !drawer" fab small>
-                <v-icon large class="drawe-icon" :class="{ active: drawer }">chevron_right</v-icon>
-              </v-btn>
-              <span class="title ml-1">Устная память</span>
-            </v-layout>
-          </div>
+          <v-btn @click="drawer = !drawer" fab small class="rectangle-fab">
+            <v-icon large class="drawe-icon" :class="{ active: drawer }">chevron_right</v-icon>
+          </v-btn>
         </vue-ngw-control>
         <vue-ngw-control position="bottom-left" :margin="true">
-          <Legend></Legend>
+          <v-card
+            class="mx-auto legend-card"
+            max-width="300"
+            max-height="500"
+            dark
+            tile
+            v-if="module.legendItems.length"
+          >
+            <div v-if="legendOpen" class="d-flex flex-column">
+              <div class="flex-header-content">
+                <div class="d-flex justify-space-between">
+                  <span class="pl-2 title font-weight-light">Легенда</span>
+                  <v-btn @click="legendOpen = false" text icon>
+                    <v-icon>close</v-icon>
+                  </v-btn>
+                </div>
+              </div>
+              <div class="flex-grow-1 flex-body-content">
+                <Legend></Legend>
+              </div>
+            </div>
+            <div v-else>
+              <v-btn @click="legendOpen = !legendOpen" fab small class="rectangle-fab">
+                <v-icon class :class="{ active: drawer }">format_list_bulleted</v-icon>
+              </v-btn>
+            </div>
+          </v-card>
         </vue-ngw-control>
       </oral-map>
     </v-content>
 
     <v-navigation-drawer v-model="drawer" stateless fixed app width="360">
       <div class="drawer-content d-flex flex-column">
-        <div class="drawer-header-content">
+        <div class="flex-header-content">
           <items-filter></items-filter>
-
-          <div>
-            <v-text-field
-              class="mx-4 pt-2 pb-2"
-              v-model="listSearchText"
-              hide-details
-              solo
-              clearable
-              label="Поиск"
-              prepend-inner-icon="search"
-            ></v-text-field>
-          </div>
+          <v-text-field
+            class="mx-4 pt-2 pb-2"
+            v-model="listSearchText"
+            cache-items
+            flat
+            solo
+            dense
+            outlined
+            hide-no-data
+            hide-details
+            clearable
+            label="Поиск"
+            prepend-inner-icon="search"
+          ></v-text-field>
         </div>
-        <div class="flex-grow-1 drawer-body-content">
+        <div class="flex-grow-1 flex-body-content">
           <div v-if="items && items.length">
             <div>
               <list></list>
@@ -47,7 +70,7 @@
             </div>
           </div>
         </div>
-        <!-- <div class="drawer-footer-content">
+        <!-- <div class="flex-footer-content">
           <v-item-group class="bottom-button">
             <v-btn text color="grey">
               <v-icon>save_alt</v-icon>
@@ -62,7 +85,7 @@
 
     <v-navigation-drawer :value="!!detail" stateless width="360" absolute app right>
       <div v-if="detail" class="drawer-content d-flex flex-column pt-3 pb-0 pa-5">
-        <div class="drawer-header-content pb-5">
+        <div class="flex-header-content pb-5">
           <div class="pb-3 d-flex justify-space-between">
             <v-btn @click="detail = false" text icon>
               <v-icon>close</v-icon>
@@ -72,10 +95,10 @@
           <div>{{detail.properties.name}}</div>
           <div class="subtitle subtitle-2">{{detail.properties.type}}</div>
         </div>
-        <div class="flex-grow-1 drawer-body-content">
+        <div class="flex-grow-1 flex-body-content">
           <detail></detail>
         </div>
-        <div class="drawer-footer-content">
+        <div class="flex-footer-content">
           <v-item-group class="bottom-button">
             <v-tooltip top>
               <template v-slot:activator="{ on }">
@@ -112,6 +135,10 @@ export { Main as default } from "./Main";
 <style lang="scss">
 // @import "./style/variables.scss";
 
+.rectangle-fab {
+  border-radius: inherit;
+}
+
 .drawer-content {
   height: 100%;
 }
@@ -120,7 +147,7 @@ export { Main as default } from "./Main";
   color: #a0a8ab;
 }
 
-.drawer-body-content {
+.flex-body-content {
   overflow: auto;
 }
 
