@@ -47,3 +47,14 @@ For more help/guidelines, check README in [vue-ts-cli](https://github.com/wingla
 ```bash
 yarn run prod
 ```
+
+## Docker
+
+```bash
+docker build -t registry.nextgis.com/pastandnow:0.0.0 .
+docker build -t registry.nextgis.com/pastandnow:latest .
+docker run -it -p 8080:8080 --rm --name code-nextgis-1 registry.nextgis.com/pastandnow:latest
+
+docker push registry.nextgis.com/pastandnow:0.0.0
+docker push registry.nextgis.com/pastandnow:latest
+```

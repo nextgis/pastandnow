@@ -25,7 +25,7 @@
                   </v-btn>
                 </div>
               </div>
-              <div class="flex-grow-1 flex-body-content">
+              <div class="flex-grow-1 flex-body-content legend-body">
                 <Legend></Legend>
               </div>
             </div>
@@ -137,6 +137,11 @@ export { Main as default } from "./Main";
 
 .rectangle-fab {
   border-radius: inherit;
+}
+
+.legend-body {
+  overflow: auto;
+  max-height: 300px;
 }
 
 .drawer-content {

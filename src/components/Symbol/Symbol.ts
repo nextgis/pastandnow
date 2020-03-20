@@ -1,5 +1,5 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { CirclePaint } from '@nextgis/webmap';
+import { CirclePaint } from '@nextgis/paint';
 
 @Component
 export default class Legend extends Vue {

@@ -18,7 +18,6 @@
     ></v-select>-->
 
     <v-autocomplete
-      :loading="!cities.length"
       dark
       cache-items
       class="mx-4 pt-2 pb-2"
@@ -34,7 +33,6 @@
     <!-- label="Город" -->
       <!-- label="Район" -->
     <v-autocomplete
-      :loading="!areas.length"
       dark
       cache-items
       class="mx-4 pt-2 pb-2"

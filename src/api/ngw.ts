@@ -97,7 +97,7 @@ export default {
       .getNgwLayerFeatures<Point, BdMainItemProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 100,
+        // limit: 100,
         // limit: 3000,
         fields
       })
@@ -129,17 +129,17 @@ export default {
 
   getLayerMeta() {
     return Promise.resolve([
-      { text: 'Идентификатор', value: 'id1', noHide: false },
+      { text: 'Идентификатор', value: 'id1', noHide: false, list: true },
       // { text: 'долгота', value: 'lat', noHide: true },
       // { text: 'широта', value: 'lon', noHide: true },
       { text: 'Адрес', value: 'addr', noHide: true },
-      { text: 'Город', value: 'city', noHide: false },
-      { text: 'Название объекта', value: 'name', noHide: true },
+      { text: 'Город', value: 'city', noHide: false, list: true },
+      { text: 'Название объекта', value: 'name', noHide: true, list: true },
       // { text: 'Тип объекта', value: 'type', noHide: true },
-      { text: 'Статус объекта', value: 'status', noHide: true },
-      { text: 'Район', value: 'rayon', noHide: true },
+      { text: 'Статус объекта', value: 'status', noHide: true, list: true },
+      { text: 'Район', value: 'rayon', noHide: true, list: true },
       { text: 'Неофициальное название', value: 'unoff', noHide: true },
-      { text: 'Тип', value: 'type' },
+      { text: 'Тип', value: 'type', list: true },
       { text: 'ОПИСАНИЕ', value: 'description', noHide: true },
       { text: 'Истории о прошлом', value: 'narrativ_l', type: 'Story' },
       { text: 'Семейные истории', value: 'narrativ_b', type: 'Story' },

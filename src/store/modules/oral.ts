@@ -6,7 +6,7 @@ import {
   Module,
   getModule
 } from 'vuex-module-decorators';
-import { CirclePaint } from '@nextgis/webmap';
+import { CirclePaint } from '@nextgis/paint';
 
 import store from '..';
 import ngw, {

@@ -4,7 +4,8 @@ import { Feature, Point, FeatureCollection } from 'geojson';
 // @ts-ignore
 import geojsonExtent from '@mapbox/geojson-extent';
 
-import { VectorLayerAdapter, CirclePaint } from '@nextgis/webmap';
+import { VectorLayerAdapter } from '@nextgis/webmap';
+import { CirclePaint } from '@nextgis/paint';
 import { VueNgwMapbox } from '@nextgis/vue-ngw-mapbox';
 
 import config from '../../../config.json';
@@ -37,7 +38,7 @@ export function getHistoryPaint(
   const defaultStyle: CirclePaint = {
     color: '#363636',
     fillOpacity: 0.8,
-    weight: 2,
+    // weight: 2,
     stroke: true
   };
   let style: CirclePaint | undefined;

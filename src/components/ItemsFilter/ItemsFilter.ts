@@ -56,9 +56,9 @@ export class ItemsFilter extends Vue {
     this.areasByCities = areas;
 
     const sortCities = Object.keys(cities).sort();
-    if (!(this.city in cities)) {
-      this.city = sortCities[0];
-    }
+    // if (!(this.city in cities)) {
+    //   this.city = sortCities[0];
+    // }
     this.cities = sortCities;
     this.updateFilterAreas();
     setTimeout(() => this.updateFilter(), 0);
