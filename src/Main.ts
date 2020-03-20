@@ -1,4 +1,4 @@
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 import { NgwMapOptions } from '@nextgis/ngw-map';
 
 import { qmsId, feedbackUrl } from '../config.json';
@@ -13,7 +13,7 @@ import Legend from './components/Legend/Legend.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import { BdMainItemProperties } from './api/ngw';
 import { appModule, AppPages } from './store/modules/app';
-import { oralModule } from './store/modules/oral';
+import { oralModule, FilterProperties } from './store/modules/oral';
 import throttle from './store/utils/throttle';
 
 @Component({
@@ -89,6 +89,11 @@ export class Main extends Vue {
 
   get module() {
     return oralModule;
+  }
+
+  @Watch('listSearchText')
+  updateFilter(val: string) {
+    oralModule.setFullTextFilter(val);
   }
 
   mounted() {

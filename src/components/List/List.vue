@@ -6,6 +6,7 @@
           <SymbolComponent :paint="getItemPaint(item)" class="mr-2"></SymbolComponent>
           <v-list-item-content>
             <div>{{ item.name }}</div>
+            <v-list-item-subtitle>{{ item.type }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>

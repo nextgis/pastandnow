@@ -132,15 +132,32 @@ export default {
       { text: 'Идентификатор', value: 'id1', noHide: false, list: true },
       // { text: 'долгота', value: 'lat', noHide: true },
       // { text: 'широта', value: 'lon', noHide: true },
-      { text: 'Адрес', value: 'addr', noHide: true },
+      { text: 'Адрес', value: 'addr', noHide: true, search: true },
       { text: 'Город', value: 'city', noHide: false, list: true },
-      { text: 'Название объекта', value: 'name', noHide: true, list: true },
+      {
+        text: 'Название объекта',
+        value: 'name',
+        noHide: true,
+        list: true,
+        search: true
+      },
       // { text: 'Тип объекта', value: 'type', noHide: true },
-      { text: 'Статус объекта', value: 'status', noHide: true, list: true },
+      {
+        text: 'Статус объекта',
+        value: 'status',
+        noHide: true,
+        list: true,
+        search: true
+      },
       { text: 'Район', value: 'rayon', noHide: true, list: true },
-      { text: 'Неофициальное название', value: 'unoff', noHide: true },
-      { text: 'Тип', value: 'type', list: true },
-      { text: 'ОПИСАНИЕ', value: 'description', noHide: true },
+      {
+        text: 'Неофициальное название',
+        value: 'unoff',
+        noHide: true,
+        search: true
+      },
+      { text: 'Тип', value: 'type', list: true, search: true },
+      { text: 'ОПИСАНИЕ', value: 'description', noHide: true, search: true },
       { text: 'Истории о прошлом', value: 'narrativ_l', type: 'Story' },
       { text: 'Семейные истории', value: 'narrativ_b', type: 'Story' },
       { text: 'Практики горожан', value: 'narrativ_p', type: 'Story' },

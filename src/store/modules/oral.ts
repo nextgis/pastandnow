@@ -7,6 +7,7 @@ import {
   getModule
 } from 'vuex-module-decorators';
 import { CirclePaint } from '@nextgis/paint';
+import { PropertiesFilter, featureFilter } from '@nextgis/properties-filter';
 
 import store from '..';
 import ngw, {
@@ -18,6 +19,13 @@ import { Alias } from '../../components/Detail/Detail';
 
 export type OralFeature = Feature<Point, BdMainItemProperties>;
 
+export interface FilterProperties {
+  city?: PropertiesFilter;
+  rayon?: PropertiesFilter;
+  type?: PropertiesFilter;
+  fullText?: PropertiesFilter;
+}
+
 @Module({ dynamic: true, store, name: 'oral' })
 export class OralState extends VuexModule {
   items: OralFeature[] = [];
@@ -27,8 +35,19 @@ export class OralState extends VuexModule {
   detailItem: any | false = false;
   legendItems: Array<{ name: string; item: CirclePaint }> = [];
 
+  filters: FilterProperties = {
+    city: undefined,
+    rayon: undefined,
+    type: undefined,
+    fullText: undefined
+  };
+
   get features() {
     return this.filtered;
+  }
+
+  get propertiesFilter(): PropertiesFilter {
+    return Object.values(this.filters).filter(x => x);
   }
 
   get sortFeatures() {
@@ -59,9 +78,37 @@ export class OralState extends VuexModule {
     return photos;
   }
 
-  @Action({ commit: '_setFilter' })
-  setFilter(items: OralFeature[]) {
-    return items;
+  @Action({ commit: '_updateFilter' })
+  async updateFilter(filters: FilterProperties) {
+    const filters_ = { ...this.filters, ...filters };
+    return filters_;
+  }
+
+  @Action({ commit: '_updateFilter' })
+  async setFullTextFilter(query: string) {
+    if (!query) {
+      return { ...this.filters, fullText: undefined };
+    }
+    const filters_ = { ...this.filters };
+    const meta = await ngw.getLayerMeta();
+    const searchField = meta.filter(x => x.search).map(x => x.value);
+    const propertiesFilter: PropertiesFilter = ['any'];
+    searchField.forEach(x => {
+      propertiesFilter.push([`%${x}%`, 'ilike', query]);
+    });
+    filters_.fullText = propertiesFilter;
+    return filters_;
+  }
+
+  @Action({ commit: '_updateFilter' })
+  async setTypesFilter(types: string[] | undefined) {
+    if (!types) {
+      return { ...this.filters, type: undefined };
+    }
+    const filters_ = { ...this.filters };
+
+    filters_.type = [['type', 'in', types]];
+    return filters_;
   }
 
   @Action({ commit: '_setLegend' })
@@ -89,7 +136,15 @@ export class OralState extends VuexModule {
   }
 
   @Mutation
-  _setFilter(items: OralFeature[]) {
+  _updateFilter(filters: FilterProperties) {
+    this.filters = filters;
+
+    const items: OralFeature[] = this.items.filter(x =>
+      featureFilter(
+        x,
+        Object.values(filters).filter(x => x)
+      )
+    );
     this.filtered = items;
 
     const detail = this.detailItem;

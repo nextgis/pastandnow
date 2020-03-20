@@ -1,5 +1,5 @@
 <template>
-  <v-list disabled flat dense>
+  <v-list flat dense>
     <!-- <v-subheader>Легенда</v-subheader> -->
     <v-list-item-group color="primary" class="legend-items">
       <v-list-item v-for="(item, i) in legendItems" :key="i">
@@ -7,6 +7,9 @@
         <v-list-item-content>
           <v-list-item-title v-text="item.text" class="text-capitalize"></v-list-item-title>
         </v-list-item-content>
+        <v-switch
+          v-model="legendFilterMem[item.text]"
+        ></v-switch>
       </v-list-item>
     </v-list-item-group>
   </v-list>

@@ -1,15 +1,17 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { BdMainItemProperties } from '../../api/ngw';
-import { oralModule, OralFeature } from '../../store/modules/oral';
+import {
+  oralModule,
+  OralFeature,
+  FilterProperties
+} from '../../store/modules/oral';
 
 const ALL_STR = 'Все районы';
 
 @Component
 export class ItemsFilter extends Vue {
   form = false;
-  years: [number, number] = [1900, 2018];
-  minYear = 1900;
-  maxYear = 2018;
+
   moscow: Array<{ name: string; param: string; value?: boolean }> = [
     { name: 'дворовая', param: 'mos1' },
     { name: 'легендарная', param: 'mos2' },
@@ -56,12 +58,9 @@ export class ItemsFilter extends Vue {
     this.areasByCities = areas;
 
     const sortCities = Object.keys(cities).sort();
-    // if (!(this.city in cities)) {
-    //   this.city = sortCities[0];
-    // }
     this.cities = sortCities;
     this.updateFilterAreas();
-    setTimeout(() => this.updateFilter(), 0);
+    setTimeout(() => this.updateFilter());
   }
 
   @Watch('city')
@@ -84,29 +83,37 @@ export class ItemsFilter extends Vue {
   }
 
   updateFilter() {
-    const items = this.items.slice();
+    const filters: FilterProperties = {
+      city: [['city', 'eq', this.city]]
+    };
 
-    const filtered = items.filter(x => {
-      const prop: BdMainItemProperties = x.properties;
-      if (prop.city !== this.city) {
-        return false;
-      }
-      if (prop.rayon) {
-        const rayons = prop.rayon.split(';').map(x => x.trim());
+    if (this.rayon && this.rayon !== ALL_STR) {
+      filters.rayon = [['%rayon%', 'ilike', this.rayon]];
+    } else {
+      filters.rayon = undefined;
+    }
 
-        if (
-          this.rayon &&
-          this.rayon !== ALL_STR &&
-          !rayons.includes(this.rayon)
-        ) {
-          return false;
-        }
-      } else {
-        return this.rayon === ALL_STR;
-      }
-      return true;
-    });
+    // const filtered = items.filter(x => {
+    //   const prop: BdMainItemProperties = x.properties;
+    //   if (prop.city !== this.city) {
+    //     return false;
+    //   }
+    //   if (prop.rayon) {
+    //     const rayons = prop.rayon.split(';').map(x => x.trim());
 
-    oralModule.setFilter(filtered);
+    //     if (
+    //       this.rayon &&
+    //       this.rayon !== ALL_STR &&
+    //       !rayons.includes(this.rayon)
+    //     ) {
+    //       return false;
+    //     }
+    //   } else {
+    //     return this.rayon === ALL_STR;
+    //   }
+    //   return true;
+    // });
+
+    oralModule.updateFilter(filters);
   }
 }
