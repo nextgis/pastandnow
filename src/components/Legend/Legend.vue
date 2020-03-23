@@ -1,17 +1,12 @@
 <template>
-  <v-list flat dense>
-    <!-- <v-subheader>Легенда</v-subheader> -->
-    <v-list-item-group color="primary" class="legend-items">
-      <v-list-item v-for="(item, i) in legendItems" :key="i">
-        <SymbolComponent class="mr-2" :paint="item.icon"></SymbolComponent>
-        <v-list-item-content>
-          <v-list-item-title v-text="item.text" class="text-capitalize"></v-list-item-title>
-        </v-list-item-content>
-        <v-switch
-          v-model="legendFilterMem[item.text]"
-        ></v-switch>
-      </v-list-item>
-    </v-list-item-group>
+  <v-list dense>
+    <v-list-item v-for="(item, i) in legendItems" :key="i" class>
+      <SymbolComponent class="mr-2" :paint="item.icon"></SymbolComponent>
+      <v-list-item-content>
+        <v-list-item-title v-text="item.text" class="text-capitalize"></v-list-item-title>
+      </v-list-item-content>
+      <v-switch class="ml-2" v-model="legendFilterMem[item.text]" inset dense color="primary"></v-switch>
+    </v-list-item>
   </v-list>
 </template>
 

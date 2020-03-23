@@ -43,6 +43,23 @@
       <div class="drawer-content d-flex flex-column">
         <div class="flex-header-content">
           <items-filter></items-filter>
+          <div class="pt-2 mx-4 d-flex justify-space-between">
+            <span class="subtitle-1 font-weight-bold">
+              Объекты
+              <v-chip class="font-weight-light" small>
+                <span v-if="isFilterSet">
+                  <span class="font-weight-bold">{{filtered.length}}</span> из&nbsp;
+                </span>
+                {{items.length}}
+              </v-chip>
+            </span>
+            <span class="subtitle-1 caption" color="primary" v-if="isFilterSet">
+              <span>Сбросить</span>
+              <v-btn text icon @click="resetFilter">
+                <v-icon>filter_list</v-icon>
+              </v-btn>
+            </span>
+          </div>
           <v-text-field
             class="mx-4 pt-2 pb-2"
             v-model="listSearchText"

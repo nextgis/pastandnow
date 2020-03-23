@@ -97,7 +97,7 @@ export default {
       .getNgwLayerFeatures<Point, BdMainItemProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        // limit: 100,
+        limit: 100,
         // limit: 3000,
         fields
       })

@@ -13,7 +13,7 @@ import Legend from './components/Legend/Legend.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import { BdMainItemProperties } from './api/ngw';
 import { appModule, AppPages } from './store/modules/app';
-import { oralModule, FilterProperties } from './store/modules/oral';
+import { oralModule } from './store/modules/oral';
 import throttle from './store/utils/throttle';
 
 @Component({
@@ -79,6 +79,14 @@ export class Main extends Vue {
     return oralModule.items.map(x => x.properties);
   }
 
+  get filtered() {
+    return oralModule.filtered;
+  }
+
+  get isFilterSet() {
+    return this.filtered.length !== this.items.length;
+  }
+
   get detail(): BdMainItemProperties {
     return oralModule.detailItem;
   }
@@ -94,6 +102,10 @@ export class Main extends Vue {
   @Watch('listSearchText')
   updateFilter(val: string) {
     oralModule.setFullTextFilter(val);
+  }
+
+  resetFilter() {
+    oralModule.resetFilter();
   }
 
   mounted() {

@@ -85,6 +85,18 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_updateFilter' })
+  async resetFilter() {
+    const filters = { ...this.filters };
+    for (const f in filters) {
+      const key = f as keyof FilterProperties;
+      if (key !== 'city') {
+        filters[key] = undefined;
+      }
+    }
+    return filters;
+  }
+
+  @Action({ commit: '_updateFilter' })
   async setFullTextFilter(query: string) {
     if (!query) {
       return { ...this.filters, fullText: undefined };
