@@ -11,14 +11,19 @@ async function getCities() {
     null,
     {
       id: config.ngwMarkerLayerId,
-      fields: 'city',
+      fields: 'city'
     }
   );
   const cities = [];
-  features.forEach((x) => {
-    const city = x.fields.city;
-    if (city && cities.indexOf(city) === -1) {
-      cities.push(city);
+  features.forEach(x => {
+    let city_ = x.fields.city;
+    if (city_) {
+      city_ = city_.split(';').map(y => y.trim());
+      city_.forEach(y => {
+        if (y && cities.indexOf(y) === -1) {
+          cities.push(y);
+        }
+      });
     }
   });
   fs.writeFile(out, JSON.stringify(cities), () =>
@@ -26,6 +31,6 @@ async function getCities() {
   );
 }
 
-getCities().catch((er) => {
+getCities().catch(er => {
   console.log(er);
 });

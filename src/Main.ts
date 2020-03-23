@@ -24,8 +24,8 @@ import throttle from './store/utils/throttle';
     ItemsFilter,
     Detail,
     DrawerContainer,
-    VueNgwControl,
-  },
+    VueNgwControl
+  }
 })
 export class Main extends Vue {
   throttleSave!: (value: string) => void;
@@ -39,8 +39,8 @@ export class Main extends Vue {
     qmsId,
     controlsOptions: {
       ZOOM: { position: 'top-right' },
-      ATTRIBUTION: { position: 'bottom-right' },
-    },
+      ATTRIBUTION: { position: 'bottom-right' }
+    }
   };
 
   get listSearchText(): string {
@@ -76,7 +76,7 @@ export class Main extends Vue {
   }
 
   get items(): BdMainItemProperties[] {
-    return oralModule.items.map((x) => x.properties);
+    return oralModule.items.map(x => x.properties);
   }
 
   get filtered() {

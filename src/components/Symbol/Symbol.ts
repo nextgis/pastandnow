@@ -8,7 +8,7 @@ export default class Legend extends Vue {
   get style() {
     return {
       width: 15 + 'px',
-      height: 15 + 'px',
+      height: 15 + 'px'
       // width: paint.radius + 'px',
       // height: paint.radius + 'px'
     };
@@ -19,7 +19,7 @@ export default class Legend extends Vue {
     return {
       ...this.style,
       backgroundColor: paint.fillColor || paint.color,
-      opacity: paint.fillOpacity || paint.opacity,
+      opacity: paint.fillOpacity || paint.opacity
     };
   }
 
@@ -27,7 +27,7 @@ export default class Legend extends Vue {
     const paint = this.paint;
     return {
       ...this.style,
-      borderColor: paint.strokeColor || paint.color,
+      borderColor: paint.strokeColor || paint.color
     };
   }
 }

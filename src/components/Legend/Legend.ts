@@ -14,10 +14,10 @@ export default class Legend extends Vue {
   get legendItems(): LegendItem[] {
     return [...oralModule.legendItems]
       .sort((a, b) => (a.name > b.name ? 1 : -1))
-      .map((x) => {
+      .map(x => {
         return {
           text: x.name,
-          icon: x.item,
+          icon: x.item
         };
       });
   }
@@ -30,9 +30,9 @@ export default class Legend extends Vue {
     oralModule.setActiveTypes(items);
     items = [...items];
     const arrayCompare = [...this.legendItems]
-      .map((x) => x.text)
+      .map(x => x.text)
       .sort()
-      .every(function (value, index) {
+      .every(function(value, index) {
         return value === items.sort()[index];
       });
     if (arrayCompare) {
@@ -43,6 +43,6 @@ export default class Legend extends Vue {
   }
 
   mounted() {
-    oralModule.setActiveTypes(oralModule.legendItems.map((x) => x.name));
+    oralModule.setActiveTypes(oralModule.legendItems.map(x => x.name));
   }
 }

@@ -10,10 +10,10 @@ export default new Vuetify({
     dark: false,
     themes: {
       dark: {
-        primary: '#005e7c',
-      },
-    },
-  },
+        primary: '#005e7c'
+      }
+    }
+  }
 });
 
 declare module 'vue/types/vue' {

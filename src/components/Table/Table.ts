@@ -4,7 +4,7 @@ import { oralModule } from '../../store/modules/oral';
 import ShowMoreField from '../ShowMoreField/ShowMoreField.vue';
 
 @Component({
-  components: { ShowMoreField },
+  components: { ShowMoreField }
 })
 export class Table extends Vue {
   @Prop() search!: string;
@@ -33,11 +33,11 @@ export class Table extends Vue {
     { text: 'Москва бездомная', value: 'mos3' },
     { text: 'Москва подземная', value: 'mos4' },
     { text: 'Москва субкультурная', value: 'mos5' },
-    { text: 'Москва легендарная', value: 'mos6' },
+    { text: 'Москва легендарная', value: 'mos6' }
   ];
 
   get items(): BdMainItemProperties[] {
-    return oralModule.sortFeatures.map((x) => x.properties);
+    return oralModule.sortFeatures.map(x => x.properties);
   }
 
   @Watch('pagination')

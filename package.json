@@ -8,7 +8,8 @@
     "build": "webpack --progress",
     "watch": "rimraf ./dist && npm run build -- --watch",
     "dev": "rimraf ./dist && npm run build",
-    "prod": "rimraf ./dist && npm run build -- --mode=production"
+    "prod": "rimraf ./dist && npm run build -- --mode=production",
+    "data": "node ./scripts/getCities.js"
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
