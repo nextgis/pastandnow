@@ -4,8 +4,9 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 export class ShowMoreField extends Vue {
   @Prop({ default: '' }) text!: string;
   @Prop({ default: 40 }) charCount!: number;
+  @Prop({ type: Boolean, default: true }) disableExpand!: boolean;
 
-  expand = false;
+  expand = true;
 
   get toShow() {
     if (this.expand) {

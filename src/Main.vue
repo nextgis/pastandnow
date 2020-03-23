@@ -107,7 +107,13 @@
             <v-btn @click="detail = false" text icon>
               <v-icon>close</v-icon>
             </v-btn>
-            <v-chip class="ma-2" color="#7bd235" dark small label>{{detail.properties.status}}</v-chip>
+            <v-chip
+              class="ma-2"
+              :color="detail.properties.status === 'существующий'? '#7bd235' : '#d2357b'"
+              dark
+              small
+              label
+            >{{detail.properties.status}}</v-chip>
           </div>
           <div>{{detail.properties.name}}</div>
           <div class="subtitle subtitle-2">{{detail.properties.type}}</div>
@@ -158,7 +164,7 @@ export { Main as default } from "./Main";
 
 .legend-body {
   overflow: auto;
-  max-height: 300px;
+  max-height: 400px;
 }
 
 .drawer-content {

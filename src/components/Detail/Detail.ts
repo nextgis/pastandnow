@@ -13,7 +13,7 @@ export interface Alias {
 @Component
 export class Detail extends Vue {
   url = '';
-  more = false;
+  more = true;
   bigImgSrc = '';
   dialog = false;
 
