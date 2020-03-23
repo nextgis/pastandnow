@@ -23,7 +23,6 @@
       solo-inverted
       v-model="rayon"
       :items="areas"
-      @change="updateFilter"
       no-data-text="Не найдено"
     ></v-autocomplete>
   </v-form>

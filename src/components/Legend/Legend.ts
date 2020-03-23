@@ -1,5 +1,4 @@
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import { arrayCompare } from '@nextgis/utils';
+import { Vue, Component } from 'vue-property-decorator';
 
 import { oralModule } from '../../store/modules/oral';
 
@@ -12,31 +11,28 @@ interface LegendItem {
 
 @Component({ components: { SymbolComponent } })
 export default class Legend extends Vue {
-  legendFilterMem: Record<string, boolean> = {};
-
   get legendItems(): LegendItem[] {
     return [...oralModule.legendItems]
       .sort((a, b) => (a.name > b.name ? 1 : -1))
-      .map(x => {
-        this.setTypeFilterItem(x.name, true);
+      .map((x) => {
         return {
           text: x.name,
-          icon: x.item
+          icon: x.item,
         };
       });
   }
 
-  @Watch('legendItems')
-  @Watch('legendFilterMem', { deep: true })
-  onLegendEnabledChange(item: Record<string, boolean>) {
-    const items = Object.entries(item)
-      .filter(([key, value]) => value)
-      .map(x => x[0]);
+  get activeTypes() {
+    return oralModule.activeTypes;
+  }
 
-    const arrayCompare = this.legendItems
-      .map(x => x.text)
+  set activeTypes(items: string[]) {
+    oralModule.setActiveTypes(items);
+    items = [...items];
+    const arrayCompare = [...this.legendItems]
+      .map((x) => x.text)
       .sort()
-      .every(function(value, index) {
+      .every(function (value, index) {
         return value === items.sort()[index];
       });
     if (arrayCompare) {
@@ -46,7 +42,7 @@ export default class Legend extends Vue {
     }
   }
 
-  setTypeFilterItem(name: string, value?: boolean) {
-    Vue.set(this.legendFilterMem, name, value ?? !this.legendFilterMem[name]);
+  mounted() {
+    oralModule.setActiveTypes(oralModule.legendItems.map((x) => x.name));
   }
 }

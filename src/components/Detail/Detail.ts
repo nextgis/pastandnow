@@ -18,7 +18,7 @@ export class Detail extends Vue {
   dialog = false;
 
   components = {
-    Story: ShowMoreField
+    Story: ShowMoreField,
   };
 
   get photos(): BdPhotoProperties[] {
@@ -38,14 +38,14 @@ export class Detail extends Vue {
   }
 
   get noHideMeta() {
-    return this.meta.filter(item => {
+    return this.meta.filter((item) => {
       const detail = this.getDetail(item.value);
       return detail && (!item.noHide ? this.more : true);
     });
   }
 
   get needMore(): boolean {
-    return this.meta.some(x => {
+    return this.meta.some((x) => {
       return !x.noHide ? this.getDetail(x.value) : true;
     });
   }
@@ -60,10 +60,10 @@ export class Detail extends Vue {
       const value = this.getDetail(alias.value);
       if (alias.type === 'NarratorLink') {
         const detail = this.getDetail(alias.value) as string;
-        const names = value && detail && detail.split(',').map(x => x.trim());
+        const names = value && detail && detail.split(',').map((x) => x.trim());
         const links =
           this.detail.nar_codes &&
-          this.detail.nar_codes.split(',').map(x => x.trim());
+          this.detail.nar_codes.split(',').map((x) => x.trim());
         return (
           names &&
           names

@@ -5,7 +5,14 @@
       <v-list-item-content>
         <v-list-item-title v-text="item.text" class="text-capitalize"></v-list-item-title>
       </v-list-item-content>
-      <v-switch class="ml-2" v-model="legendFilterMem[item.text]" inset dense color="primary"></v-switch>
+      <v-switch
+        class="ml-2"
+        v-model="activeTypes"
+        :value="item.text"
+        inset
+        dense
+        color="primary"
+      ></v-switch>
     </v-list-item>
   </v-list>
 </template>

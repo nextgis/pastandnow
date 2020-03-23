@@ -3,7 +3,7 @@ import { NgwMapOptions } from '@nextgis/ngw-map';
 
 import { qmsId, feedbackUrl } from '../config.json';
 import { connector } from './api/ngw';
-import VueNgwControl from '../nextgisweb_frontend/packages/vue-ngw-map/src/components/VueNgwControl';
+import { VueNgwControl } from '@nextgis/vue-ngw-map';
 
 import List from './components/List/List.vue';
 import { OralMap } from './components/OralMap/OralMap';
@@ -24,8 +24,8 @@ import throttle from './store/utils/throttle';
     ItemsFilter,
     Detail,
     DrawerContainer,
-    VueNgwControl
-  }
+    VueNgwControl,
+  },
 })
 export class Main extends Vue {
   throttleSave!: (value: string) => void;
@@ -39,12 +39,12 @@ export class Main extends Vue {
     qmsId,
     controlsOptions: {
       ZOOM: { position: 'top-right' },
-      ATTRIBUTION: { position: 'bottom-right' }
-    }
+      ATTRIBUTION: { position: 'bottom-right' },
+    },
   };
 
   get listSearchText(): string {
-    return appModule.listSearchText;
+    return oralModule.listSearchText;
   }
 
   set listSearchText(value: string) {
@@ -76,7 +76,7 @@ export class Main extends Vue {
   }
 
   get items(): BdMainItemProperties[] {
-    return oralModule.items.map(x => x.properties);
+    return oralModule.items.map((x) => x.properties);
   }
 
   get filtered() {
@@ -118,7 +118,7 @@ export class Main extends Vue {
   }
 
   setListSearchText(value: string) {
-    appModule.setListSearchText(value);
+    oralModule.setListSearchText(value);
   }
 
   openFeedbackPage() {

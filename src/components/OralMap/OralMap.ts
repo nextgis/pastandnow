@@ -26,7 +26,7 @@ export const featureStyles: Record<string, CirclePaint> = {
   другой: { color: '#363636' },
   метро: { color: '#8807ff' },
   'метро-2': { color: '#8807ff' },
-  'другие подземные объекты': { color: '#8807ff' }
+  'другие подземные объекты': { color: '#8807ff' },
 };
 export const featureStyleKeys = Object.keys(featureStyles);
 
@@ -39,13 +39,13 @@ export function getHistoryPaint(
     color: '#363636',
     fillOpacity: 0.8,
     // weight: 2,
-    stroke: true
+    stroke: true,
   };
   let style: CirclePaint | undefined;
   let styleId: string | undefined;
   if (properties && properties.type) {
     const featureType: string = properties.type;
-    styleId = featureStyleKeys.find(x => featureType.search(x) !== -1);
+    styleId = featureStyleKeys.find((x) => featureType.search(x) !== -1);
     if (styleId && featureStyles[styleId]) {
       style = featureStyles[styleId];
     }
@@ -53,7 +53,7 @@ export function getHistoryPaint(
   const paint: CirclePaint = {
     ...defaultStyle,
     ...style,
-    ...options
+    ...options,
   };
   if (style && styleId && forLegend) {
     oralModule.setLegend({ name: styleId, item: paint });
@@ -123,7 +123,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
       const layers = this.layer && this.layer.getLayers();
       if (layers && layers.length) {
         const layer = layers.find(
-          x =>
+          (x) =>
             x.feature && x.feature.properties && x.feature.properties.id === id
         );
         const feature = layer && (layer.feature as Feature<Point>);
@@ -145,17 +145,17 @@ export class OralMap extends Mixins(VueNgwMapbox) {
         .addGeoJsonLayer({
           data,
           type: 'circle',
-          paint: feature => {
+          paint: (feature) => {
             return getHistoryIcon(feature, { radius: 6 }, true);
           },
-          selectedPaint: feature => {
+          selectedPaint: (feature) => {
             return getHistoryIcon(feature, { radius: 9 });
           },
           selectable: true,
           unselectOnSecondClick: true,
-          visibility: true
+          visibility: true,
         })
-        .then(layerId => {
+        .then((layerId) => {
           const l = this.ngwMap.getLayer(layerId) as VectorLayerAdapter;
           this.layer = l;
           this.ngwMap.emitter.on(
@@ -174,7 +174,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
           );
         });
     } else if (this.layer.propertiesFilter) {
-      this.layer.propertiesFilter([['$id', 'in', features.map(x => x.id)]]);
+      this.layer.propertiesFilter([['$id', 'in', features.map((x) => x.id)]]);
     }
 
     return this.layer;
@@ -185,14 +185,14 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     if (layer && layer.getLayers) {
       const layers = layer.getLayers();
       const features = layers
-        .filter(x => {
+        .filter((x) => {
           return x.visible;
         })
-        .map(x => x.feature);
+        .map((x) => x.feature);
       if (features.length) {
         const extent = geojsonExtent({
           type: 'FeatureCollection',
-          features
+          features,
         });
         this.ngwMap.fitBounds(extent, { maxZoom: 16 });
       }

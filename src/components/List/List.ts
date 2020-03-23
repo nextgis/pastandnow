@@ -14,11 +14,11 @@ export class List extends Vue {
   active: number | null = null;
 
   get listSearchText(): string {
-    return appModule.listSearchText;
+    return oralModule.listSearchText;
   }
 
   get items(): BdMainItemProperties[] {
-    return oralModule.sortFeatures.map(x => x.properties);
+    return oralModule.sortFeatures.map((x) => x.properties);
   }
 
   get filtered() {
@@ -47,7 +47,9 @@ export class List extends Vue {
 
   @Watch('detail')
   onDetailChange(detail?: BdMainItem) {
-    const index = detail ? this.items.findIndex(x => x.id === detail.id) : null;
+    const index = detail
+      ? this.items.findIndex((x) => x.id === detail.id)
+      : null;
     this.active = index;
   }
 

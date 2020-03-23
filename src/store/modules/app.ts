@@ -3,7 +3,7 @@ import {
   Mutation,
   Action,
   Module,
-  getModule
+  getModule,
 } from 'vuex-module-decorators';
 import store from '../../store';
 
@@ -14,7 +14,6 @@ export class AppState extends VuexModule {
   drawer = true;
   page: AppPages = 'main';
   centerId: number | null = null;
-  listSearchText = '';
 
   @Action({ commit: '_toggleDrawer' })
   showDrawer() {
@@ -31,11 +30,6 @@ export class AppState extends VuexModule {
     return value;
   }
 
-  @Action({ commit: '_setListSearchText' })
-  setListSearchText(value: string) {
-    return value;
-  }
-
   @Action({ commit: '_setPage' })
   setPage(page: AppPages) {
     return page;
@@ -49,11 +43,6 @@ export class AppState extends VuexModule {
   @Mutation
   _toggleDrawer(status: boolean) {
     this.drawer = status;
-  }
-
-  @Mutation
-  _setListSearchText(value: string) {
-    this.listSearchText = value;
   }
 
   @Mutation
