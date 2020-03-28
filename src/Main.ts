@@ -11,6 +11,7 @@ import ItemsFilter from './components/ItemsFilter/ItemsFilter.vue';
 import Detail from './components/Detail/Detail.vue';
 import Legend from './components/Legend/Legend.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
+import FilterPanel from './components/FilterPanel/FilterPanel.vue';
 import { BdMainItemProperties } from './api/ngw';
 import { appModule, AppPages } from './store/modules/app';
 import { oralModule } from './store/modules/oral';
@@ -24,12 +25,15 @@ import throttle from './store/utils/throttle';
     ItemsFilter,
     Detail,
     DrawerContainer,
-    VueNgwControl
-  }
+    VueNgwControl,
+    FilterPanel,
+  },
 })
 export class Main extends Vue {
   throttleSave!: (value: string) => void;
   legendOpen = true;
+
+  filterPanelOpen = false;
 
   mapOptions: NgwMapOptions = {
     connector,
@@ -39,8 +43,8 @@ export class Main extends Vue {
     qmsId,
     controlsOptions: {
       ZOOM: { position: 'top-right' },
-      ATTRIBUTION: { position: 'bottom-right' }
-    }
+      ATTRIBUTION: { position: 'bottom-right' },
+    },
   };
 
   get listSearchText(): string {
@@ -76,7 +80,7 @@ export class Main extends Vue {
   }
 
   get items(): BdMainItemProperties[] {
-    return oralModule.items.map(x => x.properties);
+    return oralModule.items.map((x) => x.properties);
   }
 
   get filtered() {

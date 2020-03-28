@@ -3,7 +3,7 @@ import {
   Mutation,
   Action,
   Module,
-  getModule
+  getModule,
 } from 'vuex-module-decorators';
 import store from '../../store';
 

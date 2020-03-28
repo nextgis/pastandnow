@@ -36,6 +36,7 @@ export interface BdMainItemProperties {
   narrativ_b?: string;
   addr?: string;
   narrativ_l: string;
+  narrativ_t: string;
   lon: number;
   narrativ_p?: string;
   type: string;
@@ -79,7 +80,7 @@ export const fieldsAvailable: Record<string, boolean> = {
   status: true,
   type: true,
   unoff: true,
-  visual: true
+  visual: true,
 };
 
 // const fields: string[] = [];
@@ -92,16 +93,16 @@ export const fieldsAvailable: Record<string, boolean> = {
 export default {
   async getLayerGeoJson() {
     const meta = await this.getLayerMeta();
-    const fields = meta.map(x => x.value);
+    const fields = meta.map((x) => x.value);
     return NgwKit.utils
       .getNgwLayerFeatures<Point, BdMainItemProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 100,
+        // limit: 100,
         // limit: 3000,
-        fields
+        fields,
       })
-      .then(data => {
+      .then((data) => {
         data.features.forEach((x, i) => {
           if (x.id) {
             x.properties.id = Number(x.id);
@@ -115,10 +116,10 @@ export default {
     return NgwKit.utils
       .getNgwLayerFeatures<Point, BdPhotoProperties>({
         connector,
-        resourceId: config.layerWithPhotos
+        resourceId: config.layerWithPhotos,
       })
-      .then(data => {
-        return data.features.map(x => {
+      .then((data) => {
+        return data.features.map((x) => {
           if (x.id) {
             x.properties.id = Number(x.id);
           }
@@ -139,7 +140,7 @@ export default {
         value: 'name',
         noHide: true,
         list: true,
-        search: true
+        search: true,
       },
       // { text: 'Тип объекта', value: 'type', noHide: true },
       {
@@ -147,29 +148,32 @@ export default {
         value: 'status',
         noHide: true,
         list: true,
-        search: true
+        search: true,
       },
       { text: 'Район', value: 'rayon', noHide: true, list: true },
       {
         text: 'Неофициальное название',
         value: 'unoff',
         noHide: true,
-        search: true
+        search: true,
       },
       { text: 'Тип', value: 'type', list: true, search: true },
       { text: 'ОПИСАНИЕ', value: 'description', noHide: true, search: true },
       { text: 'Истории о прошлом', value: 'narrativ_l', type: 'Story' },
       { text: 'Семейные истории', value: 'narrativ_b', type: 'Story' },
       { text: 'Практики горожан', value: 'narrativ_p', type: 'Story' },
+      { text: 'Типы сюжетов', value: 'narrativ_t', type: 'Story' },
       { text: 'Характеристика места', value: 'descript2', type: 'Story' },
       { text: 'Рассказчик', value: 'narrator', type: 'NarratorLink' },
       { text: 'Визуальные материалы', value: 'visual' },
-      { text: 'Москва дворовая', value: 'mos1', type: 'Mos' },
-      { text: 'Москва церковная', value: 'mos2', type: 'Mos' },
-      { text: 'Москва бездомная', value: 'mos3', type: 'Mos' },
-      { text: 'Москва подземная', value: 'mos4', type: 'Mos' },
-      { text: 'Москва субкультурная', value: 'mos5', type: 'Mos' },
-      { text: 'Москва легендарная', value: 'mos6', type: 'Mos' }
+      { text: 'Дворы', value: 'mos1', type: 'Special' },
+      { text: 'Религия', value: 'mos2', type: 'Special' },
+      { text: 'Бездомные', value: 'mos3', type: 'Special' },
+      { text: 'Подземелья', value: 'mos4', type: 'Special' },
+      { text: 'Субкультуры', value: 'mos5', type: 'Special' },
+      { text: 'Легенды', value: 'mos6', type: 'Special' },
+      // { text: 'Памятники', value: 'mos7', type: 'Special' },
+      // { text: 'Последний адрес', value: 'mos8', type: 'Special' },
     ]);
-  }
+  },
 };

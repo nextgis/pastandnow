@@ -5,16 +5,20 @@ import {
   Action,
   Module,
   getModule,
-  MutationAction
+  MutationAction,
 } from 'vuex-module-decorators';
 import { CirclePaint } from '@nextgis/paint';
-import { PropertiesFilter, featureFilter } from '@nextgis/properties-filter';
+import {
+  PropertiesFilter,
+  featureFilter,
+  PropertyFilter,
+} from '@nextgis/properties-filter';
 
 import store from '..';
 import ngw, {
   BdMainItem,
   BdMainItemProperties,
-  BdPhotoProperties
+  BdPhotoProperties,
 } from '../../api/ngw';
 import { Alias } from '../../components/Detail/Detail';
 
@@ -27,6 +31,8 @@ export interface FilterProperties {
   rayon?: PropertiesFilter;
   type?: PropertiesFilter;
   fullText?: PropertiesFilter;
+  specialFilter?: PropertiesFilter;
+  narrativeType?: PropertiesFilter;
 }
 
 @Module({ dynamic: true, store, name: 'oral' })
@@ -37,6 +43,8 @@ export class OralState extends VuexModule {
   meta: Alias[] = [];
   detailItem: any | false = false;
 
+  narrativeTypeSelected: string[] = [];
+  specialFilterSelected: string[] = [];
   listSearchText = '';
   activeTypes: string[] = [];
   activeRayon = ALL_RAYON_STR;
@@ -51,7 +59,8 @@ export class OralState extends VuexModule {
     city: undefined,
     rayon: undefined,
     type: undefined,
-    fullText: undefined
+    fullText: undefined,
+    specialFilter: undefined,
   };
 
   get features() {
@@ -59,7 +68,7 @@ export class OralState extends VuexModule {
   }
 
   get propertiesFilter(): PropertiesFilter {
-    return Object.values(this.filters).filter(x => x);
+    return Object.values(this.filters).filter((x) => x);
   }
 
   get sortFeatures() {
@@ -107,7 +116,11 @@ export class OralState extends VuexModule {
     }
     this.setActiveRayon(ALL_RAYON_STR);
     this.setListSearchText('');
-    this.setActiveTypes(this.legendItems.map(x => x.name));
+    this.setSpecialFilterSelected(
+      []
+      // this.meta.filter((x) => x.type === 'Special').map((x) => x.value)
+    );
+    this.setActiveTypes(this.legendItems.map((x) => x.name));
     return filters;
   }
 
@@ -118,9 +131,9 @@ export class OralState extends VuexModule {
     }
     const filters_ = { ...this.filters };
     const meta = await ngw.getLayerMeta();
-    const searchField = meta.filter(x => x.search).map(x => x.value);
+    const searchField = meta.filter((x) => x.search).map((x) => x.value);
     const propertiesFilter: PropertiesFilter = ['any'];
-    searchField.forEach(x => {
+    searchField.forEach((x) => {
       propertiesFilter.push([`%${x}%`, 'ilike', query]);
     });
     filters_.fullText = propertiesFilter;
@@ -135,6 +148,32 @@ export class OralState extends VuexModule {
     const filters_ = { ...this.filters };
 
     filters_.type = [['type', 'in', types]];
+    return filters_;
+  }
+
+  @Action({ commit: '_updateFilter' })
+  async setSpecialFilter(selected: string[] | undefined) {
+    if (!selected) {
+      return { ...this.filters, specialFilter: undefined };
+    }
+    const filters_ = { ...this.filters };
+    const properties: PropertyFilter[] = selected.map((x) => [x, 'eq', 1]);
+    filters_.specialFilter = ['any', ...properties];
+    return filters_;
+  }
+
+  @Action({ commit: '_updateFilter' })
+  async setNarrativeType(selected: string[] | undefined) {
+    if (!selected) {
+      return { ...this.filters, narrativeType: undefined };
+    }
+    const filters_ = { ...this.filters };
+    const properties: PropertyFilter[] = selected.map((x) => [
+      '%narrativ_t%',
+      'ilike',
+      x,
+    ]);
+    filters_.narrativeType = ['any', ...properties];
     return filters_;
   }
 
@@ -171,6 +210,16 @@ export class OralState extends VuexModule {
     return { activeRayon };
   }
 
+  @MutationAction({ mutate: ['specialFilterSelected'] })
+  async setSpecialFilterSelected(specialFilterSelected: string[]) {
+    return { specialFilterSelected };
+  }
+
+  @MutationAction({ mutate: ['narrativeTypeSelected'] })
+  async setNarrativeTypeSelected(narrativeTypeSelected: string[]) {
+    return { narrativeTypeSelected };
+  }
+
   @MutationAction({ mutate: ['activeCity'] })
   async setActiveCity(activeCity: string) {
     return { activeCity };
@@ -186,10 +235,10 @@ export class OralState extends VuexModule {
   _updateFilter(filters: FilterProperties) {
     this.filters = filters;
 
-    const items: OralFeature[] = this.items.filter(x =>
+    const items: OralFeature[] = this.items.filter((x) =>
       featureFilter(
         x,
-        Object.values(filters).filter(x => x)
+        Object.values(filters).filter((x) => x)
       )
     );
     this.filtered = items;
@@ -223,7 +272,7 @@ export class OralState extends VuexModule {
 
   @Mutation
   _setLegend(legendItem: { name: string; item: CirclePaint }) {
-    const exist = this.legendItems.find(x => x.name === legendItem.name);
+    const exist = this.legendItems.find((x) => x.name === legendItem.name);
     if (!exist) {
       this.legendItems.push(legendItem);
     }

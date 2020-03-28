@@ -4,21 +4,12 @@ import {
   oralModule,
   OralFeature,
   FilterProperties,
-  ALL_RAYON_STR
+  ALL_RAYON_STR,
 } from '../../store/modules/oral';
 
 @Component
 export class ItemsFilter extends Vue {
   form = false;
-
-  moscow: Array<{ name: string; param: string; value?: boolean }> = [
-    { name: 'дворовая', param: 'mos1' },
-    { name: 'легендарная', param: 'mos2' },
-    { name: 'бездомная', param: 'mos3' },
-    { name: 'подземная', param: 'mos4' },
-    { name: 'церковная', param: 'mos5' },
-    { name: 'субкультурная', param: 'mos6', value: false }
-  ];
 
   get rayon() {
     return oralModule.activeRayon;
@@ -46,10 +37,6 @@ export class ItemsFilter extends Vue {
   }
 
   mounted() {
-    this.moscow.forEach(x => {
-      x.value = x.value !== undefined ? x.value : true;
-    });
-
     this.updateFilterValues(oralModule.items);
   }
 
@@ -63,7 +50,7 @@ export class ItemsFilter extends Vue {
   @Watch('rayon')
   updateFilter() {
     const filters: FilterProperties = {
-      city: [['city', 'eq', this.city]]
+      city: [['city', 'eq', this.city]],
     };
 
     if (this.rayon && this.rayon !== ALL_RAYON_STR) {
@@ -79,12 +66,12 @@ export class ItemsFilter extends Vue {
   updateFilterValues(items: OralFeature[]) {
     const areas: Record<string, string> = {};
     const cities: Record<string, boolean> = {};
-    items.forEach(x => {
+    items.forEach((x) => {
       const prop = x.properties;
       const rayons = prop.rayon;
       if (rayons) {
-        const rayonList = rayons.split(';').map(y => y.trim());
-        rayonList.forEach(y => {
+        const rayonList = rayons.split(';').map((y) => y.trim());
+        rayonList.forEach((y) => {
           areas[y] = prop.city;
         });
       }

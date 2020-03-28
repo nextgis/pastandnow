@@ -43,43 +43,54 @@
       <div class="drawer-content d-flex flex-column">
         <div class="flex-header-content">
           <items-filter></items-filter>
-          <div class="pt-2 mx-4 d-flex justify-space-between">
-            <span class="subtitle-1 font-weight-bold">
-              Объекты
-              <v-chip class="font-weight-light" small>
-                <span v-if="isFilterSet">
-                  <span class="font-weight-bold">{{filtered.length}}</span> из&nbsp;
-                </span>
-                {{items.length}}
-              </v-chip>
-            </span>
-            <span class="subtitle-1 caption" color="primary" v-if="isFilterSet">
-              <span>Сбросить</span>
-              <v-btn text icon @click="resetFilter">
-                <v-icon>filter_list</v-icon>
-              </v-btn>
-            </span>
+          <v-list v-if="filterPanelOpen">
+            <v-list-item @click="filterPanelOpen = false">
+              <v-list-item-icon>
+                <v-icon>arrow_back</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>Вернуться к списку объектов</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <div v-else>
+            <div class="pt-2 mx-4 d-flex justify-space-between">
+              <span class="subtitle-1 font-weight-bold">
+                Объекты
+                <v-chip class="font-weight-light" small>
+                  <span v-if="isFilterSet">
+                    <span class="font-weight-bold">{{filtered.length}}</span> из&nbsp;
+                  </span>
+                  {{items.length}}
+                </v-chip>
+              </span>
+              <span class="subtitle-1 caption" color="primary">
+                <v-btn v-if="isFilterSet" text small @click="resetFilter">Сбросить</v-btn>
+                <v-btn text icon @click="filterPanelOpen = true">
+                  <v-icon>filter_list</v-icon>
+                </v-btn>
+              </span>
+            </div>
+            <v-text-field
+              class="mx-4 pt-2 pb-2"
+              v-model="listSearchText"
+              cache-items
+              flat
+              solo
+              dense
+              outlined
+              hide-no-data
+              hide-details
+              clearable
+              label="Поиск"
+              prepend-inner-icon="search"
+            ></v-text-field>
           </div>
-          <v-text-field
-            class="mx-4 pt-2 pb-2"
-            v-model="listSearchText"
-            cache-items
-            flat
-            solo
-            dense
-            outlined
-            hide-no-data
-            hide-details
-            clearable
-            label="Поиск"
-            prepend-inner-icon="search"
-          ></v-text-field>
         </div>
         <div class="flex-grow-1 flex-body-content">
           <div v-if="items && items.length">
-            <div>
-              <list></list>
-            </div>
+            <FilterPanel v-if="filterPanelOpen" @close="filterPanelOpen = false"></FilterPanel>
+            <list v-else></list>
           </div>
           <div v-else>
             <div class="pa-3 text-center">

@@ -5,7 +5,7 @@ import TableComponent from './components/Table/Table.vue';
 import MainComponent from './Main.vue';
 
 @Component({
-  components: { MainComponent, TableComponent, AboutComponent }
+  components: { MainComponent, TableComponent, AboutComponent },
 })
 export class App extends Vue {
   tableSearch = '';
