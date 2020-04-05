@@ -189,14 +189,17 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_setDetail' })
-  setDetail(id: number | null) {
-    const item = this.filtered.find((x: BdMainItem) => {
-      const _id = x.properties.id;
-      return _id === id;
-    });
+  async setDetail(id: number | null) {
+    const item = this.filtered.find((x: BdMainItem) => x.properties.id === id);
     const detail = this.detailItem;
     if (detail && detail.id === id) {
       return false;
+    }
+    if (id) {
+      const feature = await ngw.getNgwLayerFeature(id);
+      if (feature) {
+        return feature;
+      }
     }
     return item;
   }

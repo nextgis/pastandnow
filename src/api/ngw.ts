@@ -6,6 +6,7 @@ import config from '../../config.json';
 export interface LayerMetaItem {
   text: string;
   value: string;
+  list?: boolean;
   type?: 'NarratorLink' | 'Special' | 'Story';
   detail?: boolean;
   search?: boolean;
@@ -61,46 +62,10 @@ export interface BdPhotoProperties {
 
 export type BdMainItem = Feature<Point, BdMainItemProperties>;
 
-export const fieldsAvailable: Record<string, boolean> = {
-  addr: true,
-  city: true,
-  descript2: true,
-  description: true,
-  geo: true,
-  id1: true,
-  lat: true,
-  lon: true,
-  mos1: true,
-  mos2: true,
-  mos3: true,
-  mos4: true,
-  mos5: true,
-  mos6: true,
-  name: true,
-  nar_codes: true,
-  narrativ_b: true,
-  narrativ_l: true,
-  narrativ_p: true,
-  narrativ_t: true,
-  narrator: true,
-  rayon: true,
-  status: true,
-  type: true,
-  unoff: true,
-  visual: true,
-};
-
-// const fields: string[] = [];
-// for (const f in fieldsAvailable) {
-//   if (fieldsAvailable[f]) {
-//     fields.push(f);
-//   }
-// }
-
 export default {
   async getLayerGeoJson() {
     const meta = await this.getLayerMeta();
-    const fields = meta.map((x) => x.value);
+    const fields = meta.filter((x) => x.search || x.list).map((x) => x.value);
     return NgwKit.utils
       .getNgwLayerFeatures<Point, BdMainItemProperties>({
         connector,
@@ -117,6 +82,14 @@ export default {
         });
         return data;
       });
+  },
+
+  async getNgwLayerFeature(featureId: number) {
+    return NgwKit.utils.getNgwLayerFeature({
+      resourceId: config.ngwMarkerLayerId,
+      featureId,
+      connector,
+    });
   },
 
   async getPhotos() {

@@ -26,7 +26,7 @@
 
             <v-dialog v-model="dialog" scrollable content-class="photo-dialog">
               <v-btn class="close-img-dialog-btn" color="info" @click="dialog = false">Закрыть</v-btn>
-              <v-img :src="bigImgSrc" contain></v-img>
+              <v-img :src="bigImgSrc"></v-img>
             </v-dialog>
           </div>
         </v-list-item-content>
@@ -46,6 +46,7 @@ export { Detail as default } from "./Detail";
 
 .photo-containerr {
   width: 100%;
+  overflow: hidden;
 }
 
 .show-photo-card .v-card__text {
