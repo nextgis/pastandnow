@@ -7,6 +7,12 @@ import {
   ALL_RAYON_STR,
 } from '../../store/modules/oral';
 
+interface CityItem {
+  text: string;
+  value: string;
+  count: number;
+}
+
 @Component
 export class ItemsFilter extends Vue {
   form = false;
@@ -30,7 +36,7 @@ export class ItemsFilter extends Vue {
     oralModule.setActiveCity(val);
   }
 
-  cities: string[] = [];
+  cities: CityItem[] = [];
 
   get items() {
     return oralModule.items;
@@ -64,8 +70,34 @@ export class ItemsFilter extends Vue {
 
   @Watch('items')
   updateFilterValues(items: OralFeature[]) {
+    const cities: Record<string, number> = {};
+    this.updateAreasItems(items);
+    items.forEach((x) => {
+      const prop = x.properties;
+      if (prop.city) {
+        cities[prop.city] = (cities[prop.city] ?? 0) + 1;
+      }
+    });
+    const sortCities = Object.keys(cities)
+      .sort()
+      .map((x) => {
+        const count = cities[x];
+        return {
+          text: `${x} (${count})`,
+          value: x,
+          count,
+        };
+      });
+    this.cities = sortCities;
+    this.updateFilterAreas();
+    setTimeout(() => this.updateFilter());
+  }
+
+  @Watch('city')
+  updateAreasItems(items?: OralFeature[]) {
+    items = items ?? this.items;
     const areas: Record<string, string> = {};
-    const cities: Record<string, boolean> = {};
+
     items.forEach((x) => {
       const prop = x.properties;
       const rayons = prop.rayon;
@@ -75,15 +107,19 @@ export class ItemsFilter extends Vue {
           areas[y] = prop.city;
         });
       }
-      cities[prop.city] = true;
     });
 
     this.areasByCities = areas;
+  }
 
-    const sortCities = Object.keys(cities).sort();
-    this.cities = sortCities;
-    this.updateFilterAreas();
-    setTimeout(() => this.updateFilter());
+  getItemStyle(item: CityItem) {
+    let weight = 400;
+    if (item.count >= 1000) {
+      weight = 700;
+    } else if (item.count >= 100) {
+      weight = 600;
+    }
+    return { 'font-weight': weight };
   }
 
   updateFilterAreas() {

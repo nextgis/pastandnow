@@ -87,6 +87,10 @@ export class Main extends Vue {
     return oralModule.filtered;
   }
 
+  get activeCityItems() {
+    return oralModule.activeCityItems;
+  }
+
   get isFilterSet() {
     return this.filtered.length !== this.items.length;
   }

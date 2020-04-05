@@ -67,6 +67,12 @@ export class OralState extends VuexModule {
     return this.filtered;
   }
 
+  get activeCityItems() {
+    return this.items.filter((x) => {
+      return x.properties.city === this.activeCity;
+    });
+  }
+
   get propertiesFilter(): PropertiesFilter {
     return Object.values(this.filters).filter((x) => x);
   }

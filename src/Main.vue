@@ -61,7 +61,7 @@
                   <span v-if="isFilterSet">
                     <span class="font-weight-bold">{{filtered.length}}</span> из&nbsp;
                   </span>
-                  {{items.length}}
+                  {{activeCityItems.length}}
                 </v-chip>
               </span>
               <span class="subtitle-1 caption" color="primary">
