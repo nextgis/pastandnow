@@ -1,6 +1,6 @@
 import { Vue, Component, Emit, Watch } from 'vue-property-decorator';
-import { Alias } from '../Detail/Detail';
 import { oralModule } from '../../store/modules/oral';
+import { LayerMetaItem } from 'src/api/ngw';
 
 interface NarrativeTypeItem {
   name: string;
@@ -24,7 +24,7 @@ export default class FilterPanel extends Vue {
     oralModule.setNarrativeTypeSelected(val);
   }
 
-  get meta(): Alias[] {
+  get meta(): LayerMetaItem[] {
     return oralModule.meta;
   }
 

@@ -1,52 +1,36 @@
 import { Vue, Component } from 'vue-property-decorator';
-import { BdMainItemProperties, BdPhotoProperties } from '../../api/ngw';
+import {
+  BdMainItemProperties,
+  BdPhotoProperties,
+  LayerMetaItem,
+} from '../../api/ngw';
 import { oralModule } from '../../store/modules/oral';
-import ShowMoreField from '../ShowMoreField/ShowMoreField.vue';
-
-export interface Alias {
-  text: string;
-  value: string;
-  type: 'NarratorLink' | 'Special' | 'Story';
-  noHide?: boolean;
-}
 
 @Component
 export class Detail extends Vue {
   url = '';
-  more = true;
   bigImgSrc = '';
   dialog = false;
-
-  components = {
-    Story: ShowMoreField,
-  };
 
   get photos(): BdPhotoProperties[] {
     const photo = oralModule.photos.find((x: BdPhotoProperties) => {
       return x.link_small && x.id_obj === this.detail.id1;
     });
     return photo ? [photo] : [];
-    // return oralModule.photos.filter((x: BdPhotoProperties) => x.id_obj === this.detail.id1);
   }
 
   get detail(): BdMainItemProperties {
     return oralModule.detailItem && oralModule.detailItem.properties;
   }
 
-  get meta(): Alias[] {
+  get meta(): LayerMetaItem[] {
     return oralModule.meta;
   }
 
-  get noHideMeta() {
-    return this.meta.filter((item) => {
-      const detail = this.getDetail(item.value);
-      return detail && (!item.noHide ? this.more : true);
-    });
-  }
-
-  get needMore(): boolean {
-    return this.meta.some((x) => {
-      return !x.noHide ? this.getDetail(x.value) : true;
+  get properties() {
+    return this.meta.filter((x) => {
+      const detail = this.getDetail(x.value);
+      return detail && (x.detail ?? true);
     });
   }
 
@@ -55,7 +39,7 @@ export class Detail extends Vue {
     return this.detail[v];
   }
 
-  getText(alias: Alias) {
+  getText(alias: LayerMetaItem) {
     if (alias.type) {
       const value = this.getDetail(alias.value);
       if (alias.type === 'NarratorLink') {

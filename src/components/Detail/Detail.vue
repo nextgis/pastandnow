@@ -2,17 +2,14 @@
   <div v-if="detail && meta">
     <v-list dense>
       <v-list-item
-        v-for="item in noHideMeta"
+        v-for="item in properties"
         :key="item.value"
         class="detail-prop-list pl-0 pb-0"
         style
       >
         <v-list-item-content>
-          <v-list-item-subtitle>{{ item.text }}</v-list-item-subtitle>
-          <span v-if="item.type === 'Story'">
-            <component v-bind:is="components[item.type]" :text="getText(item)"></component>
-          </span>
-          <v-list-item-title v-else v-html="getText(item)"></v-list-item-title>
+          <span class="caption text--secondary">{{ item.text }}</span>
+          <span class="body-2" v-html="getText(item)"></span>
         </v-list-item-content>
       </v-list-item>
       <v-list-item class="detail-prop-list pl-0 pb-2">
@@ -35,12 +32,6 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <!-- <div class="text-center">
-      <v-btn color="info" small v-if="needMore" @click="more = !more">
-        <span v-if="!more">Подробнее</span>
-        <span v-else>Свернуть</span>
-      </v-btn>
-    </div>-->
   </div>
 </template>
 

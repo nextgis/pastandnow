@@ -20,7 +20,7 @@ import ngw, {
   BdMainItemProperties,
   BdPhotoProperties,
 } from '../../api/ngw';
-import { Alias } from '../../components/Detail/Detail';
+import { LayerMetaItem } from '../../api/ngw';
 
 export const ALL_RAYON_STR = 'Все районы';
 
@@ -40,7 +40,7 @@ export class OralState extends VuexModule {
   items: OralFeature[] = [];
   filtered: OralFeature[] = [];
   photos: BdPhotoProperties[] = [];
-  meta: Alias[] = [];
+  meta: LayerMetaItem[] = [];
   detailItem: any | false = false;
 
   narrativeTypeSelected: string[] = [];
@@ -261,7 +261,7 @@ export class OralState extends VuexModule {
   }
 
   @Mutation
-  _setMeta(meta: Alias[]) {
+  _setMeta(meta: LayerMetaItem[]) {
     this.meta = meta;
   }
 

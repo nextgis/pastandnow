@@ -1,8 +1,15 @@
 import { Point, Feature } from 'geojson';
 import NgwConnector from '@nextgis/ngw-connector';
 import NgwKit from '@nextgis/ngw-kit';
-// @ts-ignore
 import config from '../../config.json';
+
+export interface LayerMetaItem {
+  text: string;
+  value: string;
+  type?: 'NarratorLink' | 'Special' | 'Story';
+  detail?: boolean;
+  search?: boolean;
+}
 
 export const url = config.baseUrl.replace(
   /^(https?|ftp):\/\//,
@@ -98,7 +105,7 @@ export default {
       .getNgwLayerFeatures<Point, BdMainItemProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        // limit: 100,
+        limit: 100,
         // limit: 3000,
         fields,
       })
@@ -128,37 +135,35 @@ export default {
       });
   },
 
-  getLayerMeta() {
+  getLayerMeta(): Promise<LayerMetaItem[]> {
     return Promise.resolve([
-      { text: 'Идентификатор', value: 'id1', noHide: false, list: true },
+      { text: 'Идентификатор', value: 'id1', detail: false, list: true },
       // { text: 'долгота', value: 'lat', noHide: true },
       // { text: 'широта', value: 'lon', noHide: true },
-      { text: 'Адрес', value: 'addr', noHide: true, search: true },
-      { text: 'Город', value: 'city', noHide: false, list: true },
+      { text: 'Адрес', value: 'addr', detail: true, search: true },
+      { text: 'Город', value: 'city', detail: false, list: true },
       {
         text: 'Название объекта',
         value: 'name',
-        noHide: true,
+        detail: false,
         list: true,
         search: true,
       },
-      // { text: 'Тип объекта', value: 'type', noHide: true },
       {
         text: 'Статус объекта',
         value: 'status',
-        noHide: true,
+        detail: false,
         list: true,
         search: true,
       },
-      { text: 'Район', value: 'rayon', noHide: true, list: true },
+      { text: 'Район', value: 'rayon', list: true },
       {
         text: 'Неофициальное название',
         value: 'unoff',
-        noHide: true,
         search: true,
       },
-      { text: 'Тип', value: 'type', list: true, search: true },
-      { text: 'ОПИСАНИЕ', value: 'description', noHide: true, search: true },
+      { text: 'Тип', value: 'type', detail: false, list: true, search: true },
+      { text: 'ОПИСАНИЕ', value: 'description', search: true },
       { text: 'Истории о прошлом', value: 'narrativ_l', type: 'Story' },
       { text: 'Семейные истории', value: 'narrativ_b', type: 'Story' },
       { text: 'Практики горожан', value: 'narrativ_p', type: 'Story' },
@@ -166,12 +171,12 @@ export default {
       { text: 'Характеристика места', value: 'descript2', type: 'Story' },
       { text: 'Рассказчик', value: 'narrator', type: 'NarratorLink' },
       { text: 'Визуальные материалы', value: 'visual' },
-      { text: 'Дворы', value: 'mos1', type: 'Special' },
-      { text: 'Религия', value: 'mos2', type: 'Special' },
-      { text: 'Бездомные', value: 'mos3', type: 'Special' },
-      { text: 'Подземелья', value: 'mos4', type: 'Special' },
-      { text: 'Субкультуры', value: 'mos5', type: 'Special' },
-      { text: 'Легенды', value: 'mos6', type: 'Special' },
+      { text: 'Дворы', value: 'mos1', detail: false, type: 'Special' },
+      { text: 'Религия', value: 'mos2', detail: false, type: 'Special' },
+      { text: 'Бездомные', value: 'mos3', detail: false, type: 'Special' },
+      { text: 'Подземелья', value: 'mos4', detail: false, type: 'Special' },
+      { text: 'Субкультуры', value: 'mos5', detail: false, type: 'Special' },
+      { text: 'Легенды', value: 'mos6', detail: false, type: 'Special' },
       // { text: 'Памятники', value: 'mos7', type: 'Special' },
       // { text: 'Последний адрес', value: 'mos8', type: 'Special' },
     ]);

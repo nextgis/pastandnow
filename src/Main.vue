@@ -126,8 +126,8 @@
               label
             >{{detail.properties.status}}</v-chip>
           </div>
-          <div>{{detail.properties.name}}</div>
-          <div class="subtitle subtitle-2">{{detail.properties.type}}</div>
+          <div class="font-weight-medium">{{detail.properties.name}}</div>
+          <div class="caption text--secondary">{{detail.properties.type}}</div>
         </div>
         <div class="flex-grow-1 flex-body-content">
           <detail></detail>
