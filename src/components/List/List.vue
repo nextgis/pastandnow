@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-list>
+    <v-list class="items-list" dense>
       <v-list-item-group v-model="active">
-        <v-list-item v-for="item in portion" :key="item.id" @click="setDetail(item.id)">
-          <SymbolComponent :paint="getItemPaint(item)" class="mr-2"></SymbolComponent>
+        <v-list-item v-for="item in portion" :key="item.id" @click="setDetail(item.id)" class="align-top">
+          <SymbolComponent :paint="getItemPaint(item)" class="mr-2 list-item-icon"></SymbolComponent>
           <v-list-item-content>
             <div>{{ item.name }}</div>
             <v-list-item-subtitle>{{ item.type }}</v-list-item-subtitle>
@@ -21,5 +21,18 @@
 export { List as default } from "./List";
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.items-list {
+  font-size: 14px;
+}
+
+// .items-list .v-list-item{
+//   align-items: start;
+// }
+
+// .list-item-icon {
+//   margin-top: 12px;
+// }
+
+
 </style>

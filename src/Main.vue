@@ -26,7 +26,7 @@
                 </div>
               </div>
               <div class="flex-grow-1 flex-body-content legend-body">
-                <Legend></Legend>
+                <Legend class="pt-0"></Legend>
               </div>
             </div>
             <div v-else>
@@ -175,7 +175,7 @@ export { Main as default } from "./Main";
 
 .legend-body {
   overflow: auto;
-  max-height: 400px;
+  max-height: 50vh;
 }
 
 .drawer-content {
