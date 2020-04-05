@@ -12,9 +12,10 @@ import config from '../../../config.json';
 import { BdMainItem } from '../../api/ngw';
 import { oralModule, OralFeature } from '../../store/modules/oral';
 import { appModule } from '../../store/modules/app';
+import { shadeColor } from '../../utils/shadeColor';
 
 export const featureStyles: Record<string, CirclePaint> = {
-  водоем: { color: '#4163aa' },
+  водоем: { color: '#4163aa', strokeColor: '' },
   ландшафт: { color: '#93bf20' },
   памятник: { color: '#e42a1b' },
   строение: { color: '#289de4' },
@@ -30,6 +31,14 @@ export const featureStyles: Record<string, CirclePaint> = {
 };
 export const featureStyleKeys = Object.keys(featureStyles);
 
+// Shade stroke color
+featureStyleKeys.forEach((x) => {
+  const style = featureStyles[x];
+  if (style && typeof style.color === 'string' && !style.strokeColor) {
+    style.strokeColor = shadeColor(style.color, -30);
+  }
+});
+
 export function getHistoryPaint(
   properties?: Record<string, any> | null,
   options?: CirclePaint,
@@ -39,6 +48,7 @@ export function getHistoryPaint(
     color: '#363636',
     fillOpacity: 0.9,
     // weight: 2,
+    radius: 3,
     stroke: true,
   };
   let style: CirclePaint | undefined;
@@ -146,10 +156,13 @@ export class OralMap extends Mixins(VueNgwMapbox) {
           data,
           type: 'circle',
           paint: (feature) => {
-            return getHistoryIcon(feature, { radius: 6 }, true);
+            return getHistoryIcon(feature, { radius: 5 }, true);
           },
           selectedPaint: (feature) => {
-            return getHistoryIcon(feature, { radius: 9 });
+            return getHistoryIcon(feature, {
+              radius: 9,
+              weight: 3,
+            });
           },
           selectable: true,
           unselectOnSecondClick: true,
