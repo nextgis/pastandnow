@@ -3,7 +3,7 @@
     <v-list-item v-for="(item, i) in legendItems" :key="i" class="">
       <SymbolComponent class="mr-2" :paint="item.icon"></SymbolComponent>
       <v-list-item-content>
-        <v-list-item-title v-text="item.text" class="text-capitalize"></v-list-item-title>
+        <v-list-item-title v-text="capitalize(item.text)" class=""></v-list-item-title>
       </v-list-item-content>
       <v-switch
         class="ml-2 mt-0"

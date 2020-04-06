@@ -1,4 +1,5 @@
 import { Vue, Component } from 'vue-property-decorator';
+import { capitalize } from '@nextgis/utils';
 
 import { oralModule } from '../../store/modules/oral';
 
@@ -44,5 +45,9 @@ export default class Legend extends Vue {
 
   mounted() {
     oralModule.setActiveTypes(oralModule.legendItems.map((x) => x.name));
+  }
+
+  capitalize(str: string) {
+    return capitalize(str);
   }
 }

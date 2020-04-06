@@ -65,7 +65,9 @@ export type BdMainItem = Feature<Point, BdMainItemProperties>;
 export default {
   async getLayerGeoJson() {
     const meta = await this.getLayerMeta();
-    const fields = meta.filter((x) => x.search || x.list).map((x) => x.value);
+    const fields = meta
+      .filter((x) => x.search || x.list || x.type === 'Special')
+      .map((x) => x.value);
     return NgwKit.utils
       .getNgwLayerFeatures<Point, BdMainItemProperties>({
         connector,
@@ -136,11 +138,17 @@ export default {
         search: true,
       },
       { text: 'Тип', value: 'type', detail: false, list: true, search: true },
-      { text: 'ОПИСАНИЕ', value: 'description', search: true },
+      { text: 'Описание', value: 'description', search: true },
       { text: 'Истории о прошлом', value: 'narrativ_l', type: 'Story' },
       { text: 'Семейные истории', value: 'narrativ_b', type: 'Story' },
       { text: 'Практики горожан', value: 'narrativ_p', type: 'Story' },
-      { text: 'Типы сюжетов', value: 'narrativ_t', type: 'Story' },
+      {
+        text: 'Типы сюжетов',
+        value: 'narrativ_t',
+        type: 'Story',
+        detail: false,
+        search: true,
+      },
       { text: 'Характеристика места', value: 'descript2', type: 'Story' },
       { text: 'Рассказчик', value: 'narrator', type: 'NarratorLink' },
       { text: 'Визуальные материалы', value: 'visual' },

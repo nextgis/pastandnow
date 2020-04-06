@@ -5,13 +5,14 @@
       v-for="v in specialFilterItems"
       v-model="specialFilters"
       dense
+      hide-details
       on-icon="check_box"
       off-icon="check_box_outline_blank"
       :key="v.value"
       :label="v.text"
       :value="v.value"
     ></v-checkbox>
-    <h5 class="font-weight-light">ТИПЫ СЮЖЕТОВ</h5>
+    <h5 class="font-weight-light pt-5">ТИПЫ СЮЖЕТОВ</h5>
     <v-autocomplete
       v-model="narrativeTypesSelected"
       :items="narrativeTypeItems"

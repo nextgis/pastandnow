@@ -92,7 +92,7 @@ export class Main extends Vue {
   }
 
   get isFilterSet() {
-    return this.filtered.length !== this.items.length;
+    return this.filtered.length !== this.activeCityItems.length;
   }
 
   get detail(): BdMainItemProperties {
