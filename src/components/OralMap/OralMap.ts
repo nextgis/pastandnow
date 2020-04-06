@@ -207,7 +207,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
           type: 'FeatureCollection',
           features,
         });
-        this.ngwMap.fitBounds(extent, { maxZoom: 16 });
+        this.ngwMap.fitBounds(extent, { maxZoom: 16, padding: 20 });
       }
     }
   }
