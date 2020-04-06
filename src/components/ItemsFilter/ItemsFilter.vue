@@ -1,21 +1,20 @@
 <template>
   <v-form ref="form" v-model="form" class="filter-form">
     <v-autocomplete
+      class="mx-4 pt-2 pb-2"
+      v-model="city"
+      :items="cities"
+      :disabled="cities.length < 2"
       dark
       cache-items
-      class="mx-4 pt-2 pb-2"
       flat
       hide-no-data
       hide-details
       solo-inverted
-      v-model="city"
-      :items="cities"
-      @change="updateCity"
+      append-icon="arrow_drop_down"
       no-data-text="Не найдено"
     >
-      <template v-slot:selection="data">
-        {{ data.item.value }}
-      </template>
+      <template v-slot:selection="data">{{ data.item.value }}</template>
       <template v-slot:item="data">
         <template>
           <v-list-item-content v-text="data.item.text" v-bind:style="getItemStyle(data.item)"></v-list-item-content>
@@ -23,16 +22,25 @@
       </template>
     </v-autocomplete>
     <v-autocomplete
-      dark
       class="mx-4 pt-2 pb-2"
+      v-model="rayon"
+      :items="areas"
+      :disabled="areas.length < 2"
+      dark
       flat
       hide-no-data
       hide-details
       solo-inverted
-      v-model="rayon"
-      :items="areas"
+      append-icon="arrow_drop_down"
       no-data-text="Не найдено"
-    ></v-autocomplete>
+    >
+      <template v-slot:selection="data">{{ data.item.value }}</template>
+      <template v-slot:item="data">
+        <template>
+          <v-list-item-content v-text="data.item.text" v-bind:style="getItemStyle(data.item)"></v-list-item-content>
+        </template>
+      </template>
+    </v-autocomplete>
   </v-form>
 </template>
 
