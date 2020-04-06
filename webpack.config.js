@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 let alias = {};
 try {
@@ -93,7 +94,18 @@ module.exports = (env, argv) => {
   ];
 
   if (isProd) {
-    plugins = plugins.concat([]);
+    const zopfli = require('@gfx/zopfli');
+    plugins = plugins.concat([
+      new CompressionPlugin({
+        cache: true,
+        compressionOptions: {
+          numiterations: 15,
+        },
+        algorithm(input, compressionOptions, callback) {
+          return zopfli.gzip(input, compressionOptions, callback);
+        },
+      }),
+    ]);
   }
 
   const config = {

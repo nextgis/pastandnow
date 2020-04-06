@@ -9,7 +9,8 @@
     "watch": "rimraf ./dist && npm run build -- --watch",
     "dev": "rimraf ./dist && npm run build",
     "prod": "rimraf ./dist && npm run build -- --mode=production",
-    "data": "node ./scripts/getCities.js"
+    "data": "node ./scripts/getCities.js",
+    "docker": "docker build -t registry.nextgis.com/pastandnow:latest . && docker push registry.nextgis.com/pastandnow:latest"
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
@@ -39,6 +40,7 @@
     "vuex-type-helper": "^1.2.2"
   },
   "devDependencies": {
+    "@gfx/zopfli": "^1.0.14",
     "@types/events": "^3.0.0",
     "@types/geojson": "^7946.0.7",
     "@types/lodash": "^4.14.149",
