@@ -4,7 +4,7 @@
       <oral-map :mapOptions="mapOptions" :fullFilling="true">
         <vue-ngw-control position="top-left" :margin="true">
           <v-btn @click="drawer = !drawer" fab small class="rectangle-fab">
-            <v-icon large class="drawe-icon" :class="{ active: drawer }">chevron_right</v-icon>
+            <v-icon large class="drawe-icon" :class="{ active: drawer }">{{svg.chevron_right}}</v-icon>
           </v-btn>
         </vue-ngw-control>
         <vue-ngw-control position="bottom-left" :margin="true">
@@ -21,7 +21,7 @@
                 <div class="d-flex justify-space-between">
                   <span class="pl-2 title font-weight-light">Легенда</span>
                   <v-btn @click="legendOpen = false" text icon>
-                    <v-icon>close</v-icon>
+                    <v-icon>{{svg.close}}</v-icon>
                   </v-btn>
                 </div>
               </div>
@@ -31,7 +31,7 @@
             </div>
             <div v-else>
               <v-btn @click="legendOpen = !legendOpen" fab small class="rectangle-fab">
-                <v-icon class :class="{ active: drawer }">format_list_bulleted</v-icon>
+                <v-icon class :class="{ active: drawer }">{{svg.list}}</v-icon>
               </v-btn>
             </div>
           </v-card>
@@ -46,7 +46,7 @@
           <v-list v-if="filterPanelOpen">
             <v-list-item @click="filterPanelOpen = false">
               <v-list-item-icon>
-                <v-icon>arrow_back</v-icon>
+                <v-icon>{{svg.arrow_back}}</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title>Вернуться к списку объектов</v-list-item-title>
@@ -66,8 +66,8 @@
               </span>
               <span class="subtitle-1 caption" color="primary">
                 <v-btn v-if="isFilterSet" text small @click="resetFilter">Сбросить</v-btn>
-                <v-btn text icon @click="filterPanelOpen = true">
-                  <v-icon>filter_list</v-icon>
+                <v-btn text icon @click="filterPanelOpen = true" class="filter-btn">
+                  <v-icon>{{svg.filter}}</v-icon>
                 </v-btn>
               </span>
             </div>
@@ -83,7 +83,7 @@
               hide-details
               clearable
               label="Поиск"
-              prepend-inner-icon="search"
+              :prepend-inner-icon="svg.search"
             ></v-text-field>
           </div>
         </div>
@@ -116,7 +116,7 @@
         <div class="flex-header-content pb-5">
           <div class="pb-3 d-flex justify-space-between">
             <v-btn @click="detail = false" text icon>
-              <v-icon>close</v-icon>
+              <v-icon>{{svg.close}}</v-icon>
             </v-btn>
             <v-chip
               class="ma-2"
@@ -137,7 +137,7 @@
             <v-tooltip top>
               <template v-slot:activator="{ on }">
                 <v-btn text color="grey" @click="openFeedbackPage" v-on="on">
-                  <v-icon>feedback</v-icon>
+                  <v-icon>{{svg.feedback}}</v-icon>
                 </v-btn>
               </template>
               <span>Обратная связь</span>
@@ -149,7 +149,7 @@
             <v-tooltip top>
               <template v-slot:activator="{ on }">
                 <v-btn text @click="zoomTo = detail.id" color="grey" v-on="on">
-                  <v-icon>place</v-icon>
+                  <v-icon>{{svg.place}}</v-icon>
                 </v-btn>
               </template>
               <span>Показать на карте</span>
@@ -166,7 +166,13 @@ export { Main as default } from "./Main";
 </script>
 
 
-<style lang="scss">
+<style>
+.v-text-field.v-input--dense .v-input__prepend-inner .v-input__icon > .v-icon {
+  margin-top: 0;
+}
+</style>
+
+<style lang="scss" scoped>
 // @import "./style/variables.scss";
 
 .rectangle-fab {

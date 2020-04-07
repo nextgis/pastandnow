@@ -6,8 +6,6 @@
       v-model="specialFilters"
       dense
       hide-details
-      on-icon="check_box"
-      off-icon="check_box_outline_blank"
       :key="v.value"
       :label="v.text"
       :value="v.value"

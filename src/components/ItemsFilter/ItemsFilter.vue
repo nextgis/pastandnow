@@ -11,7 +11,6 @@
       hide-no-data
       hide-details
       solo-inverted
-      append-icon="arrow_drop_down"
       no-data-text="Не найдено"
     >
       <template v-slot:selection="data">{{ data.item.value }}</template>
@@ -31,7 +30,6 @@
       hide-no-data
       hide-details
       solo-inverted
-      append-icon="arrow_drop_down"
       no-data-text="Не найдено"
     >
       <template v-slot:selection="data">{{ data.item.value }}</template>

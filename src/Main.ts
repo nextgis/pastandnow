@@ -1,5 +1,19 @@
+// @ts-ignore
+// import './images/drawing.svg';
+
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { NgwMapOptions } from '@nextgis/ngw-map';
+
+import {
+  mdiFormatListBulleted,
+  mdiFilter,
+  mdiClose,
+  mdiMessageAlert,
+  mdiMapMarker,
+  mdiChevronRight,
+  mdiArrowLeft,
+  mdiMagnify,
+} from '@mdi/js';
 
 import { qmsId, feedbackUrl } from '../config.json';
 import { connector } from './api/ngw';
@@ -32,6 +46,16 @@ import throttle from './store/utils/throttle';
 export class Main extends Vue {
   throttleSave!: (value: string) => void;
   legendOpen = true;
+  svg = {
+    filter: mdiFilter,
+    list: mdiFormatListBulleted,
+    close: mdiClose,
+    feedback: mdiMessageAlert,
+    place: mdiMapMarker,
+    chevron_right: mdiChevronRight,
+    arrow_back: mdiArrowLeft,
+    search: mdiMagnify,
+  };
 
   filterPanelOpen = false;
 
