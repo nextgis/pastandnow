@@ -47,9 +47,7 @@ export { ItemsFilter as default } from "./ItemsFilter";
 </script>
 
 <style lang="scss" scoped>
-@import "../../style/variables.scss";
-
 .filter-form {
-  background: $dark;
+  background: $primary;
 }
 </style>

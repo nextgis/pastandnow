@@ -1,1 +1,21 @@
-$dark: #005e7c;
+$primary: #005e7c;
+$icon-color: rgba(0,0,0,.5);
+$icon-color-active: $primary;
+
+$border-radius-root: 2px;
+
+
+$switch-thumb-dense-height: 10px;
+$switch-thumb-dense-width: 10px;
+$switch-track-dense-inset-height: 16px;
+$switch-track-dense-inset-width: 26px;
+$switch-track-inset-width: 26px;
+$switch-track-inset-opacity: 1;
+$switch-dirty-offset-x: 10px;
+
+$btn-sizes: (
+  'default': 40
+);
+$btn-active-opacity: 0;
+$btn-hover-opacity: .04;
+$btn-focus-opacity: .04;

@@ -68,13 +68,36 @@ module.exports = (env, argv) => {
       use: ['style-loader', 'css-loader'],
     },
     {
-      test: /\.s(c|a)ss$/,
+      test: /\.sass$/,
       use: [
         'vue-style-loader',
         'css-loader',
         {
           loader: 'sass-loader',
-          options: sassLoaderOptions,
+          // Requires sass-loader@^8.0.0
+          options: {
+            ...sassLoaderOptions,
+            // This is the path to your variables
+            prependData: "@import '@/style/variables.scss'"
+          },
+        },
+      ],
+    },
+    // SCSS has different line endings than SASS
+    // and needs a semicolon after the import.
+    {
+      test: /\.scss$/,
+      use: [
+        'vue-style-loader',
+        'css-loader',
+        {
+          loader: 'sass-loader',
+          // Requires sass-loader@^8.0.0
+          options: {
+            ...sassLoaderOptions,
+            // This is the path to your variables
+            prependData: "@import '@/style/variables.scss';"
+          },
         },
       ],
     },
@@ -126,6 +149,7 @@ module.exports = (env, argv) => {
         ...{
           vue$: 'vue/dist/vue.esm.js',
         },
+        '@': path.resolve(__dirname, 'src/')
       },
     },
     module: {

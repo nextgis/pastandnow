@@ -74,4 +74,28 @@ body {
     overflow-x: auto;
   }
 }
+
+*::-webkit-scrollbar-track{
+  background-color: transparent;
+}
+
+
+*::-webkit-scrollbar{
+  width: 8px;
+  background-color: transparent;
+}
+
+
+*::-webkit-scrollbar-thumb{
+  background-color: rgba(0, 0, 0, .35);
+}
+*::-webkit-scrollbar-corner{
+  background-color: transparent;
+}
+
+.theme--dark{
+  *::-webkit-scrollbar-thumb{
+  background-color: rgba(0, 0, 0, .55);
+}
+}
 </style>

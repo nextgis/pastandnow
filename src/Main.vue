@@ -3,24 +3,23 @@
     <v-content>
       <oral-map :mapOptions="mapOptions" :fullFilling="true">
         <vue-ngw-control position="top-left" :margin="true">
-          <v-btn @click="drawer = !drawer" fab small class="rectangle-fab">
-            <v-icon large class="drawe-icon" :class="{ active: drawer }">{{svg.chevron_right}}</v-icon>
+          <v-btn @click="drawer = !drawer" fab small class="rectangle-fab" color="#fff">
+            <v-icon class="drawe-icon" :class="{ active: drawer }">{{svg.chevron_right}}</v-icon>
           </v-btn>
         </vue-ngw-control>
         <vue-ngw-control position="bottom-left" :margin="true">
-          <v-card
-            class="mx-auto legend-card"
-            max-width="300"
-            max-height="500"
-            dark
-            tile
-            v-if="module.legendItems.length"
-          >
-            <div v-if="legendOpen" class="d-flex flex-column">
-              <div class="flex-header-content">
-                <div class="d-flex justify-space-between">
-                  <span class="pl-2 title font-weight-light">Легенда</span>
-                  <v-btn @click="legendOpen = false" text icon>
+          <div v-if="legendOpen" class="d-flex flex-column">
+            <v-card
+              class="mx-auto legend-card"
+              max-width="300"
+              max-height="500"
+              dark
+              v-if="module.legendItems.length"
+            >
+              <div class="legend-header flex-header-content">
+                <div class="d-flex justify-space-between align-center">
+                  <span class="legend-card__title">Легенда</span>
+                  <v-btn class="legend__close" @click="legendOpen = false" icon small>
                     <v-icon>{{svg.close}}</v-icon>
                   </v-btn>
                 </div>
@@ -28,13 +27,13 @@
               <div class="flex-grow-1 flex-body-content legend-body">
                 <Legend class="pt-0"></Legend>
               </div>
+            </v-card>
             </div>
-            <div v-else>
-              <v-btn @click="legendOpen = !legendOpen" fab small class="rectangle-fab">
-                <v-icon class :class="{ active: drawer }">{{svg.list}}</v-icon>
-              </v-btn>
-            </div>
-          </v-card>
+          <div v-else>
+            <v-btn @click="legendOpen = !legendOpen" fab small class="rectangle-fab" color="#fff">
+              <v-icon :class="{ active: drawer }">{{svg.list}}</v-icon>
+            </v-btn>
+          </div>
         </vue-ngw-control>
       </oral-map>
     </v-content>
@@ -173,15 +172,34 @@ export { Main as default } from "./Main";
 </style>
 
 <style lang="scss" scoped>
-// @import "./style/variables.scss";
 
 .rectangle-fab {
-  border-radius: inherit;
+  border-radius: $border-radius-root;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
+
+  .v-btn__content .v-icon {
+    color: $icon-color;
+  }
+
+  &:hover{
+    .v-btn__content .v-icon {
+      color: $icon-color-active;
+    }
+  }
 }
 
 .legend-body {
   overflow: auto;
   max-height: 50vh;
+}
+
+.legend__close{
+  opacity: .5;
+  margin-right: -8px;
+
+  &:hover{
+    opacity: 1;
+  }
 }
 
 .drawer-content {
@@ -210,6 +228,21 @@ export { Main as default } from "./Main";
   .v-btn {
     flex-grow: 1;
     margin: 0;
+  }
+}
+
+.legend-card{
+  &.theme--dark{
+    background-color: rgba(0,0,0,.75);
+  }
+
+  .legend-header{
+    padding: 12px 16px 0;
+  }
+
+  &__title{
+    font-size: 14px;
+    font-weight: 600;
   }
 }
 </style>
