@@ -13,6 +13,7 @@ import {
   mdiChevronRight,
   mdiArrowLeft,
   mdiMagnify,
+  mdiCrosshairsGps,
 } from '@mdi/js';
 
 import { qmsId, feedbackUrl } from '../config.json';
@@ -55,6 +56,7 @@ export class Main extends Vue {
     chevron_right: mdiChevronRight,
     arrow_back: mdiArrowLeft,
     search: mdiMagnify,
+    target: mdiCrosshairsGps,
   };
 
   filterPanelOpen = false;
@@ -72,6 +74,7 @@ export class Main extends Vue {
   };
 
   listIsScrolled = false;
+  detailIsScrolled = false;
 
   get listSearchText(): string {
     return oralModule.listSearchText;
@@ -138,6 +141,13 @@ export class Main extends Vue {
     oralModule.setFullTextFilter(val);
   }
 
+  @Watch('detail')
+  resetScroll(val: string) {
+    if (!val) {
+      this.detailIsScrolled = false;
+    }
+  }
+
   resetFilter() {
     oralModule.resetFilter();
   }
@@ -161,5 +171,9 @@ export class Main extends Vue {
 
   onPanelScroll(e: any) {
     this.listIsScrolled = e.target.scrollTop > 0;
+  }
+
+  onDetailScroll(e: any) {
+    this.detailIsScrolled = e.target.scrollTop > 0;
   }
 }

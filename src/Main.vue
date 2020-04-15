@@ -44,8 +44,8 @@
           <items-filter></items-filter>
           <v-list v-if="filterPanelOpen">
             <v-list-item @click="filterPanelOpen = false">
-              <v-icon class="light-text mr-2">{{svg.arrow_back}}</v-icon>
-              <span class="light-text"> Вернуться к списку объектов </span>
+              <v-icon class="text--secondary mr-2">{{svg.arrow_back}}</v-icon>
+              <span class="text--secondary"> Вернуться к списку объектов </span>
             </v-list-item>
           </v-list>
           <div v-else class="list-toolbar" :class="{ 'shadowed' : listIsScrolled }">
@@ -54,7 +54,7 @@
                 Объекты
                 <v-chip class="list-toolbar__count font-weight-medium" small>
                   <template v-if="isFilterSet">
-                    {{filtered.length}}&nbsp;<span class="light-text">из&nbsp;{{activeCityItems.length}}</span>
+                    {{filtered.length}}&nbsp;<span class="text--secondary">из&nbsp;{{activeCityItems.length}}</span>
                   </template>
                   <template v-else>
                     {{activeCityItems.length}}
@@ -110,50 +110,49 @@
       </div>
     </v-navigation-drawer>
 
-    <v-navigation-drawer :value="!!detail" stateless width="360" absolute app right>
-      <div v-if="detail" class="drawer-content d-flex flex-column pt-3 pb-0 pa-5">
-        <div class="flex-header-content pb-5">
-          <div class="pb-3 d-flex justify-space-between">
-            <v-btn @click="detail = false" text icon>
+    <v-navigation-drawer class="detail-drawer" :value="!!detail" stateless width="360" absolute app right>
+      <div v-if="detail" class="drawer-content d-flex flex-column">
+        <div class="detail-drawer__header flex-header-content"
+          :class="{'shadowed': detailIsScrolled }"
+          v-scroll:#detail-content="onDetailScroll">
+          <div class="pb-3 d-flex justify-space-between align-center">
+            <v-btn class="detail-drawer__header-close" @click="detail = false" text icon small>
               <v-icon>{{svg.close}}</v-icon>
             </v-btn>
             <v-chip
-              class="ma-2"
+              class="detail-drawer__header-chip text-uppercase font-weight-bold"
               :color="detail.properties.status === 'существующий'? '#7bd235' : '#d2357b'"
               dark
               small
               label
             >{{detail.properties.status}}</v-chip>
           </div>
-          <div class="font-weight-medium">{{detail.properties.name}}</div>
+          <div class="subtitle-1 font-weight-medium">{{detail.properties.name}}</div>
           <div class="caption text--secondary">{{detail.properties.type}}</div>
         </div>
-        <div class="flex-grow-1 flex-body-content">
+        <div class="detail-drawer__content flex-grow-1 flex-body-content" id="detail-content">
           <detail></detail>
         </div>
-        <div class="flex-footer-content">
-          <v-item-group class="bottom-button">
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn text color="grey" @click="openFeedbackPage" v-on="on">
-                  <v-icon>{{svg.feedback}}</v-icon>
-                </v-btn>
-              </template>
-              <span>Обратная связь</span>
-            </v-tooltip>
-
-            <!-- <v-btn text color="grey">
-              <v-icon>save_alt</v-icon>
-            </v-btn>-->
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn text @click="zoomTo = detail.id" color="grey" v-on="on">
-                  <v-icon>{{svg.place}}</v-icon>
-                </v-btn>
-              </template>
-              <span>Показать на карте</span>
-            </v-tooltip>
-          </v-item-group>
+        <div class="detail-drawer__footer flex-footer-content">
+          <div class="bottom-buttons">
+            <div class="bottom-buttons__item">
+              <v-btn text color="primary" @click="openFeedbackPage">
+                <v-icon left>{{svg.feedback}}</v-icon>
+                Обратная связь
+              </v-btn>
+            </div>
+            <v-divider
+              class="mx-1 my-2"
+              inset
+              vertical
+            ></v-divider>
+            <div class="bottom-buttons__item">
+              <v-btn text @click="zoomTo = detail.id" color="primary">
+                <v-icon left>{{svg.target}}</v-icon>
+                Показать на карте
+              </v-btn>
+            </div>
+          </div>
         </div>
       </div>
     </v-navigation-drawer>
@@ -221,7 +220,7 @@ export { Main as default } from "./Main";
   }
 }
 
-.bottom-button {
+.bottom-buttons {
   width: 100%;
   display: flex;
   justify-content: space-around;
@@ -248,9 +247,37 @@ export { Main as default } from "./Main";
 
 .list-toolbar{
   padding: 16px 20px 20px;
+}
 
-  &.shadowed{
-    box-shadow: 0 2px 8px rgba(0,0,0,.24);
+.detail-drawer{
+  &__header,
+  &__content,
+  &__footer{
+    padding-left: 20px;
+    padding-right: 20px;
   }
+
+  &__header{
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  &__footer{
+    background-color: #f1f4f5;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  &__header-close{
+    margin-left: -7px;
+  }
+
+  &__header-chip{
+    font-size: 10px;
+  }
+}
+
+.shadowed{
+  box-shadow: 0 2px 8px rgba(0,0,0,.24);
 }
 </style>

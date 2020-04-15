@@ -1,6 +1,6 @@
 <template>
   <div class="filter-panel">
-    <h5 class="light-text mb-1">СПЕЦИАЛЬНЫЕ ФИЛЬТРЫ</h5>
+    <h5 class="text--secondary mb-1">СПЕЦИАЛЬНЫЕ ФИЛЬТРЫ</h5>
     <v-checkbox class="filter-panel__checkbox mt-0"
       v-for="v in specialFilterItems"
       v-model="specialFilters"
@@ -10,7 +10,7 @@
       :label="v.text"
       :value="v.value"
     ></v-checkbox>
-    <h5 class="light-text mt-5 mb-1">ТИПЫ СЮЖЕТОВ</h5>
+    <h5 class="text--secondary mt-5 mb-1">ТИПЫ СЮЖЕТОВ</h5>
     <v-autocomplete
       v-model="narrativeTypesSelected"
       :items="narrativeTypeItems"

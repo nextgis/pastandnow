@@ -1,10 +1,10 @@
 <template>
-  <div v-if="detail && meta">
-    <v-list dense>
+  <div class="detail" v-if="detail && meta">
+    <v-list dense class="pt-0">
       <v-list-item
         v-for="item in properties"
         :key="item.value"
-        class="detail-prop-list pl-0 pb-0"
+        class="detail-prop-list px-0 pb-0"
         style
       >
         <v-list-item-content>
@@ -12,7 +12,7 @@
           <span class="body-2" v-html="getText(item)"></span>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item class="detail-prop-list pl-0 pb-2">
+      <v-list-item v-if="photos && photos.length" class="detail-prop-list px-0 pb-2">
         <v-list-item-content v-if="photos && photos.length">
           <v-list-item-subtitle>Фото</v-list-item-subtitle>
           <div class="photo-containerr">
@@ -40,8 +40,15 @@ export { Detail as default } from "./Detail";
 </script>
 
 <style lang="scss" scoped>
-.detail-prop-list .v-list__tile {
-  height: auto !important;
+.detail-prop-list {
+  &:first-child{
+    .v-list-item__content{
+      padding-top: 0;
+    }
+  }
+  .v-list__tile {
+    height: auto !important;
+  }
 }
 
 .photo-containerr {
@@ -64,5 +71,12 @@ export { Detail as default } from "./Detail";
   right: 0;
   z-index: 500;
   overflow: visible;
+}
+
+.detail{
+  .v-list-item__content{
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
 }
 </style>
