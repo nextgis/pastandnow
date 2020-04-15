@@ -71,6 +71,8 @@ export class Main extends Vue {
     },
   };
 
+  listIsScrolled = false;
+
   get listSearchText(): string {
     return oralModule.listSearchText;
   }
@@ -155,5 +157,9 @@ export class Main extends Vue {
 
   openFeedbackPage() {
     window.open(feedbackUrl, '_blank');
+  }
+
+  onPanelScroll(e: any) {
+    this.listIsScrolled = e.target.scrollTop > 0;
   }
 }

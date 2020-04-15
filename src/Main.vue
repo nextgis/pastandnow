@@ -44,34 +44,33 @@
           <items-filter></items-filter>
           <v-list v-if="filterPanelOpen">
             <v-list-item @click="filterPanelOpen = false">
-              <v-list-item-icon>
-                <v-icon>{{svg.arrow_back}}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>Вернуться к списку объектов</v-list-item-title>
-              </v-list-item-content>
+              <v-icon class="light-text mr-2">{{svg.arrow_back}}</v-icon>
+              <span class="light-text"> Вернуться к списку объектов </span>
             </v-list-item>
           </v-list>
-          <div v-else>
-            <div class="pt-2 mx-4 d-flex justify-space-between">
-              <span class="subtitle-1 font-weight-bold">
+          <div v-else class="list-toolbar" :class="{ 'shadowed' : listIsScrolled }">
+            <div class="d-flex justify-space-between mb-4">
+              <span class="subtitle-1 font-weight-medium">
                 Объекты
-                <v-chip class="font-weight-light" small>
-                  <span v-if="isFilterSet">
-                    <span class="font-weight-bold">{{filtered.length}}</span> из&nbsp;
-                  </span>
-                  {{activeCityItems.length}}
+                <v-chip class="list-toolbar__count font-weight-medium" small>
+                  <template v-if="isFilterSet">
+                    {{filtered.length}}&nbsp;<span class="light-text">из&nbsp;{{activeCityItems.length}}</span>
+                  </template>
+                  <template v-else>
+                    {{activeCityItems.length}}
+                  </template>
                 </v-chip>
               </span>
-              <span class="subtitle-1 caption" color="primary">
-                <v-btn v-if="isFilterSet" text small @click="resetFilter">Сбросить</v-btn>
-                <v-btn text icon @click="filterPanelOpen = true" class="filter-btn">
-                  <v-icon>{{svg.filter}}</v-icon>
+              <span>
+                <v-btn class="px-1" small text color="primary" v-if="isFilterSet" @click="resetFilter">Сбросить</v-btn>
+                <v-btn text icon small @click="filterPanelOpen = true" class="filter-btn">
+                  <v-icon class="filter-btn"
+                    color="primary"
+                    @click="filterPanelOpen = true">{{svg.filter}}</v-icon>
                 </v-btn>
               </span>
             </div>
             <v-text-field
-              class="mx-4 pt-2 pb-2"
               v-model="listSearchText"
               cache-items
               flat
@@ -81,15 +80,16 @@
               hide-no-data
               hide-details
               clearable
-              label="Поиск"
+              placeholder="Поиск..."
               :prepend-inner-icon="svg.search"
             ></v-text-field>
           </div>
         </div>
-        <div class="flex-grow-1 flex-body-content">
-          <div v-if="items && items.length">
+        <div class="flex-grow-1 flex-body-content" id="panel-content">
+          <div v-if="items && items.length" class="pb-3"
+            v-scroll:#panel-content="onPanelScroll">
             <FilterPanel v-if="filterPanelOpen" @close="filterPanelOpen = false"></FilterPanel>
-            <list v-else></list>
+            <list v-else class="pt-0"></list>
           </div>
           <div v-else>
             <div class="pa-3 text-center">
@@ -243,6 +243,14 @@ export { Main as default } from "./Main";
   &__title{
     font-size: 14px;
     font-weight: 600;
+  }
+}
+
+.list-toolbar{
+  padding: 16px 20px 20px;
+
+  &.shadowed{
+    box-shadow: 0 2px 8px rgba(0,0,0,.24);
   }
 }
 </style>

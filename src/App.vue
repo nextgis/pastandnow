@@ -61,6 +61,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden !important;
+  font-size: 14px;
 }
 
 .fullscreen-dialog {
@@ -76,13 +77,13 @@ body {
 }
 
 *::-webkit-scrollbar-track{
-  background-color: transparent;
+  background-color: inherit;
 }
 
 
 *::-webkit-scrollbar{
   width: 8px;
-  background-color: transparent;
+  background-color: inherit;
 }
 
 

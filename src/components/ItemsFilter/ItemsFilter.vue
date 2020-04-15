@@ -1,10 +1,10 @@
 <template>
   <v-form ref="form" v-model="form" class="filter-form">
-    <v-autocomplete
-      class="mx-4 pt-2 pb-2"
+    <v-autocomplete class="filter-form__control"
       v-model="city"
       :items="cities"
       :disabled="cities.length < 2"
+      dense
       dark
       cache-items
       flat
@@ -20,11 +20,11 @@
         </template>
       </template>
     </v-autocomplete>
-    <v-autocomplete
-      class="mx-4 pt-2 pb-2"
+    <v-autocomplete class="filter-form__control"
       v-model="rayon"
       :items="areas"
       :disabled="areas.length < 2"
+      dense
       dark
       flat
       hide-no-data
@@ -49,5 +49,11 @@ export { ItemsFilter as default } from "./ItemsFilter";
 <style lang="scss" scoped>
 .filter-form {
   background: $primary;
+  padding: 20px;
+  font-size: 14px;
+
+  &__control + &__control{
+    margin-top: 10px;
+  }
 }
 </style>
