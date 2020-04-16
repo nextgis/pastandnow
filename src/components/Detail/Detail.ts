@@ -9,8 +9,8 @@ import { oralModule } from '../../store/modules/oral';
 @Component
 export class Detail extends Vue {
   url = '';
-  bigImgSrc = '';
   dialog = false;
+  selectedPhoto = 0;
 
   get photos(): BdPhotoProperties[] {
     const photo = oralModule.photos.find((x: BdPhotoProperties) => {
