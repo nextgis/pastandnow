@@ -49,7 +49,7 @@
             </v-list-item>
           </v-list>
           <div v-else class="list-toolbar" :class="{ 'shadowed' : listIsScrolled }">
-            <div class="d-flex justify-space-between mb-4">
+            <div class="d-flex justify-space-between align-center mb-4">
               <span class="subtitle-1 font-weight-medium">
                 Объекты
                 <v-chip class="list-toolbar__count font-weight-medium" small>
