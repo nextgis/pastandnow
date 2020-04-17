@@ -46,7 +46,7 @@ export class OralState extends VuexModule {
   narrativeTypeSelected: string[] = [];
   specialFilterSelected: string[] = [];
   listSearchText = '';
-  activeTypes: string[] = [];
+  activeTypes: string[] | false = false;
   activeRayon = ALL_RAYON_STR;
   activeCity = 'Москва';
 

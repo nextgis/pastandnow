@@ -24,7 +24,7 @@ export default class Legend extends Vue {
   }
 
   get activeTypes() {
-    return oralModule.activeTypes;
+    return oralModule.activeTypes || [];
   }
 
   set activeTypes(items: string[]) {
@@ -44,7 +44,9 @@ export default class Legend extends Vue {
   }
 
   mounted() {
-    oralModule.setActiveTypes(oralModule.legendItems.map((x) => x.name));
+    if (!oralModule.activeTypes) {
+      oralModule.setActiveTypes(oralModule.legendItems.map((x) => x.name));
+    }
   }
 
   capitalize(str: string) {
