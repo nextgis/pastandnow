@@ -43,7 +43,7 @@
           </v-carousel-item>
         </v-carousel>
         <v-btn icon text dark small class="close-img-dialog-btn" @click="dialog = false">
-          <v-icon>close</v-icon>
+          <v-icon>{{svg.close}}</v-icon>
         </v-btn>
     </v-dialog>
   </div>

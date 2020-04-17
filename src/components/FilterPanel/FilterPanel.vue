@@ -27,7 +27,6 @@
           v-bind="data.attrs"
           :input-value="data.selected"
           close
-          close-icon="close"
           @click="data.select"
           @click:close="removeNarrativeType(data.item)"
         >

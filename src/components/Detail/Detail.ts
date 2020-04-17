@@ -5,12 +5,15 @@ import {
   LayerMetaItem,
 } from '../../api/ngw';
 import { oralModule } from '../../store/modules/oral';
+import { mdiClose } from '@mdi/js';
 
 @Component
 export class Detail extends Vue {
   url = '';
   dialog = false;
   selectedPhoto = 0;
+
+  svg = { close: mdiClose };
 
   get photos(): BdPhotoProperties[] {
     const photo = oralModule.photos.find((x: BdPhotoProperties) => {
