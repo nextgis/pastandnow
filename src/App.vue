@@ -37,7 +37,7 @@
 
         <v-footer class="pt-3 pb-4" v-if="pagination && pagination.page">
           <div class="text-center pt-1">
-            <v-pagination v-model="pagination.page" :length="pages" :total-visible="7"></v-pagination>
+            <v-pagination v-model="pagination.page" :length="pagesCount" :total-visible="7"></v-pagination>
           </div>
         </v-footer>
       </v-card>

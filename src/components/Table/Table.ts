@@ -41,7 +41,7 @@ export class Table extends Vue {
   }
 
   @Watch('pagination')
-  setPagination(value: any) {
+  setPagination(value: unknown): void {
     this.paginationSync(value);
   }
 }

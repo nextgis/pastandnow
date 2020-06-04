@@ -29,8 +29,9 @@ import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import FilterPanel from './components/FilterPanel/FilterPanel.vue';
 import { BdMainItemProperties } from './api/ngw';
 import { appModule, AppPages } from './store/modules/app';
-import { oralModule } from './store/modules/oral';
+import { oralModule, OralState } from './store/modules/oral';
 import throttle from './store/utils/throttle';
+import { OralFeature } from './interfaces';
 
 @Component({
   components: {
@@ -112,68 +113,69 @@ export class Main extends Vue {
     return oralModule.items.map((x) => x.properties);
   }
 
-  get filtered() {
+  get filtered(): OralFeature[] {
     return oralModule.filtered;
   }
 
-  get activeCityItems() {
+  get activeCityItems(): OralFeature[] {
     return oralModule.activeCityItems;
   }
 
-  get isFilterSet() {
+  get isFilterSet(): boolean {
     return this.filtered.length !== this.activeCityItems.length;
   }
 
-  get detail(): BdMainItemProperties {
+  get detail(): false | OralFeature {
     return oralModule.detailItem;
   }
 
-  set detail(value: BdMainItemProperties) {
-    oralModule.setDetail(value.id);
+  set detail(value: false | OralFeature) {
+    const id = value && value.id;
+    oralModule.setDetail(id ? Number(id) : null);
   }
 
-  get module() {
+  get module(): OralState {
     return oralModule;
   }
 
   @Watch('listSearchText')
-  updateFilter(val: string) {
+  updateFilter(val: string): void {
     oralModule.setFullTextFilter(val);
   }
 
   @Watch('detail')
-  resetScroll(val: string) {
+  resetScroll(val: string): void {
     if (!val) {
       this.detailIsScrolled = false;
     }
   }
 
-  resetFilter() {
+  resetFilter(): void {
     oralModule.resetFilter();
   }
 
-  mounted() {
+  mounted(): void {
     this.throttleSave = throttle(this.setListSearchText, 1000, this);
   }
 
-  created() {
+  created(): void {
     oralModule.getAllItems();
     oralModule.getPhotos();
   }
 
-  setListSearchText(value: string) {
+  setListSearchText(value: string): void {
     oralModule.setListSearchText(value);
   }
 
-  openFeedbackPage() {
+  openFeedbackPage(): void {
     window.open(feedbackUrl, '_blank');
   }
 
-  onPanelScroll(e: any) {
+  onPanelScroll(e: { target: HTMLElement }): void {
     this.listIsScrolled = e.target.scrollTop > 0;
   }
 
-  onDetailScroll(e: any) {
+  onDetailScroll(e: { target: HTMLElement }): void {
     this.detailIsScrolled = e.target.scrollTop > 0;
   }
 }

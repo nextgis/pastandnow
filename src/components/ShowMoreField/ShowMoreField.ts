@@ -8,7 +8,7 @@ export class ShowMoreField extends Vue {
 
   expand = true;
 
-  get toShow() {
+  get toShow(): string {
     if (this.expand) {
       return this.text;
     } else {
@@ -16,7 +16,7 @@ export class ShowMoreField extends Vue {
     }
   }
 
-  onClick() {
+  onClick(): void {
     this.expand = !this.expand;
   }
 }

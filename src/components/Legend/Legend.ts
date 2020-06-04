@@ -23,7 +23,7 @@ export default class Legend extends Vue {
       });
   }
 
-  get activeTypes() {
+  get activeTypes(): string[] {
     return oralModule.activeTypes || [];
   }
 
@@ -43,13 +43,13 @@ export default class Legend extends Vue {
     }
   }
 
-  mounted() {
+  mounted(): void {
     if (!oralModule.activeTypes) {
       oralModule.setActiveTypes(oralModule.legendItems.map((x) => x.name));
     }
   }
 
-  capitalize(str: string) {
+  capitalize(str: string): string {
     return capitalize(str);
   }
 }

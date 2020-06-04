@@ -16,42 +16,42 @@ export class AppState extends VuexModule {
   centerId: number | null = null;
 
   @Action({ commit: '_toggleDrawer' })
-  showDrawer() {
+  showDrawer(): boolean {
     return true;
   }
 
   @Action({ commit: '_toggleDrawer' })
-  hideDrawer() {
+  hideDrawer(): boolean {
     return false;
   }
 
   @Action({ commit: '_toggleDrawer' })
-  toggleDrawer(value: boolean) {
+  toggleDrawer(value: boolean): boolean {
     return value;
   }
 
   @Action({ commit: '_setPage' })
-  setPage(page: AppPages) {
+  setPage(page: AppPages): AppPages {
     return page;
   }
 
   @Action({ commit: '_setCenter' })
-  zoomTo(id: number | null) {
+  zoomTo(id: number | null): number | null {
     return id;
   }
 
   @Mutation
-  _toggleDrawer(status: boolean) {
+  _toggleDrawer(status: boolean): void {
     this.drawer = status;
   }
 
   @Mutation
-  _setCenter(center: number) {
+  _setCenter(center: number): void {
     this.centerId = center;
   }
 
   @Mutation
-  _setPage(page: AppPages) {
+  _setPage(page: AppPages): void {
     this.page = page;
   }
 }

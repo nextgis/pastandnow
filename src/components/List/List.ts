@@ -1,9 +1,11 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import { BdMainItem, BdMainItemProperties } from '../../api/ngw';
+import { CirclePaint } from '@nextgis/paint';
+import { getHistoryPaint } from '../OralMap/OralMap';
+import { BdMainItemProperties } from '../../api/ngw';
 import { appModule } from '../../store/modules/app';
 import { oralModule } from '../../store/modules/oral';
 import SymbolComponent from '../Symbol/Symbol.vue';
-import { getHistoryPaint } from '../OralMap/OralMap';
+import { OralFeature } from '../../interfaces';
 
 @Component({ components: { SymbolComponent } })
 export class List extends Vue {
@@ -21,32 +23,20 @@ export class List extends Vue {
     return oralModule.sortFeatures.map((x) => x.properties);
   }
 
-  get filtered() {
+  get filtered(): OralFeature[] {
     return oralModule.filtered;
   }
 
-  get detail(): BdMainItem {
+  get detail(): OralFeature | false {
     return oralModule.detailItem;
   }
 
-  mounted() {
-    this.addPortion();
-  }
-
-  get displayItems() {
+  get displayItems(): BdMainItemProperties[] {
     return this.getDisplayItems();
   }
 
-  getItemPaint(item: BdMainItemProperties) {
-    return getHistoryPaint(item);
-  }
-
-  getDisplayItems(): BdMainItemProperties[] {
-    return this.items;
-  }
-
   @Watch('detail')
-  onDetailChange(detail?: BdMainItem) {
+  onDetailChange(detail?: OralFeature): void {
     const index = detail
       ? this.items.findIndex((x) => x.id === detail.id)
       : null;
@@ -55,17 +45,29 @@ export class List extends Vue {
 
   @Watch('listSearchText')
   @Watch('filtered')
-  resetPortions() {
+  resetPortions(): void {
     this.portion = [];
     this.addPortion();
   }
 
-  setDetail(id: number) {
+  mounted(): void {
+    this.addPortion();
+  }
+
+  getItemPaint(item: BdMainItemProperties): CirclePaint {
+    return getHistoryPaint(item);
+  }
+
+  getDisplayItems(): BdMainItemProperties[] {
+    return this.items;
+  }
+
+  setDetail(id: number): void {
     oralModule.setDetail(id);
     appModule.zoomTo(id);
   }
 
-  addPortion() {
+  addPortion(): void {
     const items = this.getDisplayItems();
     const portionsLength = this.portion.length;
     const itemsLength = items.length;

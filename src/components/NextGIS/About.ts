@@ -3,7 +3,7 @@ import Component from 'vue-class-component';
 
 @Component
 export class About extends Vue {
-  openNextGIS() {
+  openNextGIS(): void {
     window.location.href = 'http://nextgis.com/';
   }
 }

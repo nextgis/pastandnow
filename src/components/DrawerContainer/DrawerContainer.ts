@@ -4,15 +4,15 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 export class DrawerContainer extends Vue {
   @Prop() header!: string;
 
-  get hasFooterSlot() {
+  get hasFooterSlot(): boolean {
     return this.hasSlot('footer');
   }
 
-  get hasHeaderSlot() {
+  get hasHeaderSlot(): boolean {
     return this.hasSlot('header');
   }
 
-  hasSlot(name = 'default') {
+  hasSlot(name = 'default'): boolean {
     return !!this.$slots[name] || !!this.$scopedSlots[name];
   }
 }

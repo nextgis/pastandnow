@@ -11,7 +11,7 @@ export class App extends Vue {
   tableSearch = '';
   pagination: any = null;
 
-  get page() {
+  get page(): AppPages {
     return appModule.page;
   }
 
@@ -19,7 +19,7 @@ export class App extends Vue {
     appModule.setPage(value);
   }
 
-  get pages() {
+  get pagesCount(): number {
     if (
       this.pagination &&
       (this.pagination.rowsPerPage === null ||
@@ -31,7 +31,7 @@ export class App extends Vue {
     return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
   }
 
-  paginationSync(value: any) {
+  paginationSync(value: unknown): void {
     this.pagination = value;
   }
 }
