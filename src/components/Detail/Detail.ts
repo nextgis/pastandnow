@@ -5,21 +5,24 @@ import {
   LayerMetaItem,
 } from '../../api/ngw';
 import { oralModule } from '../../store/modules/oral';
+import { mdiClose } from '@mdi/js';
 
 @Component
 export class Detail extends Vue {
   url = '';
-  bigImgSrc = '';
   dialog = false;
+  selectedPhoto = 0;
+
+  svg = { close: mdiClose };
 
   get photos(): BdPhotoProperties[] {
     const photo = oralModule.photos.find((x: BdPhotoProperties) => {
-      return x.link_small && x.id_obj === this.detail.id1;
+      return this.detail && x.link_small && x.id_obj === this.detail.id1;
     });
     return photo ? [photo] : [];
   }
 
-  get detail(): BdMainItemProperties {
+  get detail(): BdMainItemProperties | false {
     return oralModule.detailItem && oralModule.detailItem.properties;
   }
 
@@ -27,40 +30,43 @@ export class Detail extends Vue {
     return oralModule.meta;
   }
 
-  get properties() {
+  get properties(): LayerMetaItem[] {
     return this.meta.filter((x) => {
       const detail = this.getDetail(x.value);
       return detail && (x.detail ?? true);
     });
   }
 
-  getDetail(value: string) {
+  getDetail(value: string): undefined | string | number {
     const v = value as keyof BdMainItemProperties;
-    return this.detail[v];
+    return this.detail ? this.detail[v] : undefined;
   }
 
-  getText(alias: LayerMetaItem) {
+  getText(alias: LayerMetaItem): string | number | undefined {
     if (alias.type) {
       const value = this.getDetail(alias.value);
       if (alias.type === 'NarratorLink') {
-        const detail = this.getDetail(alias.value) as string;
-        const names = value && detail && detail.split(',').map((x) => x.trim());
-        const links =
-          this.detail.nar_codes &&
-          this.detail.nar_codes.split(',').map((x) => x.trim());
-        return (
-          names &&
-          names
-            .map((x, i) => {
-              const link = links ? links[i] || links[0] : '';
-              const href = (this.url + '/' + link).replace(
-                /([^:]\/)\/+/g,
-                '$1'
-              );
-              return `<a href="${href}">${x}</a>`;
-            })
-            .join(', ')
-        );
+        const detail = this.getDetail(alias.value);
+        if (value && typeof detail === 'string') {
+          const names = detail.split(',').map((x) => x.trim());
+          const links =
+            this.detail &&
+            this.detail.nar_codes &&
+            this.detail.nar_codes.split(',').map((x) => x.trim());
+          return (
+            names &&
+            names
+              .map((x, i) => {
+                const link = links ? links[i] || links[0] : '';
+                const href = (this.url + '/' + link).replace(
+                  /([^:]\/)\/+/g,
+                  '$1'
+                );
+                return `<a href="${href}">${x}</a>`;
+              })
+              .join(', ')
+          );
+        }
       } else if (alias.type === 'Special') {
         return value === 1
           ? `<i

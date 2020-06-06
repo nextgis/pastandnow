@@ -2,8 +2,8 @@
   <div>
     <v-list class="items-list" dense>
       <v-list-item-group v-model="active">
-        <v-list-item v-for="item in portion" :key="item.id" @click="setDetail(item.id)" class="align-top">
-          <SymbolComponent :paint="getItemPaint(item)" class="mr-2 list-item-icon"></SymbolComponent>
+        <v-list-item v-for="item in portion" :key="item.id" @click="setDetail(item.id)" class="align-start">
+          <SymbolComponent :paint="getItemPaint(item)" class="mr-2 mt-2 list-item-icon"></SymbolComponent>
           <v-list-item-content>
             <div>{{ item.name }}</div>
             <v-list-item-subtitle>{{ item.type }}</v-list-item-subtitle>
@@ -12,7 +12,8 @@
       </v-list-item-group>
     </v-list>
     <div v-if="displayItems.length > portion.length" class="text-center">
-      <v-btn text small @click="addPortion">Показать ещё</v-btn>
+      <v-btn text color="primary"
+        @click="addPortion">Показать ещё</v-btn>
     </div>
   </div>
 </template>

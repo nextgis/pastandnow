@@ -9,10 +9,10 @@ import { CirclePaint } from '@nextgis/paint';
 import { VueNgwMapbox } from '@nextgis/vue-ngw-mapbox';
 
 import config from '../../../config.json';
-import { BdMainItem } from '../../api/ngw';
-import { oralModule, OralFeature } from '../../store/modules/oral';
+import { oralModule } from '../../store/modules/oral';
 import { appModule } from '../../store/modules/app';
 import { shadeColor } from '../../utils/shadeColor';
+import { OralFeature } from '../../interfaces';
 
 export const featureStyles: Record<string, CirclePaint> = {
   водоем: { color: '#4163aa', strokeColor: '' },
@@ -43,7 +43,7 @@ export function getHistoryPaint(
   properties?: Record<string, any> | null,
   options?: CirclePaint,
   forLegend = false
-) {
+): CirclePaint {
   const defaultStyle: CirclePaint = {
     color: '#363636',
     fillOpacity: 0.9,
@@ -89,26 +89,20 @@ export class OralMap extends Mixins(VueNgwMapbox) {
 
   private loaded = false;
 
-  get filtered() {
+  get filtered(): OralFeature[] {
     return oralModule.filtered;
   }
 
-  get detailItem() {
+  get detailItem(): false | OralFeature {
     return oralModule.detailItem;
   }
 
-  get centerId() {
+  get centerId(): number | null {
     return appModule.centerId;
   }
 
-  mounted() {
-    this.ngwMap.onLoad().then(() => {
-      this._onLoad();
-    });
-  }
-
   @Watch('filtered')
-  onFilteredChange(filtered: OralFeature[]) {
+  onFilteredChange(filtered: OralFeature[]): void {
     if (this.loaded) {
       filtered = JSON.parse(JSON.stringify(filtered));
       this.addMarkers(filtered);
@@ -117,7 +111,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   }
 
   @Watch('detailItem')
-  setSelected(item: BdMainItem) {
+  setSelected(item: OralFeature): void {
     const layer = this.layer;
     if (item && layer.select) {
       layer.select([['$id', 'eq', item.id]]);
@@ -128,7 +122,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   }
 
   @Watch('centerId')
-  zoomTo(id: number) {
+  zoomTo(id: number): void {
     if (id && this.layer.getLayers) {
       const layers = this.layer && this.layer.getLayers();
       if (layers && layers.length) {
@@ -148,13 +142,19 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     }
   }
 
-  addMarkers(features: OralFeature[]) {
+  async mounted(): Promise<void> {
+    this.ngwMap.onLoad().then(() => {
+      this._onLoad();
+    });
+  }
+
+  addMarkers(features: OralFeature[]): void {
     if (!this.layer) {
       const data: FeatureCollection = { type: 'FeatureCollection', features };
-      return this.ngwMap
+      this.ngwMap
         .addGeoJsonLayer({
           data,
-          type: 'circle',
+          type: 'point',
           paint: (feature) => {
             return getHistoryIcon(feature, { radius: 5 }, true);
           },
@@ -190,10 +190,10 @@ export class OralMap extends Mixins(VueNgwMapbox) {
       this.layer.propertiesFilter([['$id', 'in', features.map((x) => x.id)]]);
     }
 
-    return this.layer;
+    // return this.layer;
   }
 
-  zoomToFiltered() {
+  zoomToFiltered(): void {
     const layer = this.layer;
     if (layer && layer.getLayers) {
       const layers = layer.getLayers();

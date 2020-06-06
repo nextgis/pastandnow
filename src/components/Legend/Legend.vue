@@ -1,12 +1,12 @@
 <template>
-  <v-list dense>
-    <v-list-item v-for="(item, i) in legendItems" :key="i" class="">
-      <SymbolComponent class="mr-2" :paint="item.icon"></SymbolComponent>
-      <v-list-item-content>
-        <v-list-item-title v-text="capitalize(item.text)" class=""></v-list-item-title>
-      </v-list-item-content>
+  <div class="legend" dense>
+    <div class="legend__item" v-for="(item, i) in legendItems" :key="i">
+      <div class="legend__item-label">
+        <SymbolComponent class="mr-2" :paint="item.icon"></SymbolComponent>
+        <span v-text="capitalize(item.text)" class=""></span>
+      </div>
       <v-switch
-        class="ml-2 mt-0"
+        class="legend__item-switcher ml-3 mt-0"
         v-model="activeTypes"
         :value="item.text"
         inset
@@ -14,19 +14,27 @@
         hide-details
         color="primary"
       ></v-switch>
-    </v-list-item>
-  </v-list>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" src="./Legend.ts"></script>
 
 <style lang="scss" scoped>
-.legend-card {
-  overflow-y: auto;
-  background: rgba(0, 0, 0, 0.75) !important;
-}
+  .legend{
+    width: 200px;
+    padding: 16px;
 
-// .legend-items {
-//   overflow-y: auto;
-// }
+    &__item{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    &__item-label{
+      display: flex;
+      align-items: center;
+    }
+  }
 </style>

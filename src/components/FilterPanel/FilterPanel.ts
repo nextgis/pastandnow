@@ -28,7 +28,7 @@ export default class FilterPanel extends Vue {
     return oralModule.meta;
   }
 
-  get specialFilterItems() {
+  get specialFilterItems(): LayerMetaItem[] {
     return this.meta
       .filter((x) => x.type === 'Special')
       .sort((a, b) => (a.text > b.text ? 1 : -1));
@@ -51,21 +51,21 @@ export default class FilterPanel extends Vue {
   }
 
   @Emit('close')
-  close() {
+  close(): boolean {
     return true;
   }
 
   @Watch('specialFilters')
-  onSpecialFilterChange(val: string[]) {
+  onSpecialFilterChange(val: string[]): void {
     oralModule.setSpecialFilter(val.length ? val : undefined);
   }
 
   @Watch('narrativeTypesSelected')
-  onNarrativeChange(val: string[]) {
+  onNarrativeChange(val: string[]): void {
     oralModule.setNarrativeType(val.length ? val : undefined);
   }
 
-  removeNarrativeType(item: NarrativeTypeItem) {
+  removeNarrativeType(item: NarrativeTypeItem): void {
     const narrativeTypesSelected = [...this.narrativeTypesSelected];
     const index = narrativeTypesSelected.indexOf(item.name);
     if (index >= 0) {

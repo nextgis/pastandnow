@@ -37,7 +37,7 @@
 
         <v-footer class="pt-3 pb-4" v-if="pagination && pagination.page">
           <div class="text-center pt-1">
-            <v-pagination v-model="pagination.page" :length="pages" :total-visible="7"></v-pagination>
+            <v-pagination v-model="pagination.page" :length="pagesCount" :total-visible="7"></v-pagination>
           </div>
         </v-footer>
       </v-card>
@@ -61,6 +61,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden !important;
+  font-size: 14px;
 }
 
 .fullscreen-dialog {
@@ -73,5 +74,29 @@ body {
     overflow-y: auto;
     overflow-x: auto;
   }
+}
+
+*::-webkit-scrollbar-track{
+  background-color: inherit;
+}
+
+
+*::-webkit-scrollbar{
+  width: 8px;
+  background-color: inherit;
+}
+
+
+*::-webkit-scrollbar-thumb{
+  background-color: rgba(0, 0, 0, .35);
+}
+*::-webkit-scrollbar-corner{
+  background-color: transparent;
+}
+
+.theme--dark{
+  *::-webkit-scrollbar-thumb{
+  background-color: rgba(0, 0, 0, .55);
+}
 }
 </style>

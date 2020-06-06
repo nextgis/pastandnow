@@ -1,5 +1,20 @@
+// @ts-ignore
+// import './images/drawing.svg';
+
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { NgwMapOptions } from '@nextgis/ngw-map';
+
+import {
+  mdiFormatListBulleted,
+  mdiFilter,
+  mdiClose,
+  mdiMessageAlert,
+  mdiMapMarker,
+  mdiChevronRight,
+  mdiArrowLeft,
+  mdiMagnify,
+  mdiCrosshairsGps,
+} from '@mdi/js';
 
 import { qmsId, feedbackUrl } from '../config.json';
 import { connector } from './api/ngw';
@@ -14,8 +29,9 @@ import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import FilterPanel from './components/FilterPanel/FilterPanel.vue';
 import { BdMainItemProperties } from './api/ngw';
 import { appModule, AppPages } from './store/modules/app';
-import { oralModule } from './store/modules/oral';
+import { oralModule, OralState } from './store/modules/oral';
 import throttle from './store/utils/throttle';
+import { OralFeature } from './interfaces';
 
 @Component({
   components: {
@@ -32,6 +48,17 @@ import throttle from './store/utils/throttle';
 export class Main extends Vue {
   throttleSave!: (value: string) => void;
   legendOpen = true;
+  svg = {
+    filter: mdiFilter,
+    list: mdiFormatListBulleted,
+    close: mdiClose,
+    feedback: mdiMessageAlert,
+    place: mdiMapMarker,
+    chevron_right: mdiChevronRight,
+    arrow_back: mdiArrowLeft,
+    search: mdiMagnify,
+    target: mdiCrosshairsGps,
+  };
 
   filterPanelOpen = false;
 
@@ -46,6 +73,9 @@ export class Main extends Vue {
       ATTRIBUTION: { position: 'bottom-right' },
     },
   };
+
+  listIsScrolled = false;
+  detailIsScrolled = false;
 
   get listSearchText(): string {
     return oralModule.listSearchText;
@@ -83,53 +113,69 @@ export class Main extends Vue {
     return oralModule.items.map((x) => x.properties);
   }
 
-  get filtered() {
+  get filtered(): OralFeature[] {
     return oralModule.filtered;
   }
 
-  get activeCityItems() {
+  get activeCityItems(): OralFeature[] {
     return oralModule.activeCityItems;
   }
 
-  get isFilterSet() {
+  get isFilterSet(): boolean {
     return this.filtered.length !== this.activeCityItems.length;
   }
 
-  get detail(): BdMainItemProperties {
+  get detail(): false | OralFeature {
     return oralModule.detailItem;
   }
 
-  set detail(value: BdMainItemProperties) {
-    oralModule.setDetail(value.id);
+  set detail(value: false | OralFeature) {
+    const id = value && value.id;
+    oralModule.setDetail(id ? Number(id) : null);
   }
 
-  get module() {
+  get module(): OralState {
     return oralModule;
   }
 
   @Watch('listSearchText')
-  updateFilter(val: string) {
+  updateFilter(val: string): void {
     oralModule.setFullTextFilter(val);
   }
 
-  resetFilter() {
+  @Watch('detail')
+  resetScroll(val: string): void {
+    if (!val) {
+      this.detailIsScrolled = false;
+    }
+  }
+
+  resetFilter(): void {
     oralModule.resetFilter();
   }
 
-  mounted() {
+  mounted(): void {
     this.throttleSave = throttle(this.setListSearchText, 1000, this);
   }
 
-  created() {
+  created(): void {
     oralModule.getAllItems();
     oralModule.getPhotos();
   }
 
-  setListSearchText(value: string) {
+  setListSearchText(value: string): void {
     oralModule.setListSearchText(value);
   }
 
-  openFeedbackPage() {
+  openFeedbackPage(): void {
     window.open(feedbackUrl, '_blank');
+  }
+
+  onPanelScroll(e: { target: HTMLElement }): void {
+    this.listIsScrolled = e.target.scrollTop > 0;
+  }
+
+  onDetailScroll(e: { target: HTMLElement }): void {
+    this.detailIsScrolled = e.target.scrollTop > 0;
   }
 }

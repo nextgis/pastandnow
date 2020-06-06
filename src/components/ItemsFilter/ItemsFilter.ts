@@ -2,10 +2,10 @@ import { Vue, Component, Watch } from 'vue-property-decorator';
 
 import {
   oralModule,
-  OralFeature,
   FilterProperties,
   ALL_RAYON_STR,
 } from '../../store/modules/oral';
+import { OralFeature } from '../../interfaces';
 
 interface CountItem {
   text: string;
@@ -17,7 +17,7 @@ interface CountItem {
 export class ItemsFilter extends Vue {
   form = false;
 
-  get rayon() {
+  get rayon(): string {
     return oralModule.activeRayon;
   }
 
@@ -28,7 +28,7 @@ export class ItemsFilter extends Vue {
   areas: CountItem[] = [];
   areasByCities: Record<string, string> = {};
 
-  get city() {
+  get city(): string {
     return oralModule.activeCity;
   }
 
@@ -38,22 +38,18 @@ export class ItemsFilter extends Vue {
 
   cities: CountItem[] = [];
 
-  get items() {
+  get items(): OralFeature[] {
     return oralModule.items;
   }
 
-  mounted() {
-    this.updateFilterValues(oralModule.items);
-  }
-
   @Watch('city')
-  updateCity() {
+  updateCity(): void {
     this.rayon = ALL_RAYON_STR;
     this.updateFilter();
   }
 
   @Watch('rayon')
-  updateFilter() {
+  updateFilter(): void {
     const filters: FilterProperties = {
       city: [['city', 'eq', this.city]],
     };
@@ -68,7 +64,7 @@ export class ItemsFilter extends Vue {
   }
 
   @Watch('items')
-  updateFilterValues(items: OralFeature[]) {
+  updateFilterValues(items: OralFeature[]): void {
     const cities: Record<string, number> = {};
     items.forEach((x) => {
       const prop = x.properties;
@@ -92,7 +88,11 @@ export class ItemsFilter extends Vue {
   }
 
   @Watch('city')
-  updateAreasItems(city?: string, oldCity?: string, items?: OralFeature[]) {
+  updateAreasItems(
+    city?: string,
+    oldCity?: string,
+    items?: OralFeature[]
+  ): void {
     items = items ?? this.items;
     const areas: Record<string, number> = {};
 
@@ -124,7 +124,11 @@ export class ItemsFilter extends Vue {
     this.areas = sortCities;
   }
 
-  getItemStyle(item: CountItem) {
+  mounted(): void {
+    this.updateFilterValues(oralModule.items);
+  }
+
+  getItemStyle(item: CountItem): Record<string, any> {
     let weight = 400;
     if (item.count >= 1000) {
       weight = 700;

@@ -15,7 +15,7 @@ async function getCities() {
     }
   );
   const cities = [];
-  features.forEach(x => {
+  features.forEach((x) => {
     let city_ = x.fields.city;
     if (city_) {
       city_ = city_.split(';').map(y => y.trim());
@@ -25,7 +25,7 @@ async function getCities() {
         }
       });
     }
-  });
+  })
   fs.writeFile(out, JSON.stringify(cities), () =>
     console.log('Data write in `' + out + '` file')
   );

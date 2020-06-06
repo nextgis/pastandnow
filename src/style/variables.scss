@@ -1,1 +1,65 @@
-$dark: #005e7c;
+$primary: #005e7c;
+$icon-color: rgba(0,0,0,.5);
+$icon-color-active: $primary;
+
+$border-radius-root: 2px;
+
+$switch-thumb-dense-height: 10px;
+$switch-thumb-dense-width: 10px;
+$switch-track-dense-inset-height: 16px;
+$switch-track-dense-inset-width: 26px;
+$switch-track-inset-width: 26px;
+$switch-track-inset-opacity: 1;
+$switch-dirty-offset-x: 10px;
+
+$btn-sizes: (
+  'default': 40
+);
+$btn-active-opacity: 0;
+$btn-hover-opacity: .04;
+$btn-focus-opacity: .04;
+
+$text-field-solo-dense-control-min-height: 36px;
+$text-field-filled-full-width-outlined-single-line-slot-min-height: 36px;
+$text-field-dense-icon-append-prepend-margin-top: 0;
+
+$input-font-size: 14px;
+$label-font-size: 14px;
+
+
+// Chip's sizes
+$icon-sizes: (
+  'small': (
+    'font-size': 12,
+    'height': 20
+  ),
+);
+$chip-padding: 7px;
+
+$headings: (
+  'caption': (
+    'letter-spacing': 0
+  ),
+  'subtitle-1': (
+    'line-height': 1.2,
+  ),
+);
+
+$list-item-padding: 0 20px;
+$list-item-subtitle-font-size: 12px;
+
+$btn-letter-spacing: 0px;
+$btn-text-transform: none;
+
+
+$material-light: (
+  'text': (
+    'secondary': #a0a8ab,
+    'primary': rgba(0, 0, 0, 0.87),
+  ),
+  'text-fields': (
+    'outlined': #cbd3d5
+  ),
+  'chips': #f1f4f5,
+
+);

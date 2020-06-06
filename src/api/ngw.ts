@@ -1,7 +1,8 @@
-import { Point, Feature } from 'geojson';
-import NgwConnector from '@nextgis/ngw-connector';
+import { Point } from 'geojson';
+import NgwConnector, { CancelablePromise } from '@nextgis/ngw-connector';
 import NgwKit from '@nextgis/ngw-kit';
 import config from '../../config.json';
+import { OralFeatureCollection, OralFeature } from '../interfaces';
 
 export interface LayerMetaItem {
   text: string;
@@ -60,10 +61,8 @@ export interface BdPhotoProperties {
   details: string;
 }
 
-export type BdMainItem = Feature<Point, BdMainItemProperties>;
-
 export default {
-  async getLayerGeoJson() {
+  async getLayerGeoJson(): CancelablePromise<OralFeatureCollection> {
     const meta = await this.getLayerMeta();
     const fields = meta
       .filter((x) => x.search || x.list || x.type === 'Special')
@@ -73,7 +72,6 @@ export default {
         connector,
         resourceId: config.ngwMarkerLayerId,
         // limit: 100,
-        // limit: 3000,
         fields,
       })
       .then((data) => {
@@ -86,7 +84,7 @@ export default {
       });
   },
 
-  async getNgwLayerFeature(featureId: number) {
+  async getNgwLayerFeature(featureId: number): CancelablePromise<OralFeature> {
     return NgwKit.utils.getNgwLayerFeature({
       resourceId: config.ngwMarkerLayerId,
       featureId,
@@ -94,7 +92,7 @@ export default {
     });
   },
 
-  async getPhotos() {
+  async getPhotos(): CancelablePromise<BdPhotoProperties[]> {
     return NgwKit.utils
       .getNgwLayerFeatures<Point, BdPhotoProperties>({
         connector,
@@ -111,7 +109,7 @@ export default {
   },
 
   getLayerMeta(): Promise<LayerMetaItem[]> {
-    return Promise.resolve([
+    return CancelablePromise.resolve([
       { text: 'Идентификатор', value: 'id1', detail: false, list: true },
       // { text: 'долгота', value: 'lat', noHide: true },
       // { text: 'широта', value: 'lon', noHide: true },
@@ -139,9 +137,27 @@ export default {
       },
       { text: 'Тип', value: 'type', detail: false, list: true, search: true },
       { text: 'Описание', value: 'description', search: true },
-      { text: 'Истории о прошлом', value: 'narrativ_l', type: 'Story' },
-      { text: 'Семейные истории', value: 'narrativ_b', type: 'Story' },
-      { text: 'Практики горожан', value: 'narrativ_p', type: 'Story' },
+      {
+        text: 'Истории о прошлом',
+        value: 'narrativ_l',
+        type: 'Story',
+        list: true,
+        search: true,
+      },
+      {
+        text: 'Семейные истории',
+        value: 'narrativ_b',
+        type: 'Story',
+        list: true,
+        search: true,
+      },
+      {
+        text: 'Практики горожан',
+        value: 'narrativ_p',
+        type: 'Story',
+        list: true,
+        search: true,
+      },
       {
         text: 'Типы сюжетов',
         value: 'narrativ_t',

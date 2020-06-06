@@ -13,5 +13,5 @@ const routes: RouteConfig[] = [
 export const router: VueRouter = new VueRouter({
   // base:  window.location.pathname,
   mode: 'history',
-  routes
+  routes,
 });

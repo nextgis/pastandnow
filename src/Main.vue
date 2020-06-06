@@ -3,38 +3,37 @@
     <v-content>
       <oral-map :mapOptions="mapOptions" :fullFilling="true">
         <vue-ngw-control position="top-left" :margin="true">
-          <v-btn @click="drawer = !drawer" fab small class="rectangle-fab">
-            <v-icon large class="drawe-icon" :class="{ active: drawer }">chevron_right</v-icon>
+          <v-btn @click="drawer = !drawer" fab small class="rectangle-fab" color="#fff">
+            <v-icon class="drawe-icon" :class="{ active: drawer }">{{svg.chevron_right}}</v-icon>
           </v-btn>
         </vue-ngw-control>
         <vue-ngw-control position="bottom-left" :margin="true">
-          <v-card
-            class="mx-auto legend-card"
-            max-width="300"
-            max-height="500"
-            dark
-            tile
-            v-if="module.legendItems.length"
-          >
-            <div v-if="legendOpen" class="d-flex flex-column">
-              <div class="flex-header-content">
-                <div class="d-flex justify-space-between">
-                  <span class="pl-2 title font-weight-light">Легенда</span>
-                  <v-btn @click="legendOpen = false" text icon>
-                    <v-icon>close</v-icon>
+          <div v-if="legendOpen" class="d-flex flex-column">
+            <v-card
+              class="mx-auto legend-card"
+              max-width="300"
+              max-height="500"
+              dark
+              v-if="module.legendItems.length"
+            >
+              <div class="legend-header flex-header-content">
+                <div class="d-flex justify-space-between align-center">
+                  <span class="legend-card__title">Легенда</span>
+                  <v-btn class="legend__close" @click="legendOpen = false" icon small>
+                    <v-icon>{{svg.close}}</v-icon>
                   </v-btn>
                 </div>
               </div>
               <div class="flex-grow-1 flex-body-content legend-body">
                 <Legend class="pt-0"></Legend>
               </div>
+            </v-card>
             </div>
-            <div v-else>
-              <v-btn @click="legendOpen = !legendOpen" fab small class="rectangle-fab">
-                <v-icon class :class="{ active: drawer }">format_list_bulleted</v-icon>
-              </v-btn>
-            </div>
-          </v-card>
+          <div v-else>
+            <v-btn @click="legendOpen = !legendOpen" fab small class="rectangle-fab" color="#fff">
+              <v-icon :class="{ active: drawer }">{{svg.list}}</v-icon>
+            </v-btn>
+          </div>
         </vue-ngw-control>
       </oral-map>
     </v-content>
@@ -45,34 +44,33 @@
           <items-filter></items-filter>
           <v-list v-if="filterPanelOpen">
             <v-list-item @click="filterPanelOpen = false">
-              <v-list-item-icon>
-                <v-icon>arrow_back</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>Вернуться к списку объектов</v-list-item-title>
-              </v-list-item-content>
+              <v-icon class="text--secondary mr-2">{{svg.arrow_back}}</v-icon>
+              <span class="text--secondary"> Вернуться к списку объектов </span>
             </v-list-item>
           </v-list>
-          <div v-else>
-            <div class="pt-2 mx-4 d-flex justify-space-between">
-              <span class="subtitle-1 font-weight-bold">
+          <div v-else class="list-toolbar" :class="{ 'shadowed' : listIsScrolled }">
+            <div class="d-flex justify-space-between align-center mb-4">
+              <span class="subtitle-1 font-weight-medium">
                 Объекты
-                <v-chip class="font-weight-light" small>
-                  <span v-if="isFilterSet">
-                    <span class="font-weight-bold">{{filtered.length}}</span> из&nbsp;
-                  </span>
-                  {{activeCityItems.length}}
+                <v-chip class="list-toolbar__count font-weight-medium" small>
+                  <template v-if="isFilterSet">
+                    {{filtered.length}}&nbsp;<span class="text--secondary">из&nbsp;{{activeCityItems.length}}</span>
+                  </template>
+                  <template v-else>
+                    {{activeCityItems.length}}
+                  </template>
                 </v-chip>
               </span>
-              <span class="subtitle-1 caption" color="primary">
-                <v-btn v-if="isFilterSet" text small @click="resetFilter">Сбросить</v-btn>
-                <v-btn text icon @click="filterPanelOpen = true">
-                  <v-icon>filter_list</v-icon>
+              <span>
+                <v-btn class="px-1" small text color="primary" v-if="isFilterSet" @click="resetFilter">Сбросить</v-btn>
+                <v-btn text icon small @click="filterPanelOpen = true" class="filter-btn">
+                  <v-icon class="filter-btn"
+                    color="primary"
+                    @click="filterPanelOpen = true">{{svg.filter}}</v-icon>
                 </v-btn>
               </span>
             </div>
             <v-text-field
-              class="mx-4 pt-2 pb-2"
               v-model="listSearchText"
               cache-items
               flat
@@ -82,15 +80,16 @@
               hide-no-data
               hide-details
               clearable
-              label="Поиск"
-              prepend-inner-icon="search"
+              placeholder="Поиск..."
+              :prepend-inner-icon="svg.search"
             ></v-text-field>
           </div>
         </div>
-        <div class="flex-grow-1 flex-body-content">
-          <div v-if="items && items.length">
+        <div class="flex-grow-1 flex-body-content" id="panel-content">
+          <div v-if="items && items.length" class="pb-3"
+            v-scroll:#panel-content="onPanelScroll">
             <FilterPanel v-if="filterPanelOpen" @close="filterPanelOpen = false"></FilterPanel>
-            <list v-else></list>
+            <list v-else class="pt-0"></list>
           </div>
           <div v-else>
             <div class="pa-3 text-center">
@@ -111,50 +110,49 @@
       </div>
     </v-navigation-drawer>
 
-    <v-navigation-drawer :value="!!detail" stateless width="360" absolute app right>
-      <div v-if="detail" class="drawer-content d-flex flex-column pt-3 pb-0 pa-5">
-        <div class="flex-header-content pb-5">
-          <div class="pb-3 d-flex justify-space-between">
-            <v-btn @click="detail = false" text icon>
-              <v-icon>close</v-icon>
+    <v-navigation-drawer class="detail-drawer" :value="!!detail" stateless width="360" absolute app right>
+      <div v-if="detail" class="drawer-content d-flex flex-column">
+        <div class="detail-drawer__header flex-header-content"
+          :class="{'shadowed': detailIsScrolled }"
+          v-scroll:#detail-content="onDetailScroll">
+          <div class="pb-3 d-flex justify-space-between align-center">
+            <v-btn class="detail-drawer__header-close" @click="detail = false" text icon small>
+              <v-icon>{{svg.close}}</v-icon>
             </v-btn>
             <v-chip
-              class="ma-2"
+              class="detail-drawer__header-chip text-uppercase font-weight-bold"
               :color="detail.properties.status === 'существующий'? '#7bd235' : '#d2357b'"
               dark
               small
               label
             >{{detail.properties.status}}</v-chip>
           </div>
-          <div class="font-weight-medium">{{detail.properties.name}}</div>
+          <div class="subtitle-1 font-weight-medium">{{detail.properties.name}}</div>
           <div class="caption text--secondary">{{detail.properties.type}}</div>
         </div>
-        <div class="flex-grow-1 flex-body-content">
+        <div class="detail-drawer__content flex-grow-1 flex-body-content" id="detail-content">
           <detail></detail>
         </div>
-        <div class="flex-footer-content">
-          <v-item-group class="bottom-button">
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn text color="grey" @click="openFeedbackPage" v-on="on">
-                  <v-icon>feedback</v-icon>
-                </v-btn>
-              </template>
-              <span>Обратная связь</span>
-            </v-tooltip>
-
-            <!-- <v-btn text color="grey">
-              <v-icon>save_alt</v-icon>
-            </v-btn>-->
-            <v-tooltip top>
-              <template v-slot:activator="{ on }">
-                <v-btn text @click="zoomTo = detail.id" color="grey" v-on="on">
-                  <v-icon>place</v-icon>
-                </v-btn>
-              </template>
-              <span>Показать на карте</span>
-            </v-tooltip>
-          </v-item-group>
+        <div class="detail-drawer__footer flex-footer-content">
+          <div class="bottom-buttons">
+            <div class="bottom-buttons__item">
+              <v-btn text color="primary" @click="openFeedbackPage">
+                <v-icon left>{{svg.feedback}}</v-icon>
+                Обратная связь
+              </v-btn>
+            </div>
+            <v-divider
+              class="mx-1 my-2"
+              inset
+              vertical
+            ></v-divider>
+            <div class="bottom-buttons__item">
+              <v-btn text @click="zoomTo = detail.id" color="primary">
+                <v-icon left>{{svg.target}}</v-icon>
+                Показать на карте
+              </v-btn>
+            </div>
+          </div>
         </div>
       </div>
     </v-navigation-drawer>
@@ -166,16 +164,41 @@ export { Main as default } from "./Main";
 </script>
 
 
-<style lang="scss">
-// @import "./style/variables.scss";
+<style>
+.v-text-field.v-input--dense .v-input__prepend-inner .v-input__icon > .v-icon {
+  margin-top: 0;
+}
+</style>
+
+<style lang="scss" scoped>
 
 .rectangle-fab {
-  border-radius: inherit;
+  border-radius: $border-radius-root;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
+
+  .v-btn__content .v-icon {
+    color: $icon-color;
+  }
+
+  &:hover{
+    .v-btn__content .v-icon {
+      color: $icon-color-active;
+    }
+  }
 }
 
 .legend-body {
   overflow: auto;
   max-height: 50vh;
+}
+
+.legend__close{
+  opacity: .5;
+  margin-right: -8px;
+
+  &:hover{
+    opacity: 1;
+  }
 }
 
 .drawer-content {
@@ -197,7 +220,7 @@ export { Main as default } from "./Main";
   }
 }
 
-.bottom-button {
+.bottom-buttons {
   width: 100%;
   display: flex;
   justify-content: space-around;
@@ -205,5 +228,56 @@ export { Main as default } from "./Main";
     flex-grow: 1;
     margin: 0;
   }
+}
+
+.legend-card{
+  &.theme--dark{
+    background-color: rgba(0,0,0,.75);
+  }
+
+  .legend-header{
+    padding: 12px 16px 0;
+  }
+
+  &__title{
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.list-toolbar{
+  padding: 16px 20px 20px;
+}
+
+.detail-drawer{
+  &__header,
+  &__content,
+  &__footer{
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  &__header{
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  &__footer{
+    background-color: #f1f4f5;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  &__header-close{
+    margin-left: -7px;
+  }
+
+  &__header-chip{
+    font-size: 10px;
+  }
+}
+
+.shadowed{
+  box-shadow: 0 2px 8px rgba(0,0,0,.24);
 }
 </style>

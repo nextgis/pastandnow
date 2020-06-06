@@ -1,4 +1,3 @@
-import { Feature, Point } from 'geojson';
 import {
   VuexModule,
   Mutation,
@@ -15,16 +14,11 @@ import {
 } from '@nextgis/properties-filter';
 
 import store from '..';
-import ngw, {
-  BdMainItem,
-  BdMainItemProperties,
-  BdPhotoProperties,
-} from '../../api/ngw';
+import ngw, { BdPhotoProperties } from '../../api/ngw';
 import { LayerMetaItem } from '../../api/ngw';
+import { OralFeature, OralFilter, LegendItem } from '../../interfaces';
 
 export const ALL_RAYON_STR = 'Все районы';
-
-export type OralFeature = Feature<Point, BdMainItemProperties>;
 
 export interface FilterProperties {
   city?: PropertiesFilter;
@@ -41,12 +35,12 @@ export class OralState extends VuexModule {
   filtered: OralFeature[] = [];
   photos: BdPhotoProperties[] = [];
   meta: LayerMetaItem[] = [];
-  detailItem: any | false = false;
+  detailItem: OralFeature | false = false;
 
   narrativeTypeSelected: string[] = [];
   specialFilterSelected: string[] = [];
   listSearchText = '';
-  activeTypes: string[] = [];
+  activeTypes: string[] | false = false;
   activeRayon = ALL_RAYON_STR;
   activeCity = 'Москва';
 
@@ -63,11 +57,11 @@ export class OralState extends VuexModule {
     specialFilter: undefined,
   };
 
-  get features() {
+  get features(): OralFeature[] {
     return this.filtered;
   }
 
-  get activeCityItems() {
+  get activeCityItems(): OralFeature[] {
     return this.items.filter((x) => {
       return x.properties.city === this.activeCity;
     });
@@ -77,8 +71,8 @@ export class OralState extends VuexModule {
     return Object.values(this.filters).filter((x) => x);
   }
 
-  get sortFeatures() {
-    const filtered = [...this.filtered] as BdMainItem[];
+  get sortFeatures(): OralFeature[] {
+    const filtered = [...this.filtered] as OralFeature[];
     return filtered.sort((a, b) => {
       const aName = a.properties.name || '';
       const bName = b.properties.name || '';
@@ -87,32 +81,32 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_setItems' })
-  async getAllItems() {
+  async getAllItems(): Promise<OralFeature[]> {
     await this.setMeta();
     const items = await ngw.getLayerGeoJson();
     return items.features;
   }
 
   @Action({ commit: '_setMeta' })
-  async setMeta() {
+  async setMeta(): Promise<LayerMetaItem[]> {
     const meta = await ngw.getLayerMeta();
     return meta;
   }
 
   @Action({ commit: '_setPhotos' })
-  async getPhotos() {
+  async getPhotos(): Promise<BdPhotoProperties[]> {
     const photos = await ngw.getPhotos();
     return photos;
   }
 
   @Action({ commit: '_updateFilter' })
-  async updateFilter(filters: FilterProperties) {
+  async updateFilter(filters: FilterProperties): Promise<OralFilter> {
     const filters_ = { ...this.filters, ...filters };
     return filters_;
   }
 
   @Action({ commit: '_updateFilter' })
-  async resetFilter() {
+  async resetFilter(): Promise<OralFilter> {
     const filters = { ...this.filters };
     for (const f in filters) {
       const key = f as keyof FilterProperties;
@@ -131,7 +125,7 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_updateFilter' })
-  async setFullTextFilter(query: string) {
+  async setFullTextFilter(query: string): Promise<OralFilter> {
     if (!query) {
       return { ...this.filters, fullText: undefined };
     }
@@ -147,7 +141,7 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_updateFilter' })
-  async setTypesFilter(types: string[] | undefined) {
+  async setTypesFilter(types: string[] | undefined): Promise<OralFilter> {
     if (!types) {
       return { ...this.filters, type: undefined };
     }
@@ -158,7 +152,7 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_updateFilter' })
-  async setSpecialFilter(selected: string[] | undefined) {
+  async setSpecialFilter(selected: string[] | undefined): Promise<OralFilter> {
     if (!selected) {
       return { ...this.filters, specialFilter: undefined };
     }
@@ -169,7 +163,7 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_updateFilter' })
-  async setNarrativeType(selected: string[] | undefined) {
+  async setNarrativeType(selected: string[] | undefined): Promise<OralFilter> {
     if (!selected) {
       return { ...this.filters, narrativeType: undefined };
     }
@@ -184,13 +178,13 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_setLegend' })
-  setLegend(legendItem: { name: string; item: CirclePaint }) {
+  setLegend(legendItem: { name: string; item: CirclePaint }): LegendItem {
     return legendItem;
   }
 
   @Action({ commit: '_setDetail' })
-  async setDetail(id: number | null) {
-    const item = this.filtered.find((x: BdMainItem) => x.properties.id === id);
+  async setDetail(id: number | null): Promise<false | OralFeature | undefined> {
+    const item = this.filtered.find((x: OralFeature) => x.properties.id === id);
     const detail = this.detailItem;
     if (detail && detail.id === id) {
       return false;
@@ -205,43 +199,67 @@ export class OralState extends VuexModule {
   }
 
   @MutationAction({ mutate: ['listSearchText'] })
-  async setListSearchText(listSearchText: string) {
+  async setListSearchText(
+    listSearchText: string
+  ): Promise<{
+    listSearchText: string;
+  }> {
     return { listSearchText };
   }
 
   @MutationAction({ mutate: ['activeTypes'] })
-  async setActiveTypes(activeTypes: string[]) {
+  async setActiveTypes(
+    activeTypes: string[]
+  ): Promise<{
+    activeTypes: string[];
+  }> {
     return { activeTypes };
   }
 
   @MutationAction({ mutate: ['activeRayon'] })
-  async setActiveRayon(activeRayon: string) {
+  async setActiveRayon(
+    activeRayon: string
+  ): Promise<{
+    activeRayon: string;
+  }> {
     return { activeRayon };
   }
 
   @MutationAction({ mutate: ['specialFilterSelected'] })
-  async setSpecialFilterSelected(specialFilterSelected: string[]) {
+  async setSpecialFilterSelected(
+    specialFilterSelected: string[]
+  ): Promise<{
+    specialFilterSelected: string[];
+  }> {
     return { specialFilterSelected };
   }
 
   @MutationAction({ mutate: ['narrativeTypeSelected'] })
-  async setNarrativeTypeSelected(narrativeTypeSelected: string[]) {
+  async setNarrativeTypeSelected(
+    narrativeTypeSelected: string[]
+  ): Promise<{
+    narrativeTypeSelected: string[];
+  }> {
     return { narrativeTypeSelected };
   }
 
   @MutationAction({ mutate: ['activeCity'] })
-  async setActiveCity(activeCity: string) {
+  async setActiveCity(
+    activeCity: string
+  ): Promise<{
+    activeCity: string;
+  }> {
     return { activeCity };
   }
 
   @Mutation
-  _setItems(items: OralFeature[]) {
+  _setItems(items: OralFeature[]): void {
     this.items = items;
     this.filtered = items;
   }
 
   @Mutation
-  _updateFilter(filters: FilterProperties) {
+  _updateFilter(filters: FilterProperties): void {
     this.filters = filters;
 
     const items: OralFeature[] = this.items.filter((x) =>
@@ -254,7 +272,7 @@ export class OralState extends VuexModule {
 
     const detail = this.detailItem;
     if (detail) {
-      const item = items.find((x: BdMainItem) => {
+      const item = items.find((x: OralFeature) => {
         const id = x.properties.id;
         return id === detail.id;
       });
@@ -265,22 +283,22 @@ export class OralState extends VuexModule {
   }
 
   @Mutation
-  _setDetail(item: number) {
+  _setDetail(item: OralFeature): void {
     this.detailItem = item;
   }
 
   @Mutation
-  _setMeta(meta: LayerMetaItem[]) {
+  _setMeta(meta: LayerMetaItem[]): void {
     this.meta = meta;
   }
 
   @Mutation
-  _setPhotos(photos: BdPhotoProperties[]) {
+  _setPhotos(photos: BdPhotoProperties[]): void {
     this.photos = photos;
   }
 
   @Mutation
-  _setLegend(legendItem: { name: string; item: CirclePaint }) {
+  _setLegend(legendItem: { name: string; item: CirclePaint }): void {
     const exist = this.legendItems.find((x) => x.name === legendItem.name);
     if (!exist) {
       this.legendItems.push(legendItem);
