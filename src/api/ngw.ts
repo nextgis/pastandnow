@@ -1,6 +1,7 @@
 import { Point } from 'geojson';
-import NgwConnector, { CancelablePromise } from '@nextgis/ngw-connector';
-import NgwKit from '@nextgis/ngw-kit';
+import NgwConnector from '@nextgis/ngw-connector';
+import CancelablePromise from '@nextgis/cancelable-promise';
+import { getNgwLayerFeature, getNgwLayerFeatures } from '@nextgis/ngw-kit';
 import config from '../../config.json';
 import { OralFeatureCollection, OralFeature } from '../interfaces';
 
@@ -67,25 +68,23 @@ export default {
     const fields = meta
       .filter((x) => x.search || x.list || x.type === 'Special')
       .map((x) => x.value);
-    return NgwKit.utils
-      .getNgwLayerFeatures<Point, BdMainItemProperties>({
-        connector,
-        resourceId: config.ngwMarkerLayerId,
-        // limit: 100,
-        fields,
-      })
-      .then((data) => {
-        data.features.forEach((x, i) => {
-          if (x.id) {
-            x.properties.id = Number(x.id);
-          }
-        });
-        return data;
+    return getNgwLayerFeatures<Point, BdMainItemProperties>({
+      connector,
+      resourceId: config.ngwMarkerLayerId,
+      // limit: 100,
+      fields,
+    }).then((data) => {
+      data.features.forEach((x, i) => {
+        if (x.id) {
+          x.properties.id = Number(x.id);
+        }
       });
+      return data;
+    });
   },
 
   async getNgwLayerFeature(featureId: number): CancelablePromise<OralFeature> {
-    return NgwKit.utils.getNgwLayerFeature({
+    return getNgwLayerFeature({
       resourceId: config.ngwMarkerLayerId,
       featureId,
       connector,
@@ -93,19 +92,17 @@ export default {
   },
 
   async getPhotos(): CancelablePromise<BdPhotoProperties[]> {
-    return NgwKit.utils
-      .getNgwLayerFeatures<Point, BdPhotoProperties>({
-        connector,
-        resourceId: config.layerWithPhotos,
-      })
-      .then((data) => {
-        return data.features.map((x) => {
-          if (x.id) {
-            x.properties.id = Number(x.id);
-          }
-          return x.properties;
-        });
+    return getNgwLayerFeatures<Point, BdPhotoProperties>({
+      connector,
+      resourceId: config.layerWithPhotos,
+    }).then((data) => {
+      return data.features.map((x) => {
+        if (x.id) {
+          x.properties.id = Number(x.id);
+        }
+        return x.properties;
       });
+    });
   },
 
   getLayerMeta(): Promise<LayerMetaItem[]> {

@@ -6,7 +6,7 @@ import geojsonExtent from '@mapbox/geojson-extent';
 
 import { VectorLayerAdapter } from '@nextgis/webmap';
 import { CirclePaint } from '@nextgis/paint';
-import { VueNgwMapbox } from '@nextgis/vue-ngw-mapbox';
+import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 
 import config from '../../../config.json';
 import { oralModule } from '../../store/modules/oral';

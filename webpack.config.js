@@ -7,7 +7,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 
 let alias = {};
 try {
-  const { getAliases } = require('./nextgisweb_frontend/build/aliases');
+  const { getAliases } = require('./nextgis_frontend/scripts/aliases');
   alias = getAliases();
 } catch (er) {
   // ignore
@@ -111,6 +111,8 @@ module.exports = (env, argv) => {
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(argv.mode || 'development'),
+      __BROWSER__: true,
+      __DEV__: !isProd,
     }),
     new VuetifyLoaderPlugin(),
     // new BundleAnalyzerPlugin()
@@ -149,7 +151,6 @@ module.exports = (env, argv) => {
         ...{
           vue$: 'vue/dist/vue.esm.js',
         },
-        '@': path.resolve(__dirname, 'src/')
       },
     },
     module: {
