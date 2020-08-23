@@ -78,7 +78,7 @@ module.exports = (env, argv) => {
           options: {
             ...sassLoaderOptions,
             // This is the path to your variables
-            prependData: "@import '@/style/variables.scss'"
+            prependData: "@import '@/style/variables.scss'",
           },
         },
       ],
@@ -96,7 +96,7 @@ module.exports = (env, argv) => {
           options: {
             ...sassLoaderOptions,
             // This is the path to your variables
-            prependData: "@import '@/style/variables.scss';"
+            prependData: "@import '@/style/variables.scss';",
           },
         },
       ],
@@ -148,9 +148,8 @@ module.exports = (env, argv) => {
       extensions: ['.ts', '.js', '.vue', '.json'],
       alias: {
         ...alias,
-        ...{
-          vue$: 'vue/dist/vue.esm.js',
-        },
+        vue$: 'vue/dist/vue.esm.js',
+        '@': path.resolve(__dirname, 'src/'),
       },
     },
     module: {
