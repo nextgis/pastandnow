@@ -7,7 +7,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 
 let alias = {};
 try {
-  const { getAliases } = require('./nextgis_frontend/scripts/aliases');
+  const { getAliases } = require('./@nextgis/scripts/aliases');
   alias = getAliases();
 } catch (er) {
   // ignore

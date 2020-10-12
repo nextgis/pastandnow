@@ -1,4 +1,4 @@
-import { PropertiesFilter } from '@nextgis/webmap';
+import { PropertiesFilter } from '@nextgis/properties-filter';
 import { CirclePaint } from '@nextgis/paint';
 import { BdMainItemProperties } from './api/ngw';
 import { Point, Feature, FeatureCollection } from 'geojson';

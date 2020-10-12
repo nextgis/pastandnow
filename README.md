@@ -52,7 +52,7 @@ yarn run prod
 
 ```bash
 docker build -t registry.nextgis.com/pastandnow:0.0.0 .
-docker build -t registry.nextgis.com/pastandnow:latest .
+docker build -t registry.nextgis.com/pastandnow:latest . && docker push registry.nextgis.com/pastandnow:latest
 docker run -it -p 8080:8080 --rm --name pastandnow registry.nextgis.com/pastandnow:latest
 
 docker push registry.nextgis.com/pastandnow:0.0.0
