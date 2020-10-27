@@ -1,6 +1,6 @@
 {
   "name": "oral-history-front",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -23,9 +23,9 @@
     "@nextgis/vue-ngw-map": "^1.0.0-alpha.10",
     "@nextgis/vue-ngw-mapbox": "^1.0.0-alpha.10",
     "@nextgis/webmap": "^1.0.0-alpha.10",
+    "@turf/bbox": "^6.0.1",
     "canvg": "^3.0.7",
     "core-js": "^3.6.5",
-    "eslint-loader": "^4.0.2",
     "mapbox-gl": "^1.12.0",
     "nouislider": "^14.6.2",
     "regenerator": "^0.14.7",
@@ -51,6 +51,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "compression-webpack-plugin": "^6.0.4",
     "css-loader": "^5.0.0",
+    "eslint-webpack-plugin": "^2.1.0",
     "fibers": "^5.0.0",
     "file-loader": "^6.1.1",
     "html-webpack-plugin": "^4.5.0",

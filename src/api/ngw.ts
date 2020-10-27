@@ -1,7 +1,7 @@
 import { Point } from 'geojson';
 import NgwConnector from '@nextgis/ngw-connector';
 import CancelablePromise from '@nextgis/cancelable-promise';
-import { getNgwLayerFeature, getNgwLayerFeatures } from '@nextgis/ngw-kit';
+import { fetchNgwLayerFeature, fetchNgwLayerFeatures } from '@nextgis/ngw-kit';
 import config from '../../config.json';
 import { OralFeatureCollection, OralFeature } from '../interfaces';
 
@@ -68,7 +68,7 @@ export default {
     const fields = meta
       .filter((x) => x.search || x.list || x.type === 'Special')
       .map((x) => x.value);
-    return getNgwLayerFeatures<Point, BdMainItemProperties>({
+    return fetchNgwLayerFeatures<Point, BdMainItemProperties>({
       connector,
       resourceId: config.ngwMarkerLayerId,
       // limit: 100,
@@ -84,8 +84,10 @@ export default {
     });
   },
 
-  async getNgwLayerFeature(featureId: number): CancelablePromise<OralFeature> {
-    return getNgwLayerFeature({
+  async fetchNgwLayerFeature(
+    featureId: number
+  ): CancelablePromise<OralFeature> {
+    return fetchNgwLayerFeature({
       resourceId: config.ngwMarkerLayerId,
       featureId,
       connector,
@@ -93,9 +95,12 @@ export default {
   },
 
   async getPhotos(): CancelablePromise<BdPhotoProperties[]> {
-    return getNgwLayerFeatures<Point, BdPhotoProperties>({
+    return fetchNgwLayerFeatures<Point, BdPhotoProperties>({
       connector,
       resourceId: config.layerWithPhotos,
+      geom: false,
+      extensions: false,
+      fields: ['link_small', 'link_big', 'id_obj'],
     }).then((data) => {
       return data.features.map((x) => {
         if (x.id) {

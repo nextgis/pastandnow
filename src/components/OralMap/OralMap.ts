@@ -1,8 +1,7 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator';
 import { Map } from 'mapbox-gl';
 import { Feature, Point, FeatureCollection } from 'geojson';
-// @ts-ignore
-import geojsonExtent from '@mapbox/geojson-extent';
+import bbox from '@turf/bbox';
 
 import { VectorLayerAdapter } from '@nextgis/webmap';
 import { CirclePaint } from '@nextgis/paint';
@@ -207,7 +206,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
         })
         .map((x) => x.feature);
       if (features.length) {
-        const extent = geojsonExtent({
+        const extent = bbox({
           type: 'FeatureCollection',
           features,
         });

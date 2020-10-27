@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 let alias = {};
 try {
@@ -37,16 +38,6 @@ module.exports = (env, argv) => {
     {
       test: /\.vue$/,
       loader: 'vue-loader',
-    },
-    {
-      enforce: 'pre',
-      test: /\.(t|j)sx?$/,
-      loader: 'eslint-loader',
-      exclude: /node_modules|@nextgis/,
-      include: [path.join(__dirname, 'src')],
-      options: {
-        fix: true,
-      },
     },
     {
       test: /\.tsx?$/,
@@ -114,6 +105,7 @@ module.exports = (env, argv) => {
   ];
 
   let plugins = [
+    new ESLintPlugin({fix: true, files: ['src/'], extensions: ['ts']}),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       template: 'index.html',

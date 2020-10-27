@@ -190,7 +190,7 @@ export class OralState extends VuexModule {
       return false;
     }
     if (id) {
-      const feature = await ngw.getNgwLayerFeature(id);
+      const feature = await ngw.fetchNgwLayerFeature(id);
       if (feature) {
         return feature;
       }
