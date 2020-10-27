@@ -88,7 +88,7 @@ module.exports = (env, argv) => {
           options: {
             ...sassLoaderOptions,
             // This is the path to your variables
-            prependData: "@import '@/style/variables.scss'",
+            additionalData: "@import '@/style/variables.scss'",
           },
         },
       ],
@@ -106,7 +106,7 @@ module.exports = (env, argv) => {
           options: {
             ...sassLoaderOptions,
             // This is the path to your variables
-            prependData: "@import '@/style/variables.scss';",
+            additionalData: "@import '@/style/variables.scss';",
           },
         },
       ],

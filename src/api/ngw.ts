@@ -73,6 +73,7 @@ export default {
       resourceId: config.ngwMarkerLayerId,
       // limit: 100,
       fields,
+      extensions: [],
     }).then((data) => {
       data.features.forEach((x, i) => {
         if (x.id) {
