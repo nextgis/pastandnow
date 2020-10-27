@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <oral-map :mapOptions="mapOptions" :fullFilling="true">
         <vue-ngw-control position="top-left" :margin="true">
           <v-btn @click="drawer = !drawer" fab small class="rectangle-fab" color="#fff">
@@ -36,7 +36,7 @@
           </div>
         </vue-ngw-control>
       </oral-map>
-    </v-content>
+    </v-main>
 
     <v-navigation-drawer v-model="drawer" stateless fixed app width="360">
       <div class="drawer-content d-flex flex-column">

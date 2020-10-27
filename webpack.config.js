@@ -7,7 +7,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 
 let alias = {};
 try {
-  const { getAliases } = require('./nextgis_frontend/scripts/aliases');
+  const { getAliases } = require('./@nextgis/scripts/aliases');
   alias = getAliases();
 } catch (er) {
   // ignore
@@ -17,7 +17,17 @@ try {
 
 const sassLoaderOptions = {
   implementation: require('sass'),
-  // indentedSyntax: true // optional
+  sassOptions: {
+    fiber: require('fibers'),
+    // indentedSyntax: true, // optional
+  },
+};
+
+const cssLoader = {
+  loader: 'css-loader',
+  options: {
+    esModule: false,
+  },
 };
 
 module.exports = (env, argv) => {
@@ -32,7 +42,7 @@ module.exports = (env, argv) => {
       enforce: 'pre',
       test: /\.(t|j)sx?$/,
       loader: 'eslint-loader',
-      exclude: /node_modules/,
+      exclude: /node_modules|@nextgis/,
       include: [path.join(__dirname, 'src')],
       options: {
         fix: true,
@@ -65,20 +75,21 @@ module.exports = (env, argv) => {
     },
     {
       test: /\.css$/i,
-      use: ['style-loader', 'css-loader'],
+      use: ['style-loader', cssLoader],
     },
     {
       test: /\.sass$/,
       use: [
         'vue-style-loader',
-        'css-loader',
+        cssLoader,
         {
           loader: 'sass-loader',
           // Requires sass-loader@^8.0.0
           options: {
             ...sassLoaderOptions,
             // This is the path to your variables
-            prependData: "@import '@/style/variables.scss'"
+            // prependData: "@import '@/style/variables.scss'",
+            additionalData: "@import '@/style/variables.scss'",
           },
         },
       ],
@@ -89,14 +100,15 @@ module.exports = (env, argv) => {
       test: /\.scss$/,
       use: [
         'vue-style-loader',
-        'css-loader',
+        cssLoader,
         {
           loader: 'sass-loader',
           // Requires sass-loader@^8.0.0
           options: {
             ...sassLoaderOptions,
             // This is the path to your variables
-            prependData: "@import '@/style/variables.scss';"
+            // prependData: "@import '@/style/variables.scss';",
+            additionalData: "@import '@/style/variables.scss';",
           },
         },
       ],
@@ -148,6 +160,7 @@ module.exports = (env, argv) => {
       extensions: ['.ts', '.js', '.vue', '.json'],
       alias: {
         ...alias,
+        '@': path.resolve(__dirname, 'src/'),
         ...{
           vue$: 'vue/dist/vue.esm.js',
         },
