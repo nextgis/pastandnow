@@ -1,11 +1,13 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator';
-
+import { Map } from 'mapbox-gl';
 import { Feature, Point, FeatureCollection } from 'geojson';
 // @ts-ignore
 import geojsonExtent from '@mapbox/geojson-extent';
 
 import { VectorLayerAdapter } from '@nextgis/webmap';
 import { CirclePaint } from '@nextgis/paint';
+import { NgwMap } from '@nextgis/ngw-map';
+// @ts-ignore
 import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 
 import config from '../../../config.json';
@@ -84,6 +86,8 @@ function getHistoryIcon(
 export class OralMap extends Mixins(VueNgwMapbox) {
   layer!: VectorLayerAdapter;
 
+  ngwMap!: NgwMap<Map>;
+
   markers: { [name: string]: boolean } = {};
   selected!: VectorLayerAdapter;
 
@@ -156,11 +160,11 @@ export class OralMap extends Mixins(VueNgwMapbox) {
           data,
           type: 'point',
           paint: (feature) => {
-            return getHistoryIcon(feature, { radius: 5 }, true);
+            return getHistoryIcon(feature, { radius: 8 }, true);
           },
           selectedPaint: (feature) => {
             return getHistoryIcon(feature, {
-              radius: 9,
+              radius: 13,
               weight: 3,
             });
           },
