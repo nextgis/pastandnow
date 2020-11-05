@@ -1,12 +1,14 @@
 <template>
   <v-form ref="form" v-model="form" class="filter-form">
+    <div class="subtitle-1 font-weight-medium white--text mb-4">Выберите место</div>
     <v-row dense>
-      <v-col>
+      <v-col cols="6">
         <v-autocomplete
           class="filter-form__control"
           v-model="city"
           :items="cities"
           :disabled="cities.length < 2"
+          item-text="value"
           dense
           dark
           cache-items
@@ -16,7 +18,6 @@
           solo-inverted
           no-data-text="Не найдено"
         >
-          <template v-slot:selection="data">{{ data.item.value }}</template>
           <template v-slot:item="data">
             <template>
               <v-list-item-content
@@ -27,12 +28,14 @@
           </template>
         </v-autocomplete>
       </v-col>
-      <v-col>
+      <v-col cols="6">
+
         <v-autocomplete
           class="filter-form__control"
           v-model="rayon"
           :items="areas"
           :disabled="areas.length < 2"
+          item-text="value"
           dense
           dark
           flat
@@ -41,7 +44,6 @@
           solo-inverted
           no-data-text="Не найдено"
         >
-          <template v-slot:selection="data">{{ data.item.value }}</template>
           <template v-slot:item="data">
             <template>
               <v-list-item-content

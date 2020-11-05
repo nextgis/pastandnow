@@ -41,15 +41,10 @@
     <v-navigation-drawer v-model="drawer" stateless fixed app width="360">
       <div class="drawer-content d-flex flex-column">
         <div class="flex-header-content">
+          <v-btn class="detail-drawer__header-close" @click="drawer = false" text icon small dark>
+            <v-icon>{{svg.close}}</v-icon>
+          </v-btn>
           <div class="place-select">
-            <div class="pb-3 d-flex justify-space-between align-center">
-              <span class="subtitle-1 font-weight-medium">
-                Выберите место
-              </span>
-              <v-btn class="detail-drawer__header-close" @click="drawer = false" text icon small>
-                <v-icon>{{svg.close}}</v-icon>
-              </v-btn>
-            </div>
             <items-filter></items-filter>
           </div>
           <v-list v-if="filterPanelOpen">
@@ -283,7 +278,9 @@ export { Main as default } from "./Main";
   }
 
   &__header-close{
-    margin-left: -7px;
+    position: absolute;
+    top: 15px;
+    right: 16px;
   }
 
   &__header-chip{
