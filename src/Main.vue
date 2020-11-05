@@ -41,7 +41,17 @@
     <v-navigation-drawer v-model="drawer" stateless fixed app width="360">
       <div class="drawer-content d-flex flex-column">
         <div class="flex-header-content">
-          <items-filter></items-filter>
+          <div class="place-select">
+            <div class="pb-3 d-flex justify-space-between align-center">
+              <span class="subtitle-1 font-weight-medium">
+                Выберите место
+              </span>
+              <v-btn class="detail-drawer__header-close" @click="drawer = false" text icon small>
+                <v-icon>{{svg.close}}</v-icon>
+              </v-btn>
+            </div>
+            <items-filter></items-filter>
+          </div>
           <v-list v-if="filterPanelOpen">
             <v-list-item @click="filterPanelOpen = false">
               <v-icon class="text--secondary mr-2">{{svg.arrow_back}}</v-icon>
@@ -171,6 +181,10 @@ export { Main as default } from "./Main";
 </style>
 
 <style lang="scss" scoped>
+
+.place-select {
+  background: $primary;
+}
 
 .rectangle-fab {
   border-radius: $border-radius-root;

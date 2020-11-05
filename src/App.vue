@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <main-component></main-component>
-    <v-dialog :value="page === 'table'" fullscreen scrollable transition="dialog-bottom-transition">
+    <!-- <v-dialog :value="page === 'table'" fullscreen scrollable transition="dialog-bottom-transition">
       <v-card class="fullscreen-dialog">
         <v-toolbar dark color="primary" class="dialog-titlebar">
           <v-btn icon dark @click.native="page = 'main'">
@@ -41,7 +41,7 @@
           </div>
         </v-footer>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </v-app>
 </template>
 

@@ -5,6 +5,7 @@ const { VueLoaderPlugin } = require('vue-loader');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 let alias = {};
 try {
@@ -71,7 +72,7 @@ module.exports = (env, argv) => {
     {
       test: /\.sass$/,
       use: [
-        'vue-style-loader',
+        isProd ? MiniCssExtractPlugin.loader : 'vue-style-loader',
         cssLoader,
         {
           loader: 'sass-loader',
@@ -89,7 +90,7 @@ module.exports = (env, argv) => {
     {
       test: /\.scss$/,
       use: [
-        'vue-style-loader',
+        isProd ? MiniCssExtractPlugin.loader : 'vue-style-loader',
         cssLoader,
         {
           loader: 'sass-loader',
@@ -105,7 +106,7 @@ module.exports = (env, argv) => {
   ];
 
   let plugins = [
-    new ESLintPlugin({fix: true, files: ['src/'], extensions: ['ts']}),
+    new ESLintPlugin({ fix: true, files: ['src/'], extensions: ['ts'] }),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       template: 'index.html',
@@ -132,6 +133,7 @@ module.exports = (env, argv) => {
           return zopfli.gzip(input, compressionOptions, callback);
         },
       }),
+      new MiniCssExtractPlugin(),
     ]);
   }
 
