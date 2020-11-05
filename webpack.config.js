@@ -15,8 +15,6 @@ try {
   // ignore
 }
 
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 const sassLoaderOptions = {
   implementation: require('sass'),
   sassOptions: {
@@ -118,8 +116,11 @@ module.exports = (env, argv) => {
       __DEV__: !isProd,
     }),
     new VuetifyLoaderPlugin(),
-    // new BundleAnalyzerPlugin()
   ];
+
+  // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  //   .BundleAnalyzerPlugin;
+  // plugins.push(new BundleAnalyzerPlugin());
 
   if (isProd) {
     const zopfli = require('@gfx/zopfli');

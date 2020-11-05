@@ -3,7 +3,7 @@
     <v-main>
       <oral-map :mapOptions="mapOptions" :fullFilling="true">
         <vue-ngw-control position="top-left" :margin="true">
-          <v-btn @click="drawer = !drawer" fab small class="rectangle-fab" color="#fff">
+          <v-btn v-if="!drawer" @click="drawer = !drawer" fab small class="rectangle-fab" color="#fff">
             <v-icon class="drawe-icon" :class="{ active: drawer }">{{svg.chevron_right}}</v-icon>
           </v-btn>
         </vue-ngw-control>
