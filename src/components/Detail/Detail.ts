@@ -1,15 +1,19 @@
 import { Vue, Component } from 'vue-property-decorator';
+import { mdiClose } from '@mdi/js';
+// @ts-ignore add types
+import Urlify from 'urlify';
 import {
   BdMainItemProperties,
   BdPhotoProperties,
   LayerMetaItem,
 } from '../../api/ngw';
 import { oralModule } from '../../store/modules/oral';
-import { mdiClose } from '@mdi/js';
+
+const urlify = Urlify.create({ toLower: true });
 
 @Component
 export class Detail extends Vue {
-  url = '';
+  url = 'https://pastandnow.ru';
   dialog = false;
   selectedPhoto = 0;
 
@@ -49,10 +53,8 @@ export class Detail extends Vue {
         const detail = this.getDetail(alias.value);
         if (value && typeof detail === 'string') {
           const names = detail.split(',').map((x) => x.trim());
-          const links =
-            this.detail &&
-            this.detail.nar_codes &&
-            this.detail.nar_codes.split(',').map((x) => x.trim());
+          // const links: string[] = this._getNarLinks();
+          const links: string[] = this._getAuthorLinks(names);
           return (
             names &&
             names
@@ -62,7 +64,7 @@ export class Detail extends Vue {
                   /([^:]\/)\/+/g,
                   '$1'
                 );
-                return `<a href="${href}">${x}</a>`;
+                return `<a href="${href}" target="_blank">${x}</a>`;
               })
               .join(', ')
           );
@@ -85,5 +87,15 @@ export class Detail extends Vue {
     }
 
     return this.getDetail(alias.value);
+  }
+
+  private _getAuthorLinks(names: string[]): string[] {
+    return names.map((x) => urlify(x.replace(/\*/g, '0')));
+  }
+
+  private _getNarLinks(): string[] {
+    return this.detail && this.detail.nar_codes
+      ? this.detail.nar_codes.split(',').map((x) => x.trim())
+      : [];
   }
 }
