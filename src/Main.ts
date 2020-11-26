@@ -16,8 +16,9 @@ import {
   mdiCrosshairsGps,
 } from '@mdi/js';
 
+import { prepareFilterData } from '../scripts/prepareFilterData';
 import { qmsId, feedbackUrl } from '../config.json';
-import { connector } from './api/Ngw';
+import { connector } from './services/Ngw';
 import { VueNgwControl } from '@nextgis/vue-ngw-map';
 
 import List from './components/List/List.vue';
@@ -27,7 +28,7 @@ import Detail from './components/Detail/Detail.vue';
 import Legend from './components/Legend/Legend.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import FilterPanel from './components/FilterPanel/FilterPanel.vue';
-import { OralProperties } from './api/interfaces';
+import { OralProperties } from './services/interfaces';
 import { appModule, AppPages } from './store/modules/app';
 import { oralModule, OralState } from './store/modules/oral';
 import throttle from './store/utils/throttle';
@@ -163,8 +164,15 @@ export class Main extends Vue {
   }
 
   created(): void {
+    const setFilterData = () => {
+      const filterData = prepareFilterData(
+        oralModule.items.map((x) => x.properties)
+      );
+      oralModule.setFilterData(filterData);
+    };
     oralModule.getAllItems().then(() => {
-      oralModule.loadStories();
+      setFilterData();
+      oralModule.loadStories().then(setFilterData);
     });
     oralModule.getPhotos();
   }

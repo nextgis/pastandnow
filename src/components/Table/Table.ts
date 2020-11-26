@@ -1,5 +1,5 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
-import { OralProperties } from '../../api/interfaces';
+import { OralProperties } from '../../services/interfaces';
 import { oralModule } from '../../store/modules/oral';
 import ShowMoreField from '../ShowMoreField/ShowMoreField.vue';
 

@@ -6,7 +6,7 @@ import {
   OralProperties,
   OralPhotoProperties,
   LayerMetaItem,
-} from '../../api/interfaces';
+} from '../../services/interfaces';
 import { oralModule } from '../../store/modules/oral';
 
 const urlify = Urlify.create({ toLower: true });

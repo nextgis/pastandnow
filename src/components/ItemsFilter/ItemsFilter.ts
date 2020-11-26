@@ -36,7 +36,19 @@ export class ItemsFilter extends Vue {
     oralModule.setActiveCity(val);
   }
 
-  cities: CountItem[] = [];
+  get cities(): CountItem[] {
+    const cities = oralModule.filterData.cities;
+    return Object.keys(cities)
+      .sort()
+      .map((x) => {
+        const count = cities[x];
+        return {
+          text: `${x} (${count})`,
+          value: x,
+          count,
+        };
+      });
+  }
 
   get items(): OralFeature[] {
     return oralModule.items;
@@ -65,24 +77,6 @@ export class ItemsFilter extends Vue {
 
   @Watch('items')
   updateFilterValues(items: OralFeature[]): void {
-    const cities: Record<string, number> = {};
-    items.forEach((x) => {
-      const prop = x.properties;
-      if (prop.city) {
-        cities[prop.city] = (cities[prop.city] ?? 0) + 1;
-      }
-    });
-    const sortCities = Object.keys(cities)
-      .sort()
-      .map((x) => {
-        const count = cities[x];
-        return {
-          text: `${x} (${count})`,
-          value: x,
-          count,
-        };
-      });
-    this.cities = sortCities;
     this.updateAreasItems(undefined, undefined, items);
     setTimeout(() => this.updateFilter());
   }

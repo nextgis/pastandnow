@@ -1,10 +1,7 @@
 import { Vue, Component, Emit, Watch } from 'vue-property-decorator';
 import { oralModule } from '../../store/modules/oral';
-import { LayerMetaItem } from 'src/api/interfaces';
-
-interface NarrativeTypeItem {
-  name: string;
-}
+import { LayerMetaItem } from '../../services/interfaces';
+import { NarrativeTypeItem } from '../../interfaces';
 
 @Component
 export default class FilterPanel extends Vue {
@@ -35,19 +32,9 @@ export default class FilterPanel extends Vue {
   }
 
   get narrativeTypeItems(): NarrativeTypeItem[] {
-    const narrativeTypesItems: string[] = [];
-    oralModule.items.forEach((x) => {
-      const narrativeType = x.properties && x.properties['narrativ_t'];
-      if (narrativeType) {
-        const split = narrativeType.split('.').map((x) => x.trim());
-        split.forEach((y) => {
-          if (y && narrativeTypesItems.indexOf(y) === -1) {
-            narrativeTypesItems.push(y);
-          }
-        });
-      }
-    });
-    return narrativeTypesItems.sort().map((name) => ({ name }));
+    const types =
+      oralModule.filterData.narrativeTypeItems[oralModule.activeCity];
+    return (types || []).map((name) => ({ name }));
   }
 
   @Emit('close')

@@ -13,9 +13,10 @@ import {
   PropertyFilter,
 } from '@nextgis/properties-filter';
 
-import store from '..';
-import { Ngw } from '../../api/Ngw';
-import { LayerMetaItem, OralPhotoProperties } from '../../api/interfaces';
+import store from '../index';
+import { Ngw } from '../../services/Ngw';
+import { FilterData } from '../../../scripts/FilterData';
+import { LayerMetaItem, OralPhotoProperties } from '../../services/interfaces';
 import { OralFeature, OralFilter, LegendItem } from '../../interfaces';
 
 export const ALL_RAYON_STR = 'Все районы';
@@ -49,11 +50,19 @@ export class OralState extends VuexModule {
     item: CirclePaint;
   }> = [];
 
+  filterData: FilterData = {
+    cities: {},
+    rayonDict: {},
+    narrativeTypeItems: {},
+  };
+
   filters: FilterProperties = {
+    fullText: undefined,
     city: undefined,
     rayon: undefined,
+    // in legend
     type: undefined,
-    fullText: undefined,
+    // meta field type is 'Special'
     specialFilter: undefined,
   };
 
@@ -228,6 +237,15 @@ export class OralState extends VuexModule {
     return { searchReady };
   }
 
+  @MutationAction({ mutate: ['filterData'] })
+  async setFilterData(
+    filterData: FilterData
+  ): Promise<{
+    filterData: FilterData;
+  }> {
+    return { filterData };
+  }
+
   @MutationAction({ mutate: ['listSearchText'] })
   async setListSearchText(
     listSearchText: string
@@ -283,13 +301,13 @@ export class OralState extends VuexModule {
   }
 
   @Mutation
-  _setItems(items: OralFeature[]): void {
+  protected _setItems(items: OralFeature[]): void {
     this.items = items;
     this.filtered = items;
   }
 
   @Mutation
-  _updateFilter(filters: FilterProperties): void {
+  protected _updateFilter(filters: FilterProperties): void {
     this.filters = filters;
 
     const items: OralFeature[] = this.items.filter((x) =>
@@ -313,22 +331,22 @@ export class OralState extends VuexModule {
   }
 
   @Mutation
-  _setDetail(item: OralFeature): void {
+  protected _setDetail(item: OralFeature): void {
     this.detailItem = item;
   }
 
   @Mutation
-  _setMeta(meta: LayerMetaItem[]): void {
+  protected _setMeta(meta: LayerMetaItem[]): void {
     this.meta = meta;
   }
 
   @Mutation
-  _setPhotos(photos: OralPhotoProperties[]): void {
+  protected _setPhotos(photos: OralPhotoProperties[]): void {
     this.photos = photos;
   }
 
   @Mutation
-  _setLegend(legendItem: { name: string; item: CirclePaint }): void {
+  protected _setLegend(legendItem: { name: string; item: CirclePaint }): void {
     const exist = this.legendItems.find((x) => x.name === legendItem.name);
     if (!exist) {
       this.legendItems.push(legendItem);

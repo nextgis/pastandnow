@@ -1,44 +1,46 @@
-import { Point } from 'geojson';
+import { OralProperties } from '../src/services/interfaces';
 import { FilterData } from './FilterData';
-// import { BdMainItemProperties } from '../src/api/ngw';
-import { fetchNgwLayerItems } from '@nextgis/ngw-kit';
-const NgwConnector = require('@nextgis/ngw-connector');
-const config = require('../config.json');
 
-const connector = new NgwConnector({ baseUrl: config.baseUrl });
-
-async function prepareFilterData() {
-  const features = await fetchNgwLayerItems<Point>({
-    connector,
-    resourceId: config.ngwMarkerLayerId,
-    fields: [],
-  });
-
+export function prepareFilterData(items: OralProperties[]): FilterData {
   const filterData: FilterData = {
     cities: {},
     rayonDict: {},
+    narrativeTypeItems: {},
   };
-  features.forEach((x) => {
-    const fields = x.fields;
-    const cityStr = fields.city as string;
+  items.forEach((props) => {
+    const cityStr = props.city as string;
     if (cityStr) {
       const cities = cityStr.split(';').map((y) => y.trim());
-      cities.forEach((x) => {
-        if (x) {
-          const cityCount: number = filterData.cities[x] || 0;
-          filterData.cities[x] = cityCount + 1;
-          const rayonStr = fields.rayon as string;
+      cities.forEach((city) => {
+        if (city) {
+          const cityCount: number = filterData.cities[city] || 0;
+          filterData.cities[city] = cityCount + 1;
+          const rayonStr = props.rayon as string;
 
           if (rayonStr) {
-            const rayonList = cityStr.split(';').map((y) => y.trim());
-            rayonList.forEach((y) => {
-              if (y) {
-                const existRayon = filterData.rayonDict[x];
+            const rayonList = rayonStr.split(';').map((y) => y.trim());
+            rayonList.forEach((rayon) => {
+              if (rayon) {
+                const existRayon = filterData.rayonDict[city];
                 if (!existRayon) {
-                  filterData.rayonDict[x] = {};
+                  filterData.rayonDict[city] = {};
                 }
-                const rayonCount: number = filterData.rayonDict[x][y] || 0;
-                filterData.cities[y] = rayonCount + 1;
+                const rayonCount: number =
+                  filterData.rayonDict[city][rayon] || 0;
+                filterData.rayonDict[city][rayon] = rayonCount + 1;
+              }
+            });
+          }
+
+          const narrativeType = props['narrativ_t'];
+          if (narrativeType) {
+            if (!filterData.narrativeTypeItems[city]) {
+              filterData.narrativeTypeItems[city] = [];
+            }
+            const split = narrativeType.split('.').map((x) => x.trim());
+            split.forEach((y) => {
+              if (y && filterData.narrativeTypeItems[city].indexOf(y) === -1) {
+                filterData.narrativeTypeItems[city].push(y);
               }
             });
           }
@@ -46,11 +48,8 @@ async function prepareFilterData() {
       });
     }
   });
-  // fs.writeFile(out, JSON.stringify(filterData), () =>
-  //   console.log('Data write in `' + out + '` file')
-  // );
+  for (const n in filterData.narrativeTypeItems) {
+    filterData.narrativeTypeItems[n].sort();
+  }
+  return filterData;
 }
-
-prepareFilterData().catch((er) => {
-  console.log(er);
-});

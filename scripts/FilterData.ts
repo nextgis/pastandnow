@@ -4,4 +4,5 @@ export interface FilterData {
    */
   cities: Record<string, number>;
   rayonDict: { [city: string]: { [rayon: string]: number } };
+  narrativeTypeItems: { [city: string]: string[] };
 }
