@@ -27,7 +27,7 @@ import Detail from './components/Detail/Detail.vue';
 import Legend from './components/Legend/Legend.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import FilterPanel from './components/FilterPanel/FilterPanel.vue';
-import { BdMainItemProperties } from './api/interfaces';
+import { OralProperties } from './api/interfaces';
 import { appModule, AppPages } from './store/modules/app';
 import { oralModule, OralState } from './store/modules/oral';
 import throttle from './store/utils/throttle';
@@ -109,7 +109,7 @@ export class Main extends Vue {
     appModule.toggleDrawer(value);
   }
 
-  get items(): BdMainItemProperties[] {
+  get items(): OralProperties[] {
     return oralModule.items.map((x) => x.properties);
   }
 

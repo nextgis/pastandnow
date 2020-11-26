@@ -10,7 +10,8 @@
     "dev": "rimraf ./dist && npm run build",
     "prod": "rimraf ./dist && npm run build -- --mode=production",
     "data": "node ./scripts/getCities.js",
-    "docker": "docker build -t registry.nextgis.com/pastandnow:latest . && docker push registry.nextgis.com/pastandnow:latest"
+    "docker": "docker build -t registry.nextgis.com/pastandnow:latest . && docker push registry.nextgis.com/pastandnow:latest",
+    "prepare:filter": "node ./scripts/prepareFilterData.js"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

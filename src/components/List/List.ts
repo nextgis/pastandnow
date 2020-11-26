@@ -1,17 +1,18 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { CirclePaint } from '@nextgis/paint';
-import { getHistoryPaint } from '../OralMap/OralMap';
-import { BdMainItemProperties } from '../../api/interfaces';
+
+import { OralProperties } from '../../api/interfaces';
 import { appModule } from '../../store/modules/app';
 import { oralModule } from '../../store/modules/oral';
 import SymbolComponent from '../Symbol/Symbol.vue';
 import { OralFeature } from '../../interfaces';
+import { getHistoryPaint } from '../../utils/getHistoryPaint';
 
 @Component({ components: { SymbolComponent } })
 export class List extends Vue {
   portionCount = 30;
 
-  portion: BdMainItemProperties[] = [];
+  portion: OralProperties[] = [];
 
   active: number | null = null;
 
@@ -19,7 +20,7 @@ export class List extends Vue {
     return oralModule.listSearchText;
   }
 
-  get items(): BdMainItemProperties[] {
+  get items(): OralProperties[] {
     return oralModule.sortFeatures.map((x) => x.properties);
   }
 
@@ -31,7 +32,7 @@ export class List extends Vue {
     return oralModule.detailItem;
   }
 
-  get displayItems(): BdMainItemProperties[] {
+  get displayItems(): OralProperties[] {
     return this.getDisplayItems();
   }
 
@@ -54,11 +55,11 @@ export class List extends Vue {
     this.addPortion();
   }
 
-  getItemPaint(item: BdMainItemProperties): CirclePaint {
+  getItemPaint(item: OralProperties): CirclePaint {
     return getHistoryPaint(item);
   }
 
-  getDisplayItems(): BdMainItemProperties[] {
+  getDisplayItems(): OralProperties[] {
     return this.items;
   }
 

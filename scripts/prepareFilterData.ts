@@ -1,13 +1,11 @@
-import { fetchNgwLayerItems } from '@nextgis/ngw-kit';
-import NgwConnector from '@nextgis/ngw-connector';
 import { Point } from 'geojson';
 import { FilterData } from './FilterData';
 // import { BdMainItemProperties } from '../src/api/ngw';
-const fs = require('fs');
+import { fetchNgwLayerItems } from '@nextgis/ngw-kit';
+const NgwConnector = require('@nextgis/ngw-connector');
 const config = require('../config.json');
 
 const connector = new NgwConnector({ baseUrl: config.baseUrl });
-const out = './src/cities.json';
 
 async function prepareFilterData() {
   const features = await fetchNgwLayerItems<Point>({
@@ -48,9 +46,9 @@ async function prepareFilterData() {
       });
     }
   });
-  fs.writeFile(out, JSON.stringify(filterData), () =>
-    console.log('Data write in `' + out + '` file')
-  );
+  // fs.writeFile(out, JSON.stringify(filterData), () =>
+  //   console.log('Data write in `' + out + '` file')
+  // );
 }
 
 prepareFilterData().catch((er) => {

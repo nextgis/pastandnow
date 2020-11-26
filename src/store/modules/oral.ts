@@ -15,7 +15,7 @@ import {
 
 import store from '..';
 import { Ngw } from '../../api/Ngw';
-import { LayerMetaItem, BdPhotoProperties } from '../../api/interfaces';
+import { LayerMetaItem, OralPhotoProperties } from '../../api/interfaces';
 import { OralFeature, OralFilter, LegendItem } from '../../interfaces';
 
 export const ALL_RAYON_STR = 'Все районы';
@@ -33,7 +33,7 @@ export interface FilterProperties {
 export class OralState extends VuexModule {
   items: OralFeature[] = [];
   filtered: OralFeature[] = [];
-  photos: BdPhotoProperties[] = [];
+  photos: OralPhotoProperties[] = [];
   meta: LayerMetaItem[] = [];
   detailItem: OralFeature | false = false;
 
@@ -85,8 +85,8 @@ export class OralState extends VuexModule {
   @Action({ commit: '_setItems' })
   async getAllItems(): Promise<OralFeature[]> {
     await this.setMeta();
-    const items = await Ngw.getLayerGeoJson();
-    return items.features;
+    const features = await Ngw.getLayerFeatures();
+    return features;
   }
 
   @Action({ commit: '_setItems' })
@@ -115,7 +115,7 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_setPhotos' })
-  async getPhotos(): Promise<BdPhotoProperties[]> {
+  async getPhotos(): Promise<OralPhotoProperties[]> {
     const photos = await Ngw.getPhotos();
     return photos;
   }
@@ -323,7 +323,7 @@ export class OralState extends VuexModule {
   }
 
   @Mutation
-  _setPhotos(photos: BdPhotoProperties[]): void {
+  _setPhotos(photos: OralPhotoProperties[]): void {
     this.photos = photos;
   }
 

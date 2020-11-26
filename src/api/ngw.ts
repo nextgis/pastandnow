@@ -1,4 +1,4 @@
-import { Point } from 'geojson';
+import { Point, Feature } from 'geojson';
 import NgwConnector, { FeatureItem } from '@nextgis/ngw-connector';
 import CancelablePromise from '@nextgis/cancelable-promise';
 import {
@@ -7,10 +7,10 @@ import {
   fetchNgwLayerItems,
 } from '@nextgis/ngw-kit';
 import config from '../../config.json';
-import { OralFeatureCollection, OralFeature } from '../interfaces';
+import { OralFeature } from '../interfaces';
 import {
-  BdMainItemProperties,
-  BdPhotoProperties,
+  OralProperties,
+  OralPhotoProperties,
   LayerMetaItem,
 } from './interfaces';
 
@@ -22,27 +22,31 @@ export const url = config.baseUrl.replace(
 export const connector = new NgwConnector({ baseUrl: url });
 
 export class Ngw {
-  static async getLayerGeoJson(): CancelablePromise<OralFeatureCollection> {
-    const meta = await this.getLayerMeta();
-    const fields = meta
-      .filter(
-        (x) =>
-          x.type !== 'Story' && (x.search || x.list || x.type === 'Special')
-      )
-      .map((x) => x.value);
-    return fetchNgwLayerFeatures<Point, BdMainItemProperties>({
-      connector,
-      resourceId: config.ngwMarkerLayerId,
-      limit: 100,
-      fields,
-      extensions: [],
-    }).then((data) => {
-      data.features.forEach((x, i) => {
-        if (x.id) {
-          x.properties.id = Number(x.id);
-        }
+  static getLayerFeatures(): CancelablePromise<
+    Feature<Point, OralProperties>[]
+  > {
+    return this.getLayerMeta().then((meta) => {
+      const fields = meta
+        .filter(
+          (x) =>
+            x.type !== 'Story' && (x.search || x.list || x.type === 'Special')
+        )
+        .map((x) => x.value) as (keyof OralProperties)[];
+
+      return fetchNgwLayerFeatures<Point, OralProperties>({
+        connector,
+        resourceId: config.ngwMarkerLayerId,
+        // limit: 100,
+        fields,
+        extensions: [],
+      }).then((features) => {
+        features.forEach((x, i) => {
+          if (x.id) {
+            x.properties.id = Number(x.id);
+          }
+        });
+        return features;
       });
-      return data;
     });
   }
 
@@ -52,7 +56,7 @@ export class Ngw {
     return fetchNgwLayerItems<Point>({
       connector,
       resourceId: config.ngwMarkerLayerId,
-      limit: 100,
+      // limit: 100,
       geom: false,
       fields,
       extensions: [],
@@ -69,24 +73,24 @@ export class Ngw {
     });
   }
 
-  static async getPhotos(): CancelablePromise<BdPhotoProperties[]> {
-    return fetchNgwLayerFeatures<Point, BdPhotoProperties>({
+  static async getPhotos(): CancelablePromise<OralPhotoProperties[]> {
+    return fetchNgwLayerItems<Point, OralPhotoProperties>({
       connector,
       resourceId: config.layerWithPhotos,
       geom: false,
       extensions: false,
       fields: ['link_small', 'link_big', 'id_obj'],
-    }).then((data) => {
-      return data.features.map((x) => {
+    }).then((features) => {
+      return features.map((x) => {
         if (x.id) {
-          x.properties.id = Number(x.id);
+          x.fields.id = Number(x.id);
         }
-        return x.properties;
+        return x.fields;
       });
     });
   }
 
-  static getLayerMeta(): Promise<LayerMetaItem[]> {
+  static getLayerMeta(): CancelablePromise<LayerMetaItem[]> {
     return CancelablePromise.resolve([
       { text: 'Идентификатор', value: 'id1', detail: false, list: true },
       // { text: 'долгота', value: 'lat', noHide: true },

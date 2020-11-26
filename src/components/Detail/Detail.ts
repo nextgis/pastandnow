@@ -3,8 +3,8 @@ import { mdiClose } from '@mdi/js';
 // @ts-ignore add types
 import Urlify from 'urlify';
 import {
-  BdMainItemProperties,
-  BdPhotoProperties,
+  OralProperties,
+  OralPhotoProperties,
   LayerMetaItem,
 } from '../../api/interfaces';
 import { oralModule } from '../../store/modules/oral';
@@ -19,14 +19,14 @@ export class Detail extends Vue {
 
   svg = { close: mdiClose };
 
-  get photos(): BdPhotoProperties[] {
-    const photo = oralModule.photos.find((x: BdPhotoProperties) => {
+  get photos(): OralPhotoProperties[] {
+    const photo = oralModule.photos.find((x: OralPhotoProperties) => {
       return this.detail && x.link_small && x.id_obj === this.detail.id1;
     });
     return photo ? [photo] : [];
   }
 
-  get detail(): BdMainItemProperties | false {
+  get detail(): OralProperties | false {
     return oralModule.detailItem && oralModule.detailItem.properties;
   }
 
@@ -42,7 +42,7 @@ export class Detail extends Vue {
   }
 
   getDetail(value: string): undefined | string | number {
-    const v = value as keyof BdMainItemProperties;
+    const v = value as keyof OralProperties;
     return this.detail ? this.detail[v] : undefined;
   }
 

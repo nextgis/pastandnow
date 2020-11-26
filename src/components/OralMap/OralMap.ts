@@ -4,7 +4,6 @@ import { Feature, Point, FeatureCollection } from 'geojson';
 import bbox from '@turf/bbox';
 
 import { VectorLayerAdapter } from '@nextgis/webmap';
-import { CirclePaint } from '@nextgis/paint';
 import { NgwMap } from '@nextgis/ngw-map';
 // @ts-ignore
 import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
@@ -12,74 +11,9 @@ import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 import config from '../../../config.json';
 import { oralModule } from '../../store/modules/oral';
 import { appModule } from '../../store/modules/app';
-import { shadeColor } from '../../utils/shadeColor';
+
 import { OralFeature } from '../../interfaces';
-
-export const featureStyles: Record<string, CirclePaint> = {
-  водоем: { color: '#4163aa', strokeColor: '' },
-  ландшафт: { color: '#93bf20' },
-  памятник: { color: '#e42a1b' },
-  строение: { color: '#289de4' },
-  территория: { color: '#e75dbd' },
-  улица: { color: '#fbd507' },
-  зона: { color: '#bbbbbb' },
-  'населенный пункт': { color: '#aaaaaa' },
-  район: { color: '#b1ae44' },
-  другой: { color: '#363636' },
-  метро: { color: '#8807ff' },
-  'метро-2': { color: '#8807ff' },
-  'другие подземные объекты': { color: '#8807ff' },
-};
-export const featureStyleKeys = Object.keys(featureStyles);
-
-// Shade stroke color
-featureStyleKeys.forEach((x) => {
-  const style = featureStyles[x];
-  if (style && typeof style.color === 'string' && !style.strokeColor) {
-    style.strokeColor = shadeColor(style.color, -30);
-  }
-});
-
-export function getHistoryPaint(
-  properties?: Record<string, any> | null,
-  options?: CirclePaint,
-  forLegend = false
-): CirclePaint {
-  const defaultStyle: CirclePaint = {
-    color: '#363636',
-    fillOpacity: 0.9,
-    // weight: 2,
-    radius: 3,
-    stroke: true,
-  };
-  let style: CirclePaint | undefined;
-  let styleId: string | undefined;
-  if (properties && properties.type) {
-    const featureType: string = properties.type;
-    styleId = featureStyleKeys.find((x) => featureType.search(x) !== -1);
-    if (styleId && featureStyles[styleId]) {
-      style = featureStyles[styleId];
-    }
-  }
-  const paint: CirclePaint = {
-    ...defaultStyle,
-    ...style,
-    ...options,
-  };
-  if (style && styleId && forLegend) {
-    oralModule.setLegend({ name: styleId, item: paint });
-  }
-  return paint;
-}
-
-function getHistoryIcon(
-  feature: Feature,
-  options?: CirclePaint,
-  forLegend = false
-) {
-  const paint = getHistoryPaint(feature.properties, options, forLegend);
-  return paint;
-}
+import { getHistoryIcon } from '../../utils/getHistoryIcons';
 
 @Component
 export class OralMap extends Mixins(VueNgwMapbox) {
@@ -113,10 +47,10 @@ export class OralMap extends Mixins(VueNgwMapbox) {
           type: x.type,
           id: x.id,
           geometry: x.geometry,
-          properties: { id: x.id, type: x.type },
+          properties: { id: x.id, type: x.properties.type },
         });
       });
-      this.addMarkers(forMap);
+      this.drawMarkers(forMap);
       this.zoomToFiltered();
     }
   }
@@ -159,7 +93,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     });
   }
 
-  addMarkers(features: Feature[]): void {
+  drawMarkers(features: Feature[]): void {
     if (!this.layer) {
       const data: FeatureCollection = { type: 'FeatureCollection', features };
       this.ngwMap
@@ -200,8 +134,6 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     } else if (this.layer.propertiesFilter) {
       this.layer.propertiesFilter([['$id', 'in', features.map((x) => x.id)]]);
     }
-
-    // return this.layer;
   }
 
   zoomToFiltered(): void {
@@ -224,11 +156,11 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   }
 
   private async _onLoad() {
-    await this.ngwMap.addNgwLayer({ resourceId: config.districtsLayer });
+    await this.ngwMap.addNgwLayer({ resource: config.districtsLayer });
     const items = this.filtered;
     if (items && items.length) {
       const _items = JSON.parse(JSON.stringify(items));
-      this.addMarkers(_items);
+      this.drawMarkers(_items);
     }
     this.loaded = true;
   }

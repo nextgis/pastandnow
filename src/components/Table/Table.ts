@@ -1,5 +1,5 @@
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
-import { BdMainItemProperties } from '../../api/interfaces';
+import { OralProperties } from '../../api/interfaces';
 import { oralModule } from '../../store/modules/oral';
 import ShowMoreField from '../ShowMoreField/ShowMoreField.vue';
 
@@ -36,7 +36,7 @@ export class Table extends Vue {
     { text: 'Москва легендарная', value: 'mos6' },
   ];
 
-  get items(): BdMainItemProperties[] {
+  get items(): OralProperties[] {
     return oralModule.sortFeatures.map((x) => x.properties);
   }
 

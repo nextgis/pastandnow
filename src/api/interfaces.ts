@@ -1,4 +1,4 @@
-export interface BdMainItemProperties {
+export interface OralProperties {
   id: number;
 
   id1: number;
@@ -29,7 +29,7 @@ export interface BdMainItemProperties {
   type: string;
 }
 
-export interface BdPhotoProperties {
+export interface OralPhotoProperties {
   id: number;
   link_big: string;
   link_small: string;
