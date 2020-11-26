@@ -6,7 +6,7 @@ import {
   BdMainItemProperties,
   BdPhotoProperties,
   LayerMetaItem,
-} from '../../api/ngw';
+} from '../../api/interfaces';
 import { oralModule } from '../../store/modules/oral';
 
 const urlify = Urlify.create({ toLower: true });

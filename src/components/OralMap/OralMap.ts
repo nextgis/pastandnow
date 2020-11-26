@@ -107,8 +107,16 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   @Watch('filtered')
   onFilteredChange(filtered: OralFeature[]): void {
     if (this.loaded) {
-      filtered = JSON.parse(JSON.stringify(filtered));
-      this.addMarkers(filtered);
+      const forMap: Feature[] = [];
+      filtered.forEach((x) => {
+        forMap.push({
+          type: x.type,
+          id: x.id,
+          geometry: x.geometry,
+          properties: { id: x.id, type: x.type },
+        });
+      });
+      this.addMarkers(forMap);
       this.zoomToFiltered();
     }
   }
@@ -151,7 +159,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     });
   }
 
-  addMarkers(features: OralFeature[]): void {
+  addMarkers(features: Feature[]): void {
     if (!this.layer) {
       const data: FeatureCollection = { type: 'FeatureCollection', features };
       this.ngwMap

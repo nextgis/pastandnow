@@ -17,7 +17,7 @@ import {
 } from '@mdi/js';
 
 import { qmsId, feedbackUrl } from '../config.json';
-import { connector } from './api/ngw';
+import { connector } from './api/Ngw';
 import { VueNgwControl } from '@nextgis/vue-ngw-map';
 
 import List from './components/List/List.vue';
@@ -27,7 +27,7 @@ import Detail from './components/Detail/Detail.vue';
 import Legend from './components/Legend/Legend.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import FilterPanel from './components/FilterPanel/FilterPanel.vue';
-import { BdMainItemProperties } from './api/ngw';
+import { BdMainItemProperties } from './api/interfaces';
 import { appModule, AppPages } from './store/modules/app';
 import { oralModule, OralState } from './store/modules/oral';
 import throttle from './store/utils/throttle';
@@ -138,6 +138,10 @@ export class Main extends Vue {
     return oralModule;
   }
 
+  get searchReady(): boolean {
+    return this.module.searchReady;
+  }
+
   @Watch('listSearchText')
   updateFilter(val: string): void {
     oralModule.setFullTextFilter(val);
@@ -159,7 +163,9 @@ export class Main extends Vue {
   }
 
   created(): void {
-    oralModule.getAllItems();
+    oralModule.getAllItems().then(() => {
+      oralModule.loadStories();
+    });
     oralModule.getPhotos();
   }
 

@@ -1,18 +1,18 @@
 import { Point } from 'geojson';
-import NgwConnector from '@nextgis/ngw-connector';
+import NgwConnector, { FeatureItem } from '@nextgis/ngw-connector';
 import CancelablePromise from '@nextgis/cancelable-promise';
-import { fetchNgwLayerFeature, fetchNgwLayerFeatures } from '@nextgis/ngw-kit';
+import {
+  fetchNgwLayerFeature,
+  fetchNgwLayerFeatures,
+  fetchNgwLayerItems,
+} from '@nextgis/ngw-kit';
 import config from '../../config.json';
 import { OralFeatureCollection, OralFeature } from '../interfaces';
-
-export interface LayerMetaItem {
-  text: string;
-  value: string;
-  list?: boolean;
-  type?: 'NarratorLink' | 'Special' | 'Story';
-  detail?: boolean;
-  search?: boolean;
-}
+import {
+  BdMainItemProperties,
+  BdPhotoProperties,
+  LayerMetaItem,
+} from './interfaces';
 
 export const url = config.baseUrl.replace(
   /^(https?|ftp):\/\//,
@@ -21,57 +21,19 @@ export const url = config.baseUrl.replace(
 
 export const connector = new NgwConnector({ baseUrl: url });
 
-export interface BdMainItemProperties {
-  id: number;
-
-  id1: number;
-  city: string;
-  status: string;
-  narrator: string;
-  nar_codes: string;
-  description?: string;
-  mos2?: string;
-  mos5?: string;
-  mos4?: string;
-  visual?: string;
-  mos6?: string;
-  mos1?: string;
-  unoff: string;
-  mos3?: string;
-  descript2?: string;
-  lat: number;
-  rayon: string;
-  geo?: string;
-  name?: string;
-  narrativ_b?: string;
-  addr?: string;
-  narrativ_l: string;
-  narrativ_t: string;
-  lon: number;
-  narrativ_p?: string;
-  type: string;
-}
-
-export interface BdPhotoProperties {
-  id: number;
-  link_big: string;
-  link_small: string;
-  id_obj: number;
-  descript: string;
-  link: string;
-  details: string;
-}
-
-export default {
-  async getLayerGeoJson(): CancelablePromise<OralFeatureCollection> {
+export class Ngw {
+  static async getLayerGeoJson(): CancelablePromise<OralFeatureCollection> {
     const meta = await this.getLayerMeta();
     const fields = meta
-      .filter((x) => x.search || x.list || x.type === 'Special')
+      .filter(
+        (x) =>
+          x.type !== 'Story' && (x.search || x.list || x.type === 'Special')
+      )
       .map((x) => x.value);
     return fetchNgwLayerFeatures<Point, BdMainItemProperties>({
       connector,
       resourceId: config.ngwMarkerLayerId,
-      // limit: 100,
+      limit: 100,
       fields,
       extensions: [],
     }).then((data) => {
@@ -82,9 +44,22 @@ export default {
       });
       return data;
     });
-  },
+  }
 
-  async fetchNgwLayerFeature(
+  static async getLayerStoryItems(): CancelablePromise<FeatureItem[]> {
+    const meta = await this.getLayerMeta();
+    const fields = meta.filter((x) => x.type === 'Story').map((x) => x.value);
+    return fetchNgwLayerItems<Point>({
+      connector,
+      resourceId: config.ngwMarkerLayerId,
+      limit: 100,
+      geom: false,
+      fields,
+      extensions: [],
+    });
+  }
+
+  static async fetchNgwLayerFeature(
     featureId: number
   ): CancelablePromise<OralFeature> {
     return fetchNgwLayerFeature({
@@ -92,9 +67,9 @@ export default {
       featureId,
       connector,
     });
-  },
+  }
 
-  async getPhotos(): CancelablePromise<BdPhotoProperties[]> {
+  static async getPhotos(): CancelablePromise<BdPhotoProperties[]> {
     return fetchNgwLayerFeatures<Point, BdPhotoProperties>({
       connector,
       resourceId: config.layerWithPhotos,
@@ -109,9 +84,9 @@ export default {
         return x.properties;
       });
     });
-  },
+  }
 
-  getLayerMeta(): Promise<LayerMetaItem[]> {
+  static getLayerMeta(): Promise<LayerMetaItem[]> {
     return CancelablePromise.resolve([
       { text: 'Идентификатор', value: 'id1', detail: false, list: true },
       // { text: 'долгота', value: 'lat', noHide: true },
@@ -186,5 +161,5 @@ export default {
       // { text: 'Памятники', value: 'mos7', type: 'Special' },
       // { text: 'Последний адрес', value: 'mos8', type: 'Special' },
     ]);
-  },
-};
+  }
+}

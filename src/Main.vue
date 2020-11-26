@@ -77,6 +77,7 @@
             </div>
             <v-text-field
               v-model="listSearchText"
+              :loading="!searchReady"
               cache-items
               flat
               solo

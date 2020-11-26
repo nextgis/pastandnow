@@ -14,8 +14,8 @@ import {
 } from '@nextgis/properties-filter';
 
 import store from '..';
-import ngw, { BdPhotoProperties } from '../../api/ngw';
-import { LayerMetaItem } from '../../api/ngw';
+import { Ngw } from '../../api/Ngw';
+import { LayerMetaItem, BdPhotoProperties } from '../../api/interfaces';
 import { OralFeature, OralFilter, LegendItem } from '../../interfaces';
 
 export const ALL_RAYON_STR = 'Все районы';
@@ -57,6 +57,8 @@ export class OralState extends VuexModule {
     specialFilter: undefined,
   };
 
+  searchReady = false;
+
   get features(): OralFeature[] {
     return this.filtered;
   }
@@ -83,19 +85,38 @@ export class OralState extends VuexModule {
   @Action({ commit: '_setItems' })
   async getAllItems(): Promise<OralFeature[]> {
     await this.setMeta();
-    const items = await ngw.getLayerGeoJson();
+    const items = await Ngw.getLayerGeoJson();
     return items.features;
+  }
+
+  @Action({ commit: '_setItems' })
+  async loadStories(): Promise<OralFeature[]> {
+    this.context.dispatch('setSearchReady', false);
+    const features: OralFeature[] = [];
+    const items = await Ngw.getLayerStoryItems();
+    this.items.forEach((x) => {
+      const storyItemIndex = items.findIndex((y) => y.id === x.id);
+      const newOralFeature = { ...x };
+      if (storyItemIndex) {
+        newOralFeature.properties = { ...x.properties };
+        const story = items.splice(storyItemIndex, 1)[0];
+        newOralFeature.properties = { ...x.properties, ...story.fields };
+      }
+      features.push(newOralFeature);
+    });
+    this.context.dispatch('setSearchReady', true);
+    return features;
   }
 
   @Action({ commit: '_setMeta' })
   async setMeta(): Promise<LayerMetaItem[]> {
-    const meta = await ngw.getLayerMeta();
+    const meta = await Ngw.getLayerMeta();
     return meta;
   }
 
   @Action({ commit: '_setPhotos' })
   async getPhotos(): Promise<BdPhotoProperties[]> {
-    const photos = await ngw.getPhotos();
+    const photos = await Ngw.getPhotos();
     return photos;
   }
 
@@ -130,7 +151,7 @@ export class OralState extends VuexModule {
       return { ...this.filters, fullText: undefined };
     }
     const filters_ = { ...this.filters };
-    const meta = await ngw.getLayerMeta();
+    const meta = await Ngw.getLayerMeta();
     const searchField = meta.filter((x) => x.search).map((x) => x.value);
     const propertiesFilter: PropertiesFilter = ['any'];
     searchField.forEach((x) => {
@@ -190,12 +211,21 @@ export class OralState extends VuexModule {
       return false;
     }
     if (id) {
-      const feature = await ngw.fetchNgwLayerFeature(id);
+      const feature = await Ngw.fetchNgwLayerFeature(id);
       if (feature) {
         return feature;
       }
     }
     return item;
+  }
+
+  @MutationAction({ mutate: ['searchReady'] })
+  async setSearchReady(
+    searchReady: boolean
+  ): Promise<{
+    searchReady: boolean;
+  }> {
+    return { searchReady };
   }
 
   @MutationAction({ mutate: ['listSearchText'] })

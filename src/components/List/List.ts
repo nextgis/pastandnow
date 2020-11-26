@@ -1,7 +1,7 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { CirclePaint } from '@nextgis/paint';
 import { getHistoryPaint } from '../OralMap/OralMap';
-import { BdMainItemProperties } from '../../api/ngw';
+import { BdMainItemProperties } from '../../api/interfaces';
 import { appModule } from '../../store/modules/app';
 import { oralModule } from '../../store/modules/oral';
 import SymbolComponent from '../Symbol/Symbol.vue';

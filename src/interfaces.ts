@@ -1,6 +1,6 @@
 import { PropertiesFilter } from '@nextgis/properties-filter';
 import { CirclePaint } from '@nextgis/paint';
-import { BdMainItemProperties } from './api/ngw';
+import { BdMainItemProperties } from './api/interfaces';
 import { Point, Feature, FeatureCollection } from 'geojson';
 
 export type OralFeature = Feature<Point, BdMainItemProperties>;

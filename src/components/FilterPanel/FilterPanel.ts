@@ -1,6 +1,6 @@
 import { Vue, Component, Emit, Watch } from 'vue-property-decorator';
 import { oralModule } from '../../store/modules/oral';
-import { LayerMetaItem } from 'src/api/ngw';
+import { LayerMetaItem } from 'src/api/interfaces';
 
 interface NarrativeTypeItem {
   name: string;
