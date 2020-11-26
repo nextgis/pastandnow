@@ -50,20 +50,21 @@ export class Ngw {
     });
   }
 
-  static async getLayerStoryItems(): CancelablePromise<FeatureItem[]> {
-    const meta = await this.getLayerMeta();
-    const fields = meta.filter((x) => x.type === 'Story').map((x) => x.value);
-    return fetchNgwLayerItems<Point>({
-      connector,
-      resourceId: config.ngwMarkerLayerId,
-      // limit: 100,
-      geom: false,
-      fields,
-      extensions: [],
+  static getLayerStoryItems(): CancelablePromise<FeatureItem[]> {
+    return this.getLayerMeta().then((meta) => {
+      const fields = meta.filter((x) => x.type === 'Story').map((x) => x.value);
+      return fetchNgwLayerItems<Point>({
+        connector,
+        resourceId: config.ngwMarkerLayerId,
+        // limit: 100,
+        geom: false,
+        fields,
+        extensions: [],
+      });
     });
   }
 
-  static async fetchNgwLayerFeature(
+  static fetchNgwLayerFeature(
     featureId: number
   ): CancelablePromise<OralFeature> {
     return fetchNgwLayerFeature({
@@ -73,7 +74,7 @@ export class Ngw {
     });
   }
 
-  static async getPhotos(): CancelablePromise<OralPhotoProperties[]> {
+  static getPhotos(): CancelablePromise<OralPhotoProperties[]> {
     return fetchNgwLayerItems<Point, OralPhotoProperties>({
       connector,
       resourceId: config.layerWithPhotos,
