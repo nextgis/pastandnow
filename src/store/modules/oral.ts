@@ -107,7 +107,6 @@ export class OralState extends VuexModule {
       const storyItemIndex = items.findIndex((y) => y.id === x.id);
       const newOralFeature = { ...x };
       if (storyItemIndex) {
-        newOralFeature.properties = { ...x.properties };
         const story = items.splice(storyItemIndex, 1)[0];
         newOralFeature.properties = { ...x.properties, ...story.fields };
       }
