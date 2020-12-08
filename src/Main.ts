@@ -140,6 +140,10 @@ export class Main extends Vue {
     return oralModule;
   }
 
+  get featuresLoading(): boolean {
+    return this.module.featuresLoading;
+  }
+
   get searchReady(): boolean {
     return this.module.searchReady;
   }

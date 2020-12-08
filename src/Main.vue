@@ -97,7 +97,7 @@
             <FilterPanel v-if="filterPanelOpen" @close="filterPanelOpen = false"></FilterPanel>
             <list v-else class="pt-0"></list>
           </div>
-          <div v-else>
+          <div v-if="featuresLoading">
             <div class="pa-3 text-center">
               <v-progress-circular indeterminate color="primary"></v-progress-circular>
             </div>

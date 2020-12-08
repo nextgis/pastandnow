@@ -37,6 +37,7 @@ export class OralState extends VuexModule {
   photos: OralPhotoProperties[] = [];
   meta: LayerMetaItem[] = [];
   detailItem: OralFeature | false = false;
+  featuresLoading = false;
 
   narrativeTypeSelected: string[] = [];
   specialFilterSelected: string[] = [];
@@ -93,8 +94,10 @@ export class OralState extends VuexModule {
 
   @Action({ commit: '_setItems' })
   async getAllItems(): Promise<OralFeature[]> {
+    this.setFeaturesLoading(true);
     await this.setMeta();
     const features = await Ngw.getLayerFeatures();
+    this.setFeaturesLoading(false);
     return features;
   }
 
@@ -242,6 +245,15 @@ export class OralState extends VuexModule {
     return { searchReady };
   }
 
+  @MutationAction({ mutate: ['featuresLoading'] })
+  async setFeaturesLoading(
+    featuresLoading: boolean
+  ): Promise<{
+    featuresLoading: boolean;
+  }> {
+    return { featuresLoading };
+  }
+
   @MutationAction({ mutate: ['filterData'] })
   async setFilterData(
     filterData: FilterData
@@ -355,6 +367,7 @@ export class OralState extends VuexModule {
     const exist = this.legendItems.find((x) => x.name === legendItem.name);
     if (!exist) {
       this.legendItems.push(legendItem);
+      this.activeTypes = this.legendItems.map((x) => x.name);
     }
   }
 }

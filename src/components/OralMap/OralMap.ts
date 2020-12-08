@@ -17,7 +17,7 @@ import { getHistoryIcon } from '../../utils/getHistoryIcons';
 
 @Component
 export class OralMap extends Mixins(VueNgwMapbox) {
-  layer: VectorLayerAdapter | null = null;
+  layer!: VectorLayerAdapter;
 
   ngwMap!: NgwMap<Map>;
 
@@ -46,9 +46,10 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   onItemsChange(newFeatures: OralFeature[], old: OralFeature[]): void {
     if (newFeatures.length !== old.length) {
       if (this.ngwMap && this.layer) {
-        this.ngwMap.removeLayer(this.layer);
-        this.layer = null;
-        // this.onFilteredChange(newFeatures);
+        this.ngwMap.setLayerData(
+          this.layer,
+          this._prepareLayerData(newFeatures)
+        );
       }
     }
   }
@@ -56,16 +57,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   @Watch('filtered')
   onFilteredChange(filtered: OralFeature[]): void {
     if (this.loaded) {
-      const forMap: Feature[] = [];
-      filtered.forEach((x) => {
-        forMap.push({
-          type: x.type,
-          id: x.id,
-          geometry: x.geometry,
-          properties: { id: x.id, type: x.properties.type },
-        });
-      });
-      this.drawMarkers(forMap);
+      this.drawMarkers(filtered);
       this.zoomToFiltered();
     }
   }
@@ -73,19 +65,17 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   @Watch('detailItem')
   setSelected(item: OralFeature): void {
     const layer = this.layer;
-    if (layer) {
-      if (item && layer.select) {
-        layer.select([['$id', 'eq', item.id]]);
-      } else if (layer.unselect) {
-        // unselect all
-        layer.unselect();
-      }
+    if (item && layer.select) {
+      layer.select([['$id', 'eq', item.id]]);
+    } else if (layer.unselect) {
+      // unselect all
+      layer.unselect();
     }
   }
 
   @Watch('centerId')
   zoomTo(id: number): void {
-    if (id && this.layer && this.layer.getLayers) {
+    if (id && this.layer.getLayers) {
       const layers = this.layer && this.layer.getLayers();
       if (layers && layers.length) {
         const layer = layers.find(
@@ -110,9 +100,9 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     });
   }
 
-  drawMarkers(features: Feature[]): void {
+  drawMarkers(features: OralFeature[]): void {
     if (!this.layer) {
-      const data: FeatureCollection = { type: 'FeatureCollection', features };
+      const data = this._prepareLayerData(features);
       this.ngwMap
         .addGeoJsonLayer({
           data,
@@ -170,6 +160,19 @@ export class OralMap extends Mixins(VueNgwMapbox) {
         this.ngwMap.fitBounds(extent, { maxZoom: 16, padding: 20 });
       }
     }
+  }
+
+  private _prepareLayerData(features: OralFeature[]): FeatureCollection {
+    const forMap: Feature[] = [];
+    features.forEach((x) => {
+      forMap.push({
+        type: x.type,
+        id: x.id,
+        geometry: x.geometry,
+        properties: { id: x.id, type: x.properties.type },
+      });
+    });
+    return { type: 'FeatureCollection', features: forMap };
   }
 
   private async _onLoad() {
