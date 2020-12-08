@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Веб-ГИС «Устная память</title>
+  </head>
+
+  <body>
+    <iframe
+      id="map"
+      src=""
+      width="100%"
+      frameborder="0"
+      scrolling="no"
+      style="
+        border: none;
+        display: block;
+        min-width: 100% !important;
+        height: 537px;
+      "
+    ></iframe>
+  </body>
+
+  <script>
+    var iframe = document.getElementById('map');
+    var src = 'https://pastandnow.staging.nextgis.com';
+    var url = new URL(window.location.href);
+    var id = url.searchParams.get('id');
+    if (id) {
+      src += '?id=' + id;
+    }
+    iframe.src = src;
+    window.addEventListener(
+      'message',
+      (event) => {
+        if (event.origin === 'https://pastandnow.staging.nextgis.com') {
+          var data = JSON.parse(event.data);
+          window.history.replaceState(null, null, '?id=' + data.detail );
+        }
+      },
+      false
+    );
+  </script>
+</html>

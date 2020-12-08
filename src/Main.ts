@@ -155,11 +155,16 @@ export class Main extends Vue {
 
   @Watch('detail')
   resetScroll(val: OralFeature): void {
-    if (!val) {
+    const id = val && val.id;
+    if (!id) {
       this.detailIsScrolled = false;
       url.remove('id');
     } else {
-      url.set('id', String(val.id));
+      url.set('id', String(id));
+    }
+    // for work with IFRAME
+    if (parent) {
+      parent.postMessage(JSON.stringify({ detail: id }), '*');
     }
   }
 
