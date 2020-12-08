@@ -99,6 +99,12 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_setItems' })
+  async setItems(features: OralFeature[]): Promise<OralFeature[]> {
+    await this.setMeta();
+    return features;
+  }
+
+  @Action({ commit: '_setItems' })
   async loadStories(): Promise<OralFeature[]> {
     this.context.dispatch('setSearchReady', false);
     const features: OralFeature[] = [];

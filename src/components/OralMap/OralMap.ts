@@ -17,7 +17,7 @@ import { getHistoryIcon } from '../../utils/getHistoryIcons';
 
 @Component
 export class OralMap extends Mixins(VueNgwMapbox) {
-  layer!: VectorLayerAdapter;
+  layer: VectorLayerAdapter | null = null;
 
   ngwMap!: NgwMap<Map>;
 
@@ -30,12 +30,27 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     return oralModule.filtered;
   }
 
+  get items(): OralFeature[] {
+    return oralModule.items;
+  }
+
   get detailItem(): false | OralFeature {
     return oralModule.detailItem;
   }
 
   get centerId(): number | null {
     return appModule.centerId;
+  }
+
+  @Watch('items')
+  onItemsChange(newFeatures: OralFeature[], old: OralFeature[]): void {
+    if (newFeatures.length !== old.length) {
+      if (this.ngwMap && this.layer) {
+        this.ngwMap.removeLayer(this.layer);
+        this.layer = null;
+        // this.onFilteredChange(newFeatures);
+      }
+    }
   }
 
   @Watch('filtered')
@@ -58,17 +73,19 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   @Watch('detailItem')
   setSelected(item: OralFeature): void {
     const layer = this.layer;
-    if (item && layer.select) {
-      layer.select([['$id', 'eq', item.id]]);
-    } else if (layer.unselect) {
-      // unselect all
-      layer.unselect();
+    if (layer) {
+      if (item && layer.select) {
+        layer.select([['$id', 'eq', item.id]]);
+      } else if (layer.unselect) {
+        // unselect all
+        layer.unselect();
+      }
     }
   }
 
   @Watch('centerId')
   zoomTo(id: number): void {
-    if (id && this.layer.getLayers) {
+    if (id && this.layer && this.layer.getLayers) {
       const layers = this.layer && this.layer.getLayers();
       if (layers && layers.length) {
         const layer = layers.find(

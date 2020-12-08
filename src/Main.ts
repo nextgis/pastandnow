@@ -18,7 +18,8 @@ import {
 
 import { prepareFilterData } from '../scripts/prepareFilterData';
 import { qmsId, feedbackUrl } from '../config.json';
-import { connector } from './services/Ngw';
+import { connector, Ngw } from './services/Ngw';
+import { url } from './services/url';
 import { VueNgwControl } from '@nextgis/vue-ngw-map';
 
 import List from './components/List/List.vue';
@@ -149,9 +150,12 @@ export class Main extends Vue {
   }
 
   @Watch('detail')
-  resetScroll(val: string): void {
+  resetScroll(val: OralFeature): void {
     if (!val) {
       this.detailIsScrolled = false;
+      url.remove('id');
+    } else {
+      url.set('id', String(val.id));
     }
   }
 
@@ -163,13 +167,22 @@ export class Main extends Vue {
     this.throttleSave = throttle(this.setListSearchText, 1000, this);
   }
 
-  created(): void {
+  async created(): Promise<void> {
     const setFilterData = () => {
       const filterData = prepareFilterData(
         oralModule.items.map((x) => x.properties)
       );
       oralModule.setFilterData(filterData);
     };
+    const id = url.get('id');
+    if (id !== undefined) {
+      const feature = await Ngw.fetchNgwLayerFeature(Number(id));
+      if (feature) {
+        await oralModule.setItems([feature]);
+        await oralModule.setActiveCity(feature.properties.city);
+        this.detail = feature;
+      }
+    }
     oralModule.getAllItems().then(() => {
       setFilterData();
       oralModule.loadStories().then(setFilterData);
