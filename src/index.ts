@@ -8,8 +8,8 @@ import { version } from '../package.json';
 import vuetify from './plugins/vuetify';
 
 //styles
-import './style/custom-vuetify.sass';
 import './style/mapbox.sass';
+import './style/custom-vuetify.sass';
 
 // Vue.use(VueRouter);
 

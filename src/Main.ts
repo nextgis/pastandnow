@@ -160,7 +160,7 @@ export class Main extends Vue {
       this.detailIsScrolled = false;
       url.remove('id');
     } else {
-      url.set('id', String(id));
+      url.set('id', id !== undefined ? String(id) : '');
     }
     // for work with IFRAME
     if (parent) {
@@ -185,11 +185,15 @@ export class Main extends Vue {
     };
     const id = url.get('id');
     if (id !== undefined) {
-      const feature = await Ngw.fetchNgwLayerFeature(Number(id));
-      if (feature) {
-        await oralModule.setItems([feature]);
-        await oralModule.setActiveCity(feature.properties.city);
-        this.detail = feature;
+      try {
+        const feature = await Ngw.fetchNgwLayerFeature(Number(id));
+        if (feature) {
+          await oralModule.setItems([feature]);
+          await oralModule.setActiveCity(feature.properties.city);
+          this.detail = feature;
+        }
+      } catch (er) {
+        url.remove('id');
       }
     }
     oralModule.getAllItems().then(() => {
