@@ -1,7 +1,7 @@
 // @ts-ignore
 // import './images/drawing.svg';
 
-import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Component, Watch, Mixins } from 'vue-property-decorator';
 import { NgwMapOptions } from '@nextgis/ngw-map';
 
 import {
@@ -34,6 +34,7 @@ import { appModule, AppPages } from './store/modules/app';
 import { oralModule, OralState } from './store/modules/oral';
 import throttle from './store/utils/throttle';
 import { OralFeature } from './interfaces';
+import { WindowSizeMixin } from './minixs/WindowSizeMixin';
 
 @Component({
   components: {
@@ -47,7 +48,7 @@ import { OralFeature } from './interfaces';
     FilterPanel,
   },
 })
-export class Main extends Vue {
+export class Main extends Mixins(WindowSizeMixin) {
   throttleSave!: (value: string) => void;
   legendOpen = true;
   svg = {
@@ -101,6 +102,10 @@ export class Main extends Vue {
 
   set zoomTo(value: number | null) {
     appModule.zoomTo(value);
+  }
+
+  get detailDrawer(): boolean {
+    return !!this.detail;
   }
 
   get drawer(): boolean {
@@ -165,6 +170,14 @@ export class Main extends Vue {
     // for work with IFRAME
     if (parent) {
       parent.postMessage(JSON.stringify({ detail: id }), '*');
+    }
+  }
+
+  @Watch('windowSize')
+  @Watch('detail')
+  resolveDrawer(): void {
+    if (this.detail && this.isMobile) {
+      this.drawer = false;
     }
   }
 

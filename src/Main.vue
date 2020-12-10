@@ -116,7 +116,7 @@
       </div>
     </v-navigation-drawer>
 
-    <v-navigation-drawer class="detail-drawer" :value="!!detail" stateless width="360" absolute app right>
+    <v-navigation-drawer class="detail-drawer" :value="detailDrawer" stateless width="360" absolute app right>
       <div v-if="detail" class="drawer-content d-flex flex-column">
         <div class="detail-drawer__header flex-header-content"
           :class="{'shadowed': detailIsScrolled }"
