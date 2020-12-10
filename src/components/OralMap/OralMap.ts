@@ -9,7 +9,7 @@ import { NgwMap } from '@nextgis/ngw-map';
 import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 
 import config from '../../../config.json';
-import { FilterProperties, oralModule } from '../../store/modules/oral';
+import { oralModule } from '../../store/modules/oral';
 import { appModule } from '../../store/modules/app';
 
 import { OralFeature } from '../../interfaces';

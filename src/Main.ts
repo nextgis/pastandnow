@@ -194,6 +194,7 @@ export class Main extends Vue {
           await oralModule.setActiveCity(feature.properties.city);
           await oralModule.setItems([feature]);
           this.detail = feature;
+          appModule.zoomTo(Number(feature.id));
         }
       } catch (er) {
         url.remove('id');
