@@ -325,8 +325,6 @@ export class OralState extends VuexModule {
 
   @Mutation
   protected _updateFilter(filters: FilterProperties): void {
-    this.filters = filters;
-
     const items: OralFeature[] = this.items.filter((x) =>
       featureFilter(
         x,
@@ -345,6 +343,7 @@ export class OralState extends VuexModule {
         this.detailItem = false;
       }
     }
+    this.filters = filters;
   }
 
   @Mutation

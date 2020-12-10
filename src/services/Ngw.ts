@@ -1,11 +1,13 @@
-import { Point, Feature } from 'geojson';
+import { Point, Feature, GeoJsonProperties } from 'geojson';
 import NgwConnector, { FeatureItem } from '@nextgis/ngw-connector';
+import { PropertiesFilter } from '@nextgis/properties-filter';
 import CancelablePromise from '@nextgis/cancelable-promise';
 import {
   fetchNgwLayerFeature,
   fetchNgwLayerFeatures,
   fetchNgwLayerItems,
 } from '@nextgis/ngw-kit';
+
 import config from '../../config.json';
 import { OralFeature } from '../interfaces';
 import {
@@ -61,6 +63,16 @@ export class Ngw {
         fields,
         extensions: [],
       });
+    });
+  }
+
+  static fetchNgwLayerFeatures<P = GeoJsonProperties>(
+    filters: PropertiesFilter<P>
+  ): CancelablePromise<OralFeature[]> {
+    return fetchNgwLayerFeatures({
+      resourceId: config.ngwMarkerLayerId,
+      connector,
+      filters,
     });
   }
 

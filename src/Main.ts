@@ -155,7 +155,7 @@ export class Main extends Vue {
 
   @Watch('detail')
   resetScroll(val: OralFeature): void {
-    const id = val && val.id;
+    const id = val && val.properties.id1;
     if (!id) {
       this.detailIsScrolled = false;
       url.remove('id');
@@ -186,10 +186,13 @@ export class Main extends Vue {
     const id = url.get('id');
     if (id !== undefined) {
       try {
-        const feature = await Ngw.fetchNgwLayerFeature(Number(id));
+        const features = await Ngw.fetchNgwLayerFeatures<OralProperties>([
+          ['id1', 'eq', id],
+        ]);
+        const feature = features && features[0];
         if (feature) {
-          await oralModule.setItems([feature]);
           await oralModule.setActiveCity(feature.properties.city);
+          await oralModule.setItems([feature]);
           this.detail = feature;
         }
       } catch (er) {

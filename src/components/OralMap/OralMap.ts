@@ -9,7 +9,7 @@ import { NgwMap } from '@nextgis/ngw-map';
 import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 
 import config from '../../../config.json';
-import { oralModule } from '../../store/modules/oral';
+import { FilterProperties, oralModule } from '../../store/modules/oral';
 import { appModule } from '../../store/modules/app';
 
 import { OralFeature } from '../../interfaces';
@@ -20,6 +20,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   layer!: VectorLayerAdapter;
 
   ngwMap!: NgwMap<Map>;
+  initZoomSet = false;
 
   markers: { [name: string]: boolean } = {};
   selected!: VectorLayerAdapter;
@@ -28,6 +29,10 @@ export class OralMap extends Mixins(VueNgwMapbox) {
 
   get filtered(): OralFeature[] {
     return oralModule.filtered;
+  }
+
+  get activeCity(): string {
+    return oralModule.activeCity;
   }
 
   get items(): OralFeature[] {
@@ -58,7 +63,22 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   onFilteredChange(filtered: OralFeature[]): void {
     if (this.loaded) {
       this.drawMarkers(filtered);
-      this.zoomToFiltered();
+      if (!this.initZoomSet) {
+        this.zoomToFiltered();
+        this.initZoomSet = true;
+      }
+    }
+  }
+
+  @Watch('activeCity')
+  onFiltersChange(activeCity: string, oldCity: string): void {
+    if (this.loaded) {
+      if (activeCity !== oldCity) {
+        const watcher = this.$watch('filtered', () => {
+          this.zoomToFiltered();
+          watcher();
+        });
+      }
     }
   }
 
