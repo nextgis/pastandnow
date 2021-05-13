@@ -1,10 +1,8 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator';
-import { Map } from 'mapbox-gl';
 import { Feature, Point, FeatureCollection } from 'geojson';
 import bbox from '@turf/bbox';
 
 import { VectorLayerAdapter } from '@nextgis/webmap';
-import { NgwMap } from '@nextgis/ngw-map';
 // @ts-ignore
 import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 
@@ -19,7 +17,7 @@ import { getHistoryIcon } from '../../utils/getHistoryIcons';
 export class OralMap extends Mixins(VueNgwMapbox) {
   layer!: VectorLayerAdapter;
 
-  ngwMap!: NgwMap<Map>;
+  // ngwMap: NgwMap<Map>;
   initZoomSet = false;
 
   markers: { [name: string]: boolean } = {};
@@ -53,7 +51,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
       if (this.ngwMap && this.layer) {
         this.ngwMap.setLayerData(
           this.layer,
-          this._prepareLayerData(newFeatures)
+          this._prepareLayerData(newFeatures),
         );
       }
     }
@@ -100,7 +98,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
       if (layers && layers.length) {
         const layer = layers.find(
           (x) =>
-            x.feature && x.feature.properties && x.feature.properties.id === id
+            x.feature && x.feature.properties && x.feature.properties.id === id,
         );
         const feature = layer && (layer.feature as Feature<Point>);
         const lngLat =
@@ -152,10 +150,10 @@ export class OralMap extends Mixins(VueNgwMapbox) {
                     ? feature && feature.properties
                       ? Number(feature.properties.id)
                       : null
-                    : null
+                    : null,
                 );
               }
-            }
+            },
           );
         });
     } else if (this.layer.propertiesFilter) {

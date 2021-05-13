@@ -18,7 +18,7 @@ import {
 
 export const url = config.baseUrl.replace(
   /^(https?|ftp):\/\//,
-  (location.protocol === 'https:' ? 'https' : 'http') + '://'
+  (location.protocol === 'https:' ? 'https' : 'http') + '://',
 );
 
 export const connector = new NgwConnector({ baseUrl: url });
@@ -31,7 +31,7 @@ export class Ngw {
       const fields = meta
         .filter(
           (x) =>
-            x.type !== 'Story' && (x.search || x.list || x.type === 'Special')
+            x.type !== 'Story' && (x.search || x.list || x.type === 'Special'),
         )
         .map((x) => x.value) as (keyof OralProperties)[];
 
@@ -67,7 +67,7 @@ export class Ngw {
   }
 
   static fetchNgwLayerFeatures<P = GeoJsonProperties>(
-    filters: PropertiesFilter<P>
+    filters: PropertiesFilter<P>,
   ): CancelablePromise<OralFeature[]> {
     return fetchNgwLayerFeatures({
       resourceId: config.ngwMarkerLayerId,
@@ -77,7 +77,7 @@ export class Ngw {
   }
 
   static fetchNgwLayerFeature(
-    featureId: number
+    featureId: number,
   ): CancelablePromise<OralFeature> {
     return fetchNgwLayerFeature({
       resourceId: config.ngwMarkerLayerId,
