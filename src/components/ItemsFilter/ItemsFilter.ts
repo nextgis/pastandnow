@@ -85,7 +85,7 @@ export class ItemsFilter extends Vue {
   updateAreasItems(
     city?: string,
     oldCity?: string,
-    items?: OralFeature[]
+    items?: OralFeature[],
   ): void {
     items = items ?? this.items;
     const areas: Record<string, number> = {};

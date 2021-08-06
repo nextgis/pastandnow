@@ -5,7 +5,7 @@ import { featureStyleKeys, featureStyles } from './featureStyleKeys';
 export function getHistoryPaint(
   properties?: Record<string, any> | null,
   options?: CirclePaint,
-  forLegend = false
+  forLegend = false,
 ): CirclePaint {
   const defaultStyle: CirclePaint = {
     color: '#363636',

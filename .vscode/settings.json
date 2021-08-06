@@ -1,9 +1,17 @@
 {
   "editor.formatOnSave": false,
   "tslint.enable": false,
-  "eslint.enable": true,
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
+  },
+  "git.ignoreLimitWarning": true,
+  "search.exclude": {
+    "**/dist": true,
+    "**/node_modules": true,
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true
   }
 }

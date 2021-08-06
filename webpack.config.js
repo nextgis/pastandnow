@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -39,13 +40,21 @@ module.exports = (env, argv) => {
       loader: 'vue-loader',
     },
     {
-      test: /\.tsx?$/,
-      loader: 'ts-loader',
+      // test: /\.jsx?$/,
+      test: /\.(js|ts)x?$/,
       exclude: /node_modules/,
-      options: {
-        appendTsSuffixTo: [/\.vue$/],
+      use: {
+        loader: 'babel-loader',
       },
     },
+    // {
+    //   test: /\.tsx?$/,
+    //   loader: 'ts-loader',
+    //   exclude: /node_modules/,
+    //   options: {
+    //     appendTsSuffixTo: [/\.vue$/],
+    //   },
+    // },
     {
       test: /\.(png|jpg|gif|svg)$/,
       loader: 'file-loader',
@@ -104,6 +113,7 @@ module.exports = (env, argv) => {
   ];
 
   let plugins = [
+    new ForkTsCheckerWebpackPlugin(),
     new ESLintPlugin({ fix: true, files: ['src/'], extensions: ['ts'] }),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
@@ -141,7 +151,7 @@ module.exports = (env, argv) => {
   const config = {
     mode: argv.mode || 'development',
 
-    devtool: isProd ? '#source-map' : 'eval-source-map',
+    devtool: isProd ? 'source-map' : 'inline-source-map',
 
     entry: './src/index.ts',
 
@@ -169,8 +179,11 @@ module.exports = (env, argv) => {
     performance: {
       hints: false,
     },
+
+    target: isProd ? 'browserslist' : 'web',
     optimization: {
       runtimeChunk: 'single',
+      usedExports: true,
       splitChunks: {
         chunks: 'all',
         minSize: 10000,

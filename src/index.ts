@@ -3,7 +3,7 @@ import Vue from 'vue';
 // import { router } from './routes';
 import store from './store';
 import App from './App.vue';
-import { version } from '../package.json';
+import pkg from '../package.json';
 
 import vuetify from './plugins/vuetify';
 
@@ -27,4 +27,4 @@ declare global {
   }
 }
 
-window.version = version;
+window.version = pkg.version;

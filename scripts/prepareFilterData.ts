@@ -1,5 +1,5 @@
-import { OralProperties } from '../src/services/interfaces';
 import { FilterData } from './FilterData';
+import type { OralProperties } from '../src/interfaces';
 
 export function prepareFilterData(items: OralProperties[]): FilterData {
   const filterData: FilterData = {

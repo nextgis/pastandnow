@@ -1,7 +1,7 @@
 import { Vue, Component, Emit, Watch } from 'vue-property-decorator';
 import { oralModule } from '../../store/modules/oral';
-import { LayerMetaItem } from '../../services/interfaces';
 import { NarrativeTypeItem } from '../../interfaces';
+import type { LayerMetaItem } from '../../interfaces';
 
 @Component
 export default class FilterPanel extends Vue {

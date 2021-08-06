@@ -1,4 +1,3 @@
-// @ts-ignore
 // import './images/drawing.svg';
 
 import { Component, Watch, Mixins } from 'vue-property-decorator';
@@ -17,8 +16,8 @@ import {
 } from '@mdi/js';
 
 import { prepareFilterData } from '../scripts/prepareFilterData';
-import { qmsId, feedbackUrl } from '../config.json';
-import { connector, Ngw } from './services/Ngw';
+import config from './config';
+import { connector, Ngw } from './services/ngw';
 import { url } from './services/url';
 import { VueNgwControl } from '@nextgis/vue-ngw-map';
 
@@ -29,13 +28,14 @@ import Detail from './components/Detail/Detail.vue';
 import Legend from './components/Legend/Legend.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import FilterPanel from './components/FilterPanel/FilterPanel.vue';
-import { OralProperties } from './services/interfaces';
 import { appModule, AppPages } from './store/modules/app';
 import { oralModule, OralState } from './store/modules/oral';
 import throttle from './store/utils/throttle';
-import { OralFeature } from './interfaces';
 import { WindowSizeMixin } from './minixs/WindowSizeMixin';
 
+import type { OralFeature, OralProperties } from './interfaces';
+
+const { qmsId, feedbackUrl } = config;
 @Component({
   components: {
     List,
@@ -71,6 +71,7 @@ export class Main extends Mixins(WindowSizeMixin) {
     center: [37.63, 55.75],
     zoom: 10,
     qmsId,
+    controls: ['ZOOM', 'ATTRIBUTION'],
     controlsOptions: {
       ZOOM: { position: 'top-right' },
       ATTRIBUTION: { position: 'bottom-right' },
@@ -192,7 +193,7 @@ export class Main extends Mixins(WindowSizeMixin) {
   async created(): Promise<void> {
     const setFilterData = () => {
       const filterData = prepareFilterData(
-        oralModule.items.map((x) => x.properties)
+        oralModule.items.map((x) => x.properties),
       );
       oralModule.setFilterData(filterData);
     };

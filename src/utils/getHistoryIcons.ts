@@ -5,7 +5,7 @@ import { getHistoryPaint } from './getHistoryPaint';
 export function getHistoryIcon(
   feature: Feature,
   options?: CirclePaint,
-  forLegend = false
+  forLegend = false,
 ): CirclePaint {
   const paint = getHistoryPaint(feature.properties, options, forLegend);
   return paint;

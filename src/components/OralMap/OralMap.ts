@@ -6,7 +6,7 @@ import { VectorLayerAdapter } from '@nextgis/webmap';
 // @ts-ignore
 import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 
-import config from '../../../config.json';
+import config from '../../config';
 import { oralModule } from '../../store/modules/oral';
 import { appModule } from '../../store/modules/app';
 

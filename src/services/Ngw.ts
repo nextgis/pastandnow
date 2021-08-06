@@ -1,5 +1,8 @@
-import { Point, Feature, GeoJsonProperties } from 'geojson';
-import NgwConnector, { FeatureItem } from '@nextgis/ngw-connector';
+import { Point, Feature } from 'geojson';
+import NgwConnector, {
+  FeatureItem,
+  FeatureProperties,
+} from '@nextgis/ngw-connector';
 import { PropertiesFilter } from '@nextgis/properties-filter';
 import CancelablePromise from '@nextgis/cancelable-promise';
 import {
@@ -8,18 +11,19 @@ import {
   fetchNgwLayerItems,
 } from '@nextgis/ngw-kit';
 
-import config from '../../config.json';
-import { OralFeature } from '../interfaces';
-import {
+import config from '../config';
+import type { OralFeature } from '../interfaces';
+import type {
   OralProperties,
   OralPhotoProperties,
   LayerMetaItem,
-} from './interfaces';
+} from '../interfaces';
 
-export const url = config.baseUrl.replace(
-  /^(https?|ftp):\/\//,
-  (location.protocol === 'https:' ? 'https' : 'http') + '://',
-);
+// export const url = config.baseUrl.replace(
+//   /^(https?|ftp):\/\//,
+//   (location.protocol === 'https:' ? 'https' : 'http') + '://',
+// );
+export const url = config.baseUrl;
 
 export const connector = new NgwConnector({ baseUrl: url });
 
@@ -38,7 +42,7 @@ export class Ngw {
       return fetchNgwLayerFeatures<Point, OralProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        // limit: 100,
+        limit: 100,
         fields,
         extensions: [],
       }).then((features) => {
@@ -58,7 +62,7 @@ export class Ngw {
       return fetchNgwLayerItems<Point>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        // limit: 100,
+        limit: 100,
         geom: false,
         fields,
         extensions: [],
@@ -66,10 +70,10 @@ export class Ngw {
     });
   }
 
-  static fetchNgwLayerFeatures<P = GeoJsonProperties>(
+  static fetchNgwLayerFeatures<P extends FeatureProperties = OralProperties>(
     filters: PropertiesFilter<P>,
-  ): CancelablePromise<OralFeature[]> {
-    return fetchNgwLayerFeatures({
+  ): CancelablePromise<Feature<Point, P>[]> {
+    return fetchNgwLayerFeatures<Point, P>({
       resourceId: config.ngwMarkerLayerId,
       connector,
       filters,

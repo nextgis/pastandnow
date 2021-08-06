@@ -1,7 +1,7 @@
 export default function throttle(
   fn: (...args: any[]) => void,
   time: number,
-  context?: Record<string, any>
+  context?: Record<string, any>,
 ): () => void {
   let lock: boolean;
   let args: any;

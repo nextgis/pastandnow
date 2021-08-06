@@ -14,10 +14,16 @@ import {
 } from '@nextgis/properties-filter';
 
 import store from '../index';
-import { Ngw } from '../../services/Ngw';
+import { Ngw } from '../../services/ngw';
 import { FilterData } from '../../../scripts/FilterData';
-import { LayerMetaItem, OralPhotoProperties } from '../../services/interfaces';
-import { OralFeature, OralFilter, LegendItem } from '../../interfaces';
+
+import type {
+  OralFeature,
+  OralFilter,
+  LegendItem,
+  LayerMetaItem,
+  OralPhotoProperties,
+} from '../../interfaces';
 
 export const ALL_RAYON_STR = 'Все районы';
 
@@ -155,7 +161,7 @@ export class OralState extends VuexModule {
     this.setActiveRayon(ALL_RAYON_STR);
     this.setListSearchText('');
     this.setSpecialFilterSelected(
-      []
+      [],
       // this.meta.filter((x) => x.type === 'Special').map((x) => x.value)
     );
     this.setActiveTypes(this.legendItems.map((x) => x.name));
@@ -237,81 +243,63 @@ export class OralState extends VuexModule {
   }
 
   @MutationAction({ mutate: ['searchReady'] })
-  async setSearchReady(
-    searchReady: boolean
-  ): Promise<{
+  async setSearchReady(searchReady: boolean): Promise<{
     searchReady: boolean;
   }> {
     return { searchReady };
   }
 
   @MutationAction({ mutate: ['featuresLoading'] })
-  async setFeaturesLoading(
-    featuresLoading: boolean
-  ): Promise<{
+  async setFeaturesLoading(featuresLoading: boolean): Promise<{
     featuresLoading: boolean;
   }> {
     return { featuresLoading };
   }
 
   @MutationAction({ mutate: ['filterData'] })
-  async setFilterData(
-    filterData: FilterData
-  ): Promise<{
+  async setFilterData(filterData: FilterData): Promise<{
     filterData: FilterData;
   }> {
     return { filterData };
   }
 
   @MutationAction({ mutate: ['listSearchText'] })
-  async setListSearchText(
-    listSearchText: string
-  ): Promise<{
+  async setListSearchText(listSearchText: string): Promise<{
     listSearchText: string;
   }> {
     return { listSearchText };
   }
 
   @MutationAction({ mutate: ['activeTypes'] })
-  async setActiveTypes(
-    activeTypes: string[]
-  ): Promise<{
+  async setActiveTypes(activeTypes: string[]): Promise<{
     activeTypes: string[];
   }> {
     return { activeTypes };
   }
 
   @MutationAction({ mutate: ['activeRayon'] })
-  async setActiveRayon(
-    activeRayon: string
-  ): Promise<{
+  async setActiveRayon(activeRayon: string): Promise<{
     activeRayon: string;
   }> {
     return { activeRayon };
   }
 
   @MutationAction({ mutate: ['specialFilterSelected'] })
-  async setSpecialFilterSelected(
-    specialFilterSelected: string[]
-  ): Promise<{
+  async setSpecialFilterSelected(specialFilterSelected: string[]): Promise<{
     specialFilterSelected: string[];
   }> {
     return { specialFilterSelected };
   }
 
   @MutationAction({ mutate: ['narrativeTypeSelected'] })
-  async setNarrativeTypeSelected(
-    narrativeTypeSelected: string[]
-  ): Promise<{
+  async setNarrativeTypeSelected(narrativeTypeSelected: string[]): Promise<{
     narrativeTypeSelected: string[];
   }> {
     return { narrativeTypeSelected };
   }
 
   @MutationAction({ mutate: ['activeCity'] })
-  async setActiveCity(
-    activeCity: string
-  ): Promise<{
+  async setActiveCity(activeCity: string): Promise<{
     activeCity: string;
   }> {
     return { activeCity };
@@ -328,8 +316,8 @@ export class OralState extends VuexModule {
     const items: OralFeature[] = this.items.filter((x) =>
       featureFilter(
         x,
-        Object.values(filters).filter((x) => x)
-      )
+        Object.values(filters).filter((x) => x),
+      ),
     );
     this.filtered = items;
 

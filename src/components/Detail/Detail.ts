@@ -2,12 +2,13 @@ import { Vue, Component } from 'vue-property-decorator';
 import { mdiClose } from '@mdi/js';
 // @ts-ignore add types
 import Urlify from 'urlify';
-import {
+import { oralModule } from '../../store/modules/oral';
+
+import type {
   OralProperties,
   OralPhotoProperties,
   LayerMetaItem,
-} from '../../services/interfaces';
-import { oralModule } from '../../store/modules/oral';
+} from '../../interfaces';
 
 const urlify = Urlify.create({ toLower: true });
 
@@ -62,7 +63,7 @@ export class Detail extends Vue {
                 const link = links ? links[i] || links[0] : '';
                 const href = (this.url + '/' + link).replace(
                   /([^:]\/)\/+/g,
-                  '$1'
+                  '$1',
                 );
                 return `<a href="${href}" target="_blank">${x}</a>`;
               })
