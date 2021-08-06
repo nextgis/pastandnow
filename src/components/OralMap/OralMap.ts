@@ -17,7 +17,6 @@ import { getHistoryIcon } from '../../utils/getHistoryIcons';
 export class OralMap extends Mixins(VueNgwMapbox) {
   layer!: VectorLayerAdapter;
 
-  // ngwMap: NgwMap<Map>;
   initZoomSet = false;
 
   markers: { [name: string]: boolean } = {};
@@ -84,6 +83,14 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   setSelected(item: OralFeature): void {
     const layer = this.layer;
     if (item && layer.select) {
+      if (layer.getSelected) {
+        const isAlredySelected = layer
+          .getSelected()
+          .some((x) => x.feature && x.feature.id === item.id);
+        if (isAlredySelected) {
+          return;
+        }
+      }
       layer.select([['$id', 'eq', item.id]]);
     } else if (layer.unselect) {
       // unselect all
@@ -134,27 +141,24 @@ export class OralMap extends Mixins(VueNgwMapbox) {
               weight: 3,
             });
           },
+          // unselectOnClick: false,
           selectable: true,
           unselectOnSecondClick: true,
           visibility: true,
+          onSelect: (e) => {
+            const feature = e.features && e.features[0];
+
+            const id = feature
+              ? feature.properties
+                ? Number(feature.properties.id)
+                : null
+              : null;
+            oralModule.setDetail(id);
+          },
         })
         .then((layerId) => {
           const l = this.ngwMap.getLayer(layerId) as VectorLayerAdapter;
           this.layer = l;
-          this.ngwMap.emitter.on(
-            'layer:click',
-            ({ layer, feature, selected }) => {
-              if (layer.id === l.id) {
-                oralModule.setDetail(
-                  selected
-                    ? feature && feature.properties
-                      ? Number(feature.properties.id)
-                      : null
-                    : null,
-                );
-              }
-            },
-          );
         });
     } else if (this.layer.propertiesFilter) {
       this.layer.propertiesFilter([['$id', 'in', features.map((x) => x.id)]]);
