@@ -2,7 +2,7 @@ import { Component, Mixins, Watch } from 'vue-property-decorator';
 import { Feature, Point, FeatureCollection } from 'geojson';
 import bbox from '@turf/bbox';
 
-import { VectorLayerAdapter } from '@nextgis/webmap';
+import { GeoJsonAdapterOptions, VectorLayerAdapter } from '@nextgis/webmap';
 // @ts-ignore
 import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 
@@ -128,38 +128,40 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   drawMarkers(features: OralFeature[]): void {
     if (!this.layer) {
       const data = this._prepareLayerData(features);
-      this.ngwMap
-        .addGeoJsonLayer({
-          data,
-          type: 'point',
-          paint: (feature) => {
-            return getHistoryIcon(feature, { radius: 8 }, true);
-          },
-          selectedPaint: (feature) => {
-            return getHistoryIcon(feature, {
-              radius: 13,
-              weight: 3,
-            });
-          },
-          // unselectOnClick: false,
-          selectable: true,
-          unselectOnSecondClick: true,
-          visibility: true,
-          onSelect: (e) => {
-            const feature = e.features && e.features[0];
+      const adapterOptions: GeoJsonAdapterOptions<OralFeature> = {
+        data,
+        type: 'point',
+        paint: (feature) => {
+          return getHistoryIcon(feature, { radius: 8 }, true);
+        },
+        selectedPaint: (feature) => {
+          return getHistoryIcon(feature, {
+            radius: 13,
+            weight: 3,
+          });
+        },
+        // unselectOnClick: false,
+        selectable: true,
+        unselectOnSecondClick: true,
+        visibility: true,
+        labelField: 'name',
+        labelOnHover: true,
+        onSelect: (e) => {
+          const feature = e.features && e.features[0];
 
-            const id = feature
-              ? feature.properties
-                ? Number(feature.properties.id)
-                : null
-              : null;
-            oralModule.setDetail(id);
-          },
-        })
-        .then((layerId) => {
-          const l = this.ngwMap.getLayer(layerId) as VectorLayerAdapter;
-          this.layer = l;
-        });
+          const id = feature
+            ? feature.properties
+              ? Number(feature.properties.id)
+              : null
+            : null;
+          oralModule.setDetail(id);
+        },
+      };
+
+      this.ngwMap.addGeoJsonLayer(adapterOptions).then((layerId) => {
+        const l = this.ngwMap.getLayer(layerId) as VectorLayerAdapter;
+        this.layer = l;
+      });
     } else if (this.layer.propertiesFilter) {
       this.layer.propertiesFilter([['$id', 'in', features.map((x) => x.id)]]);
     }
@@ -191,7 +193,11 @@ export class OralMap extends Mixins(VueNgwMapbox) {
         type: x.type,
         id: x.id,
         geometry: x.geometry,
-        properties: { id: x.id, type: x.properties.type },
+        properties: {
+          id: x.id,
+          type: x.properties.type,
+          name: x.properties.name,
+        },
       });
     });
     return { type: 'FeatureCollection', features: forMap };
