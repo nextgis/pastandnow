@@ -42,8 +42,8 @@ export class Ngw {
       return fetchNgwLayerFeatures<Point, OralProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 100,
-        filters: [['id1', 'in', [4418, 6687]]],
+        // limit: 100,
+        // filters: [['id1', 'in', [4418, 6687]]],
         fields,
         extensions: [],
       }).then((features) => {
@@ -63,7 +63,7 @@ export class Ngw {
       return fetchNgwLayerItems<Point>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 100,
+        // limit: 100,
         geom: false,
         fields,
         extensions: [],
