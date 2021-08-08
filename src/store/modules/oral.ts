@@ -146,11 +146,14 @@ export class OralState extends VuexModule {
     const feature = features && features[0];
     if (feature) {
       const existActiveTypes = [...(this.activeTypes || [])];
-      if (!existActiveTypes.includes(feature.properties.type)) {
+      if (
+        existActiveTypes.length &&
+        !existActiveTypes.includes(feature.properties.type)
+      ) {
         existActiveTypes.push(feature.properties.type);
+        await this.setActiveTypes([...existActiveTypes]);
+        await this.setTypesFilter([...existActiveTypes]);
       }
-      await this.setActiveTypes([...existActiveTypes]);
-      await this.setTypesFilter([...existActiveTypes]);
       await this.setActiveCity(feature.properties.city);
       const items = [...this.items];
       const exist = items.find((x) => x.id === feature.id);
