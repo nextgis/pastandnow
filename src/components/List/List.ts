@@ -21,7 +21,9 @@ export class List extends Vue {
   }
 
   get items(): OralProperties[] {
-    return oralModule.sortFeatures.map((x) => x.properties);
+    return oralModule.sortFeatures.map((x) => {
+      return { ...x.properties, id: Number(x.id) };
+    });
   }
 
   get filtered(): OralFeature[] {
@@ -52,6 +54,9 @@ export class List extends Vue {
   }
 
   mounted(): void {
+    if (this.detail) {
+      this.onDetailChange(this.detail);
+    }
     this.addPortion();
   }
 

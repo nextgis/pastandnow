@@ -15,7 +15,7 @@ import { getHistoryIcon } from '../../utils/getHistoryIcons';
 
 @Component
 export class OralMap extends Mixins(VueNgwMapbox) {
-  layer!: VectorLayerAdapter;
+  layer?: VectorLayerAdapter;
 
   initZoomSet = false;
 
@@ -82,39 +82,33 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   @Watch('detailItem')
   setSelected(item: OralFeature): void {
     const layer = this.layer;
-    if (item && layer.select) {
-      if (layer.getSelected) {
-        const isAlredySelected = layer
-          .getSelected()
-          .some((x) => x.feature && x.feature.id === item.id);
-        if (isAlredySelected) {
-          return;
+    if (layer) {
+      if (item && layer.select) {
+        if (layer.getSelected) {
+          const isAlredySelected = layer
+            .getSelected()
+            .some((x) => x.feature && x.feature.id === item.id);
+          if (isAlredySelected) {
+            return;
+          }
         }
+        layer.select([['$id', 'eq', item.id]]);
+      } else if (layer.unselect) {
+        // unselect all
+        layer.unselect();
       }
-      layer.select([['$id', 'eq', item.id]]);
-    } else if (layer.unselect) {
-      // unselect all
-      layer.unselect();
     }
   }
 
   @Watch('centerId')
   zoomTo(id: number): void {
-    if (id && this.layer.getLayers) {
-      const layers = this.layer && this.layer.getLayers();
+    const layer = this.layer;
+    if (id && layer && layer.getLayers) {
+      const layers = layer.getLayers();
       if (layers && layers.length) {
-        const layer = layers.find(
-          (x) =>
-            x.feature && x.feature.properties && x.feature.properties.id === id,
-        );
+        const layer = layers.find((x) => x.feature && x.feature.id === id);
         const feature = layer && (layer.feature as Feature<Point>);
-        const lngLat =
-          feature && (feature.geometry.coordinates as [number, number]);
-        if (lngLat) {
-          this.ngwMap.setView(lngLat, 14);
-          // reset zoomTo storage value
-          appModule.zoomTo(null);
-        }
+        feature && this._zoomToFeature(feature);
       }
     }
   }
@@ -125,7 +119,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     });
   }
 
-  drawMarkers(features: OralFeature[]): void {
+  async drawMarkers(features: OralFeature[]): Promise<OralFeature[]> {
     if (!this.layer) {
       const data = this._prepareLayerData(features);
       const adapterOptions: GeoJsonAdapterOptions<OralFeature> = {
@@ -158,13 +152,18 @@ export class OralMap extends Mixins(VueNgwMapbox) {
         },
       };
 
-      this.ngwMap.addGeoJsonLayer(adapterOptions).then((layerId) => {
+      await this.ngwMap.addGeoJsonLayer(adapterOptions).then((layerId) => {
         const l = this.ngwMap.getLayer(layerId) as VectorLayerAdapter;
         this.layer = l;
       });
     } else if (this.layer.propertiesFilter) {
       this.layer.propertiesFilter([['$id', 'in', features.map((x) => x.id)]]);
     }
+    console.log(this.centerId);
+    if (this.centerId) {
+      this.zoomTo(this.centerId);
+    }
+    return features;
   }
 
   zoomToFiltered(): void {
@@ -208,8 +207,18 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     const items = this.filtered;
     if (items && items.length) {
       const _items = JSON.parse(JSON.stringify(items));
-      this.drawMarkers(_items);
+      await this.drawMarkers(_items);
     }
     this.loaded = true;
+  }
+
+  private _zoomToFeature(feature: Feature<Point>) {
+    const lngLat =
+      feature && (feature.geometry.coordinates as [number, number]);
+    if (lngLat) {
+      this.ngwMap.setView(lngLat, 14);
+      // reset zoomTo storage value
+      appModule.zoomTo(null);
+    }
   }
 }

@@ -17,7 +17,7 @@ import {
 
 import { prepareFilterData } from '../scripts/prepareFilterData';
 import config from './config';
-import { connector, Ngw } from './services/ngw';
+import { connector } from './services/ngw';
 import { url } from './services/url';
 import { VueNgwControl } from '@nextgis/vue-ngw-map';
 
@@ -200,16 +200,8 @@ export class Main extends Mixins(WindowSizeMixin) {
     const id = url.get('id');
     if (id !== undefined) {
       try {
-        const features = await Ngw.fetchNgwLayerFeatures<OralProperties>([
-          ['id1', 'eq', id],
-        ]);
-        const feature = features && features[0];
-        if (feature) {
-          await oralModule.setActiveCity(feature.properties.city);
-          await oralModule.setItems([feature]);
-          this.detail = feature;
-          appModule.zoomTo(Number(feature.id));
-        }
+        const feature = await oralModule.setDetailById(id);
+        feature && appModule.zoomTo(Number(feature.id));
       } catch (er) {
         url.remove('id');
       }

@@ -9,6 +9,8 @@ import type {
   OralPhotoProperties,
   LayerMetaItem,
 } from '../../interfaces';
+import { isValidUrl } from '../../utils/isValidUrl';
+import { appModule } from '../../store/modules/app';
 
 const urlify = Urlify.create({ toLower: true });
 
@@ -42,9 +44,33 @@ export class Detail extends Vue {
     });
   }
 
-  getDetail(value: string): undefined | string | number {
-    const v = value as keyof OralProperties;
-    return this.detail ? this.detail[v] : undefined;
+  getDetail(key: string): undefined | string | number {
+    const v = key as keyof OralProperties;
+    let value = this.detail ? this.detail[v] : undefined;
+    if (typeof value === 'string') {
+      value = value.replace(/\[([^[\]]*)\]\((.*?)\)/gm, (m, text, url) => {
+        let url_: string | null = null;
+        if (/^#\d+$/.test(url)) {
+          const id = url.replace('#', '');
+          url_ = window.location.origin + '/?id=' + id;
+          (window as any).openDetail = async (e: string) => {
+            const feature = await oralModule.setDetailById(Number(e));
+            feature && appModule.zoomTo(Number(feature.id));
+          };
+          return `<a target="_blank" onclick="return openDetail(${id})">${
+            text || url
+          }</a>`;
+        }
+        if (isValidUrl(url)) {
+          url_ = url;
+        }
+        if (url_) {
+          return `<a href="${url_}" target="_blank">${text || url}</a>`;
+        }
+        return m;
+      });
+    }
+    return value;
   }
 
   getText(alias: LayerMetaItem): string | number | undefined {

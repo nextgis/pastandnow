@@ -43,6 +43,7 @@ export class Ngw {
         connector,
         resourceId: config.ngwMarkerLayerId,
         limit: 100,
+        filters: [['id1', 'in', [4418, 6687]]],
         fields,
         extensions: [],
       }).then((features) => {

@@ -23,6 +23,7 @@ import type {
   LegendItem,
   LayerMetaItem,
   OralPhotoProperties,
+  OralProperties,
 } from '../../interfaces';
 
 export const ALL_RAYON_STR = 'Все районы';
@@ -137,6 +138,30 @@ export class OralState extends VuexModule {
     return meta;
   }
 
+  @Action
+  async setDetailById(id: number): Promise<OralFeature | undefined> {
+    const features = await Ngw.fetchNgwLayerFeatures<OralProperties>([
+      ['id1', 'eq', id],
+    ]);
+    const feature = features && features[0];
+    if (feature) {
+      const existActiveTypes = [...(this.activeTypes || [])];
+      if (!existActiveTypes.includes(feature.properties.type)) {
+        existActiveTypes.push(feature.properties.type);
+      }
+      await this.setActiveTypes([...existActiveTypes]);
+      await this.setTypesFilter([...existActiveTypes]);
+      await this.setActiveCity(feature.properties.city);
+      const items = [...this.items];
+      const exist = items.find((x) => x.id === feature.id);
+      if (!exist) {
+        await this.setItems([...items, feature]);
+      }
+      this.setDetail(Number(feature.id));
+      return feature;
+    }
+  }
+
   @Action({ commit: '_setPhotos' })
   async getPhotos(): Promise<OralPhotoProperties[]> {
     const photos = await Ngw.getPhotos();
@@ -228,11 +253,7 @@ export class OralState extends VuexModule {
 
   @Action({ commit: '_setDetail' })
   async setDetail(id: number | null): Promise<false | OralFeature | undefined> {
-    const item = this.filtered.find((x: OralFeature) => x.properties.id === id);
-    const detail = this.detailItem;
-    if (detail && detail.id === id) {
-      return false;
-    }
+    const item = this.filtered.find((x: OralFeature) => x.id === id);
     if (id) {
       const feature = await Ngw.fetchNgwLayerFeature(id);
       if (feature) {
@@ -324,7 +345,7 @@ export class OralState extends VuexModule {
     const detail = this.detailItem;
     if (detail) {
       const item = items.find((x: OralFeature) => {
-        const id = x.properties.id;
+        const id = x.id;
         return id === detail.id;
       });
       if (!item) {
