@@ -1,0 +1,29 @@
+# compose file for local development
+# starts backend on 8080 with basic auth "dev:password" and Dev oauth2 provider on port 8084
+# UI on http://127.0.0.1:8080/web
+#
+# start remark42 service - docker-compose -f compose-dev-frontend.yml up
+version: "2"
+
+services:
+  remark42:
+    image: umputun/remark42:latest
+    restart: always
+    container_name: "remark42"
+
+    ports:
+      - "8090:8080" # primary rest server
+      - "8084:8084" # local oauth2 server
+
+    environment:
+      - REMARK_URL=http://127.0.0.1:8090
+      - SITE=pastandnow
+      - SECRET=12345
+      - DEBUG=true
+      # - ADMIN_PASSWD=password
+      # - AUTH_DEV=true # activate local oauth "dev"
+      # - ADMIN_SHARED_ID=dev_user # set admin flag for default user on local oauth2
+      - AUTH_ANON=true
+      # - AUTH_EMAIL_ENABLE=true
+    volumes:
+      - ./var:/srv/var

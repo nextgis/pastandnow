@@ -25,6 +25,7 @@ import type {
   OralPhotoProperties,
   OralProperties,
 } from '../../interfaces';
+import { sortFeatures } from '../utils/sortFeatures';
 
 export const ALL_RAYON_STR = 'Все районы';
 
@@ -91,12 +92,7 @@ export class OralState extends VuexModule {
   }
 
   get sortFeatures(): OralFeature[] {
-    const filtered = [...this.filtered] as OralFeature[];
-    return filtered.sort((a, b) => {
-      const aName = a.properties.name || '';
-      const bName = b.properties.name || '';
-      return aName.toUpperCase() > bName.toUpperCase() ? 1 : -1;
-    });
+    return this.filtered;
   }
 
   @Action({ commit: '_setItems' })
@@ -332,7 +328,7 @@ export class OralState extends VuexModule {
   @Mutation
   protected _setItems(items: OralFeature[]): void {
     this.items = items;
-    this.filtered = items;
+    this.filtered = sortFeatures(items);
   }
 
   @Mutation

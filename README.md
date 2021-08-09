@@ -48,6 +48,16 @@ For more help/guidelines, check README in [vue-ts-cli](https://github.com/wingla
 yarn run prod
 ```
 
+## Comments
+
+### Development
+
+  Docker [instruction](https://remark42.com/)
+
+  ```bash
+  docker-compose -f ./comments/docker-compose.yml up
+  ```
+
 ## Docker
 
 ```bash

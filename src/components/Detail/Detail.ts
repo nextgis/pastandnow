@@ -4,17 +4,19 @@ import { mdiClose } from '@mdi/js';
 import Urlify from 'urlify';
 import { oralModule } from '../../store/modules/oral';
 
+import { isValidUrl } from '../../utils/isValidUrl';
+import { appModule } from '../../store/modules/app';
+import Comments from '../Comments/Comments.vue';
+
 import type {
   OralProperties,
   OralPhotoProperties,
   LayerMetaItem,
 } from '../../interfaces';
-import { isValidUrl } from '../../utils/isValidUrl';
-import { appModule } from '../../store/modules/app';
 
 const urlify = Urlify.create({ toLower: true });
 
-@Component
+@Component({ components: { Comments } })
 export class Detail extends Vue {
   url = 'https://pastandnow.ru';
   dialog = false;
@@ -27,6 +29,10 @@ export class Detail extends Vue {
       return this.detail && x.link_small && x.id_obj === this.detail.id1;
     });
     return photo ? [photo] : [];
+  }
+
+  get id(): string | number | false | undefined {
+    return oralModule.detailItem && oralModule.detailItem.id;
   }
 
   get detail(): OralProperties | false {

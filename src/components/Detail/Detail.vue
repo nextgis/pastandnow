@@ -26,6 +26,9 @@
           </div>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item class="detail-prop-list px-0 pb-2">
+        <Comments v-if="id" :id="id" :key="id"></Comments>
+      </v-list-item>
     </v-list>
 
     <v-dialog class="ma-0 pa-3" v-model="dialog" fullscreen content-class="photo-dialog">

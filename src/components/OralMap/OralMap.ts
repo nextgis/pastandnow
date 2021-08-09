@@ -159,7 +159,6 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     } else if (this.layer.propertiesFilter) {
       this.layer.propertiesFilter([['$id', 'in', features.map((x) => x.id)]]);
     }
-    console.log(this.centerId);
     if (this.centerId) {
       this.zoomTo(this.centerId);
     }
@@ -187,7 +186,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
 
   private _prepareLayerData(features: OralFeature[]): FeatureCollection {
     const forMap: Feature[] = [];
-    features.forEach((x) => {
+    for (const x of features) {
       forMap.push({
         type: x.type,
         id: x.id,
@@ -198,7 +197,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
           name: x.properties.name,
         },
       });
-    });
+    }
     return { type: 'FeatureCollection', features: forMap };
   }
 
