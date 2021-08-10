@@ -4,15 +4,16 @@ import { Component, Watch, Mixins } from 'vue-property-decorator';
 import { NgwMapOptions } from '@nextgis/ngw-map';
 
 import {
-  mdiFormatListBulleted,
-  mdiFilter,
   mdiClose,
-  mdiMessageAlert,
-  mdiMapMarker,
-  mdiChevronRight,
-  mdiArrowLeft,
+  mdiFilter,
   mdiMagnify,
+  mdiMapMarker,
+  mdiArrowLeft,
+  mdiMessageAlert,
+  mdiChevronRight,
+  mdiShareVariant,
   mdiCrosshairsGps,
+  mdiFormatListBulleted,
 } from '@mdi/js';
 
 import { prepareFilterData } from '../scripts/prepareFilterData';
@@ -20,12 +21,12 @@ import config from './config';
 import { connector } from './services/ngw';
 import { url } from './services/url';
 import { VueNgwControl } from '@nextgis/vue-ngw-map';
-
 import List from './components/List/List.vue';
 import { OralMap } from './components/OralMap/OralMap';
-import ItemsFilter from './components/ItemsFilter/ItemsFilter.vue';
+import SelectPlace from './components/SelectPlace/SelectPlace.vue';
 import Detail from './components/Detail/Detail.vue';
 import Legend from './components/Legend/Legend.vue';
+import Share from './components/Share/Share.vue';
 import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
 import FilterPanel from './components/FilterPanel/FilterPanel.vue';
 import { appModule, AppPages } from './store/modules/app';
@@ -39,28 +40,31 @@ const { qmsId, feedbackUrl } = config;
 @Component({
   components: {
     List,
-    OralMap,
-    Legend,
-    ItemsFilter,
+    Share,
     Detail,
-    DrawerContainer,
-    VueNgwControl,
+    Legend,
+    OralMap,
     FilterPanel,
+    SelectPlace,
+    VueNgwControl,
+    DrawerContainer,
   },
 })
 export class Main extends Mixins(WindowSizeMixin) {
   throttleSave!: (value: string) => void;
   legendOpen = true;
+  shareDialog = false;
   svg = {
-    filter: mdiFilter,
-    list: mdiFormatListBulleted,
     close: mdiClose,
-    feedback: mdiMessageAlert,
-    place: mdiMapMarker,
-    chevron_right: mdiChevronRight,
-    arrow_back: mdiArrowLeft,
+    filter: mdiFilter,
     search: mdiMagnify,
+    place: mdiMapMarker,
+    share: mdiShareVariant,
     target: mdiCrosshairsGps,
+    arrow_back: mdiArrowLeft,
+    feedback: mdiMessageAlert,
+    list: mdiFormatListBulleted,
+    chevron_right: mdiChevronRight,
   };
 
   filterPanelOpen = false;

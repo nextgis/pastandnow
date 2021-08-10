@@ -14,7 +14,7 @@ interface CountItem {
 }
 
 @Component
-export class ItemsFilter extends Vue {
+export class SelectPlace extends Vue {
   form = false;
 
   get rayon(): string {
