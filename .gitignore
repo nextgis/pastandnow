@@ -224,3 +224,4 @@ bower_components
 # build
 dist
 /.cache
+/comments/var
