@@ -37,6 +37,18 @@ export default class FilterPanel extends Vue {
     return (types || []).map((name) => ({ name }));
   }
 
+  get allSpecialFilters(): boolean {
+    return this.specialFilters.length === this.specialFilterItems.length;
+  }
+
+  set allSpecialFilters(val: boolean) {
+    if (val) {
+      oralModule.resetSpecialFilter();
+    } else {
+      oralModule.setSpecialFilterSelected([]);
+    }
+  }
+
   @Emit('close')
   close(): boolean {
     return true;

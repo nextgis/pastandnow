@@ -208,6 +208,7 @@ export class Main extends Mixins(WindowSizeMixin) {
     }
     oralModule.getAllItems().then(() => {
       setFilterData();
+      oralModule.resetSpecialFilter();
       oralModule.loadStories().then(setFilterData);
     });
     oralModule.getPhotos();

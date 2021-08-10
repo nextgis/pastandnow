@@ -184,12 +184,16 @@ export class OralState extends VuexModule {
     }
     this.setActiveRayon(ALL_RAYON_STR);
     this.setListSearchText('');
-    this.setSpecialFilterSelected(
-      [],
-      // this.meta.filter((x) => x.type === 'Special').map((x) => x.value)
-    );
+    this.resetSpecialFilter();
     this.setActiveTypes(this.legendItems.map((x) => x.name));
     return filters;
+  }
+
+  @Action
+  resetSpecialFilter(): void {
+    this.setSpecialFilterSelected(
+      this.meta.filter((x) => x.type === 'Special').map((x) => x.value),
+    );
   }
 
   @Action({ commit: '_updateFilter' })
@@ -220,7 +224,7 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_updateFilter' })
-  async setSpecialFilter(selected: string[] | undefined): Promise<OralFilter> {
+  async setSpecialFilter(selected: string[] = []): Promise<OralFilter> {
     if (!selected) {
       return { ...this.filters, specialFilter: undefined };
     }

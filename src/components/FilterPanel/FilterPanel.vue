@@ -1,7 +1,18 @@
 <template>
   <div class="filter-panel">
     <h5 class="text--secondary mb-1">СПЕЦИАЛЬНЫЕ ФИЛЬТРЫ</h5>
-    <v-checkbox class="filter-panel__checkbox mt-0"
+    <v-checkbox
+      class="filter-panel__checkbox mt-0"
+      dense
+      hide-details
+      key="allSpecialFilters"
+      label="Все"
+      v-model="allSpecialFilters"
+      :indeterminate="specialFilters.length && specialFilters.length < specialFilterItems.length"
+    ></v-checkbox>
+    <v-divider></v-divider>
+    <v-checkbox
+      class="filter-panel__checkbox mt-0"
       v-for="v in specialFilterItems"
       v-model="specialFilters"
       dense
@@ -22,8 +33,10 @@
       multiple
     >
       <template v-slot:selection="data">
-        <v-chip class="filter-panel__chip primary--text my-1 mx-0"
-          small label
+        <v-chip
+          class="filter-panel__chip primary--text my-1 mx-0"
+          small
+          label
           v-bind="data.attrs"
           :input-value="data.selected"
           close
@@ -36,7 +49,7 @@
       <template v-slot:item="data">
         <template>
           <v-list-item-content>
-            {{data.item.name}}
+            {{ data.item.name }}
           </v-list-item-content>
         </template>
       </template>
@@ -48,17 +61,17 @@
 </script>
 
 <style lang="scss" scoped>
-  .filter-panel{
-    padding: 0 20px 20px;
+.filter-panel {
+  padding: 0 20px 20px;
 
-    &__checkbox{
-      margin-left: -4px;
-    }
+  &__checkbox {
+    margin-left: -4px;
+  }
 
-    &__chip{
-      &::v-deep .v-icon{
-        color: inherit;
-      }
+  &__chip {
+    &::v-deep .v-icon {
+      color: inherit;
     }
   }
+}
 </style>
