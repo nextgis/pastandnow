@@ -133,17 +133,17 @@ module.exports = (env, argv) => {
   // plugins.push(new BundleAnalyzerPlugin());
 
   if (isProd) {
-    const zopfli = require('@gfx/zopfli');
+    // const zopfli = require('@gfx/zopfli');
     plugins = plugins.concat([
-      new CompressionPlugin({
-        cache: true,
-        compressionOptions: {
-          numiterations: 15,
-        },
-        algorithm(input, compressionOptions, callback) {
-          return zopfli.gzip(input, compressionOptions, callback);
-        },
-      }),
+      // new CompressionPlugin({
+      //   cache: true,
+      //   compressionOptions: {
+      //     numiterations: 15,
+      //   },
+      //   algorithm(input, compressionOptions, callback) {
+      //     return zopfli.gzip(input, compressionOptions, callback);
+      //   },
+      // }),
       new MiniCssExtractPlugin(),
     ]);
   }
