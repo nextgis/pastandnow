@@ -1,9 +1,9 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { CirclePaint, Expression } from '@nextgis/paint';
+import { PathPaint, Expression } from '@nextgis/paint';
 
 @Component
 export default class Legend extends Vue {
-  @Prop({ type: Object }) paint!: CirclePaint;
+  @Prop({ type: Object }) paint!: PathPaint;
 
   get style(): Record<string, string | number> {
     return {

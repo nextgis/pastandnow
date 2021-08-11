@@ -92,7 +92,9 @@ export class OralState extends VuexModule {
   }
 
   get sortFeatures(): OralFeature[] {
-    return this.filtered;
+    const filtered = [...this.filtered] as OralFeature[];
+    // return filtered;
+    return sortFeatures(filtered);
   }
 
   @Action({ commit: '_setItems' })
@@ -136,10 +138,7 @@ export class OralState extends VuexModule {
 
   @Action
   async setDetailById(id: number): Promise<OralFeature | undefined> {
-    const features = await Ngw.fetchNgwLayerFeatures<OralProperties>([
-      ['id1', 'eq', id],
-    ]);
-    const feature = features && features[0];
+    const feature = await Ngw.fetchNgwLayerFeature(id);
     if (feature) {
       const existActiveTypes = [...(this.activeTypes || [])];
       if (
@@ -152,11 +151,13 @@ export class OralState extends VuexModule {
       }
       await this.setActiveCity(feature.properties.city);
       const items = [...this.items];
-      const exist = items.find((x) => x.id === feature.id);
+      const exist = items.find(
+        (x) => x.properties.id1 === feature.properties.id1,
+      );
       if (!exist) {
         await this.setItems([...items, feature]);
       }
-      this.setDetail(Number(feature.id));
+      this.setDetail(Number(feature.properties.id1));
       return feature;
     }
   }
@@ -255,10 +256,14 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_setDetail' })
-  async setDetail(id: number | null): Promise<false | OralFeature | undefined> {
-    const item = this.filtered.find((x: OralFeature) => x.id === id);
-    if (id) {
-      const feature = await Ngw.fetchNgwLayerFeature(id);
+  async setDetail(
+    id1: number | null,
+  ): Promise<false | OralFeature | undefined> {
+    const item = this.filtered.find(
+      (x: OralFeature) => x.properties.id1 === id1,
+    );
+    if (id1) {
+      const feature = await Ngw.fetchNgwLayerFeature(id1);
       if (feature) {
         return feature;
       }
@@ -332,7 +337,6 @@ export class OralState extends VuexModule {
   @Mutation
   protected _setItems(items: OralFeature[]): void {
     this.items = items;
-    this.filtered = sortFeatures(items);
   }
 
   @Mutation

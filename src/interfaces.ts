@@ -1,8 +1,21 @@
 import { PropertiesFilter } from '@nextgis/properties-filter';
 import { CirclePaint } from '@nextgis/paint';
-import { Point, Feature, FeatureCollection } from 'geojson';
+import type {
+  Point,
+  Feature,
+  FeatureCollection,
+  LineString,
+  MultiPolygon,
+} from 'geojson';
 
-export type OralFeature = Feature<Point, OralProperties>;
+export type OralPointFeature = Feature<Point, OralProperties>;
+export type OralLineFeature = Feature<LineString, OralProperties>;
+export type OralPolygonFeature = Feature<MultiPolygon, OralProperties>;
+
+export type OralFeature =
+  | OralPointFeature
+  | OralLineFeature
+  | OralPolygonFeature;
 
 export type OralFeatureCollection = FeatureCollection<Point, OralProperties>;
 
@@ -16,6 +29,8 @@ export interface LegendItem {
 export interface NarrativeTypeItem {
   name: string;
 }
+
+export type OralGeomType = 'point' | 'line' | 'poly';
 
 export interface OralProperties {
   id: number;
@@ -37,7 +52,7 @@ export interface OralProperties {
   descript2?: string;
   lat: number;
   rayon: string;
-  geo?: string;
+  geo?: OralGeomType | null;
   name?: string;
   narrativ_b?: string;
   addr?: string;
@@ -60,7 +75,7 @@ export interface OralPhotoProperties {
 
 export interface LayerMetaItem {
   text: string;
-  value: string;
+  value: keyof OralProperties;
   list?: boolean;
   type?: 'NarratorLink' | 'Special' | 'Story';
   detail?: boolean;

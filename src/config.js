@@ -3,6 +3,8 @@ export default {
   '#qmsId': 3033,
   qmsId: 448,
   ngwMarkerLayerId: 14,
+  ngwLineLayerId: 37,
+  ngwPolygonLayerId: 39,
   layerWithPhotos: 12,
   districtsLayer: 9,
   feedbackUrl:

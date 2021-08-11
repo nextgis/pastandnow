@@ -1,9 +1,9 @@
-import { Feature } from 'geojson';
 import { CirclePaint } from '@nextgis/paint';
-import { getHistoryPaint } from './getHistoryPaint';
+import { getHistoryPaint, getPathPaint } from './getHistoryPaint';
+import { OralFeature } from '../interfaces';
 
-export function getHistoryIcon(
-  feature: Feature,
+export function getOralPaint(
+  feature: OralFeature,
   options?: CirclePaint,
   forLegend = false,
 ): CirclePaint {

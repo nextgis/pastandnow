@@ -142,8 +142,8 @@ export class Main extends Mixins(WindowSizeMixin) {
   }
 
   set detail(value: false | OralFeature) {
-    const id = value && value.id;
-    oralModule.setDetail(id ? Number(id) : null);
+    const id1 = value && value.properties.id1;
+    oralModule.setDetail(id1 ? Number(id1) : null);
   }
 
   get module(): OralState {

@@ -5,14 +5,10 @@ import NgwConnector, {
 } from '@nextgis/ngw-connector';
 import { PropertiesFilter } from '@nextgis/properties-filter';
 import CancelablePromise from '@nextgis/cancelable-promise';
-import {
-  fetchNgwLayerFeature,
-  fetchNgwLayerFeatures,
-  fetchNgwLayerItems,
-} from '@nextgis/ngw-kit';
+import { fetchNgwLayerFeatures, fetchNgwLayerItems } from '@nextgis/ngw-kit';
 
 import config from '../config';
-import type { OralFeature } from '../interfaces';
+import type { OralPointFeature } from '../interfaces';
 import type {
   OralProperties,
   OralPhotoProperties,
@@ -42,17 +38,12 @@ export class Ngw {
       return fetchNgwLayerFeatures<Point, OralProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 100,
-        // filters: [['id1', 'in', [4418, 6687]]],
+        limit: 7,
+        filters: [
+          ['id1', 'in', [4418, 6687, 100001, 100002, 100003, 100004, 100005]],
+        ],
         fields,
         extensions: [],
-      }).then((features) => {
-        features.forEach((x, i) => {
-          if (x.id) {
-            x.properties.id = Number(x.id);
-          }
-        });
-        return features;
       });
     });
   }
@@ -63,7 +54,7 @@ export class Ngw {
       return fetchNgwLayerItems<Point>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 100,
+        limit: 7,
         geom: false,
         fields,
         extensions: [],
@@ -82,12 +73,14 @@ export class Ngw {
   }
 
   static fetchNgwLayerFeature(
-    featureId: number,
-  ): CancelablePromise<OralFeature> {
-    return fetchNgwLayerFeature({
+    id1: number,
+  ): CancelablePromise<OralPointFeature> {
+    return fetchNgwLayerFeatures<Point, OralProperties>({
       resourceId: config.ngwMarkerLayerId,
-      featureId,
       connector,
+      filters: [['id1', 'eq', id1]],
+    }).then((x) => {
+      return x[0];
     });
   }
 
@@ -121,6 +114,13 @@ export class Ngw {
         detail: false,
         list: true,
         search: true,
+      },
+      {
+        text: 'Тип геометрии',
+        value: 'geo',
+        detail: true,
+        list: true,
+        search: false,
       },
       {
         text: 'Статус объекта',

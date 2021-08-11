@@ -26,13 +26,13 @@ export class Detail extends Vue {
 
   get photos(): OralPhotoProperties[] {
     const photo = oralModule.photos.find((x: OralPhotoProperties) => {
-      return this.detail && x.link_small && x.id_obj === this.detail.id1;
+      return this.detail && x.link_small && x.id_obj === this.detail.id;
     });
     return photo ? [photo] : [];
   }
 
   get id(): string | number | false | undefined {
-    return oralModule.detailItem && oralModule.detailItem.id;
+    return oralModule.detailItem && oralModule.detailItem.properties.id1;
   }
 
   get detail(): OralProperties | false {
@@ -50,20 +50,20 @@ export class Detail extends Vue {
     });
   }
 
-  getDetail(key: string): undefined | string | number {
+  getDetail(key: string): undefined | string | number | null {
     const v = key as keyof OralProperties;
     let value = this.detail ? this.detail[v] : undefined;
     if (typeof value === 'string') {
       value = value.replace(/\[([^[\]]*)\]\((.*?)\)/gm, (m, text, url) => {
         let url_: string | null = null;
         if (/^#\d+$/.test(url)) {
-          const id = url.replace('#', '');
-          url_ = window.location.origin + '/?id=' + id;
+          const id1 = url.replace('#', '');
+          url_ = window.location.origin + '/?id=' + id1;
           (window as any).openDetail = async (e: string) => {
             const feature = await oralModule.setDetailById(Number(e));
-            feature && appModule.zoomTo(Number(feature.id));
+            feature && appModule.zoomTo(Number(feature.properties.id1));
           };
-          return `<a target="_blank" onclick="return openDetail(${id})">${
+          return `<a target="_blank" onclick="return openDetail(${id1})">${
             text || url
           }</a>`;
         }
@@ -79,7 +79,7 @@ export class Detail extends Vue {
     return value;
   }
 
-  getText(alias: LayerMetaItem): string | number | undefined {
+  getText(alias: LayerMetaItem): string | number | undefined | null {
     if (alias.type) {
       const value = this.getDetail(alias.value);
       if (alias.type === 'NarratorLink') {

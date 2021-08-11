@@ -22,7 +22,7 @@ export class List extends Vue {
 
   get items(): OralProperties[] {
     return oralModule.sortFeatures.map((x) => {
-      return { ...x.properties, id: Number(x.id) };
+      return x.properties;
     });
   }
 
@@ -39,9 +39,12 @@ export class List extends Vue {
   }
 
   @Watch('detail')
-  onDetailChange(detail?: OralFeature): void {
+  @Watch('items')
+  @Watch('filtered')
+  onDetailChange(): void {
+    const detail = this.detail;
     const index = detail
-      ? this.items.findIndex((x) => x.id === detail.id)
+      ? this.portion.findIndex((x) => x.id1 === detail.properties.id1)
       : null;
     this.active = index;
   }
@@ -55,7 +58,7 @@ export class List extends Vue {
 
   mounted(): void {
     if (this.detail) {
-      this.onDetailChange(this.detail);
+      this.onDetailChange();
     }
     this.addPortion();
   }
@@ -78,12 +81,14 @@ export class List extends Vue {
     const portionsLength = this.portion.length;
     const itemsLength = items.length;
     if (portionsLength < itemsLength) {
+      const portions = [...this.portion];
       const addLength = portionsLength + this.portionCount;
       const len = addLength > itemsLength ? itemsLength : addLength;
       for (let fry = portionsLength; fry < len; fry++) {
         const portion = items[fry];
-        this.portion.push(portion);
+        portions.push(portion);
       }
+      this.portion = portions;
     }
   }
 }
