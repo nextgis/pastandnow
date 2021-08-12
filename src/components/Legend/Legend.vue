@@ -2,7 +2,7 @@
   <div class="legend" dense>
     <div class="legend__item" v-for="(item, i) in legendItems" :key="i">
       <div class="legend__item-label">
-        <SymbolComponent class="mr-2" :paint="item.icon"></SymbolComponent>
+        <SymbolComponent class="mr-2" :paint="item.icon" :geo="item.geo"></SymbolComponent>
         <span v-text="capitalize(item.text)" class=""></span>
       </div>
       <v-switch

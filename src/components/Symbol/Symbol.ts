@@ -1,9 +1,11 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { PathPaint, Expression } from '@nextgis/paint';
+import { OralGeomType } from '../../interfaces';
 
 @Component
 export default class Legend extends Vue {
   @Prop({ type: Object }) paint!: PathPaint;
+  @Prop({ type: String, default: 'point' }) geo?: OralGeomType;
 
   get style(): Record<string, string | number> {
     return {

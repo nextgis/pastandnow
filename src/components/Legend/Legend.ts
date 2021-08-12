@@ -4,10 +4,13 @@ import { capitalize } from '@nextgis/utils';
 import { oralModule } from '../../store/modules/oral';
 
 import SymbolComponent from '../Symbol/Symbol.vue';
+import type { PathPaint } from '@nextgis/paint';
+import type { OralGeomType } from '../../interfaces';
 
 interface LegendItem {
   text: string;
-  icon: any;
+  icon: PathPaint;
+  geo?: OralGeomType;
 }
 
 @Component({ components: { SymbolComponent } })
@@ -18,6 +21,7 @@ export default class Legend extends Vue {
       .map((x) => {
         return {
           text: x.name,
+          // geo: x.geo,
           icon: x.item,
         };
       });

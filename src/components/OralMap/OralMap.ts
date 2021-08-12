@@ -5,30 +5,24 @@ import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 import { fetchNgwLayerFeatures } from '@nextgis/ngw-kit';
 
 import config from '../../config';
-import { oralModule } from '../../store/modules/oral';
 import { appModule } from '../../store/modules/app';
+import { oralModule } from '../../store/modules/oral';
 import { getOralPaint } from '../../utils/getHistoryIcons';
 
+import type { Feature, Point, FeatureCollection } from 'geojson';
 import type {
-  Feature,
-  Point,
-  FeatureCollection,
-  LineString,
-  MultiPolygon,
-} from 'geojson';
-import type {
-  FeatureLayerAdapter,
   GeoJsonAdapterOptions,
   VectorAdapterLayerType,
+  FeatureLayerAdapter,
   VectorLayerAdapter,
 } from '@nextgis/webmap';
 import type {
   OralFeature,
   OralGeomType,
+  OralProperties,
   OralLineFeature,
   OralPointFeature,
   OralPolygonFeature,
-  OralProperties,
 } from '../../interfaces';
 import { connector } from '../../services/ngw';
 import { getPathPaint } from '../../utils/getHistoryPaint';
@@ -41,17 +35,17 @@ interface OralFeatures {
   poly: OralPolygonFeature[];
 }
 interface OralLayers {
-  point: FeatureLayerAdapter<OralProperties, Point> | null;
-  line: FeatureLayerAdapter<OralProperties, LineString> | null;
-  poly: FeatureLayerAdapter<OralProperties, MultiPolygon> | null;
+  point: string;
+  line: string;
+  poly: string;
 }
 
 @Component
 export class OralMap extends Mixins(VueNgwMapbox) {
   layers: OralLayers = {
-    point: null,
-    line: null,
-    poly: null,
+    point: '',
+    line: '',
+    poly: '',
   };
 
   initZoomSet = false;
@@ -60,7 +54,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
 
   private loaded = false;
 
-  get filtered(): OralFeature[] {
+  get filtered(): OralPointFeature[] {
     return oralModule.filtered;
   }
 
@@ -117,36 +111,68 @@ export class OralMap extends Mixins(VueNgwMapbox) {
 
   @Watch('detailItem')
   setSelected(item: OralFeature): void {
-    const layer = this.layers;
-    // if (layer) {
-    //   if (item && layer.select) {
-    //     if (layer.getSelected) {
-    //       const isAlredySelected = layer
-    //         .getSelected()
-    //         .some((x) => x.feature && x.feature.id === item.id);
-    //       if (isAlredySelected) {
-    //         return;
-    //       }
-    //     }
-    //     layer.select([['$id', 'eq', item.id]]);
-    //   } else if (layer.unselect) {
-    //     // unselect all
-    //     layer.unselect();
-    //   }
-    // }
+    const isAlreadySelected = (l: FeatureLayerAdapter<OralProperties>) => {
+      return (
+        l.getSelected &&
+        l
+          .getSelected()
+          .some(
+            (x) =>
+              x.feature &&
+              x.feature.properties &&
+              x.feature.properties.id1 === item.properties.id1,
+          )
+      );
+    };
+    const someLayerSelected = () =>
+      this._forEachGeomLayer(({ layer }) => {
+        const a = isAlreadySelected(layer);
+        return a;
+      });
+    if (item) {
+      if (someLayerSelected()) {
+        return;
+      }
+      const type = item.properties.geo || 'point';
+      const layer = this.ngwMap.getLayer(
+        type,
+      ) as FeatureLayerAdapter<OralProperties>;
+      if (layer) {
+        if (layer.select) {
+          layer.select([['id1', 'eq', item.properties.id1]]);
+        } else if (layer.unselect) {
+          // unselect all
+          layer.unselect();
+        }
+      }
+    } else {
+      this._forEachGeomLayer(({ layer }) => {
+        layer.unselect && layer.unselect();
+      });
+    }
   }
 
   @Watch('centerId')
   zoomTo(id: number): void {
-    const layer = this.layers;
-    // if (id && layer && layer.getLayers) {
-    //   const layers = layer.getLayers();
-    //   if (layers && layers.length) {
-    //     const layer = layers.find((x) => x.feature && x.feature.id === id);
-    //     const feature = layer && (layer.feature as Feature<Point>);
-    //     feature && this._zoomToFeature(feature);
-    //   }
-    // }
+    console.log(id);
+    if (id) {
+      this._forEachGeomLayer(({ layer }) => {
+        if (id && layer && layer.getLayers) {
+          const layers = layer.getLayers();
+          if (layers && layers.length) {
+            const layer = layers.find(
+              (x) => x.feature && x.feature.properties.id1 === id,
+            );
+            const feature = layer && (layer.feature as Feature<Point>);
+            if (feature) {
+              this._zoomToFeature(feature);
+              return true;
+            }
+          }
+        }
+      });
+      appModule.zoomTo(null);
+    }
   }
 
   async mounted(): Promise<void> {
@@ -157,7 +183,9 @@ export class OralMap extends Mixins(VueNgwMapbox) {
 
   async drawOralLayers(features: OralPointFeature[]): Promise<OralFeature[]> {
     const geoms: OralGeomType[] = ['poly', 'line', 'point'];
-    const oralFeatures = await this._getOralFeatures(features);
+    const oralFeatures = await this._getOralFeatures(
+      JSON.parse(JSON.stringify(features)),
+    );
     for (const g of geoms) {
       await this._drawOralLayer(g, oralFeatures[g]);
     }
@@ -169,26 +197,53 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   }
 
   zoomToFiltered(): void {
-    const layer = this.layers;
-    // if (layer && layer.getLayers) {
-    //   const layers = layer.getLayers();
-    //   const features = layers
-    //     .filter((x) => {
-    //       return x.visible;
-    //     })
-    //     .map((x) => x.feature);
-    //   if (features.length) {
-    //     const extent = bbox({
-    //       type: 'FeatureCollection',
-    //       features,
-    //     });
-    //     this.ngwMap.fitBounds(extent, { maxZoom: 16, padding: 20 });
-    //   }
-    // }
+    const features: Feature[] = [];
+    this._forEachGeomLayer(({ layer }) => {
+      if (layer && layer.getLayers) {
+        const layers = layer.getLayers();
+        for (const x of layers) {
+          if (x.feature && x.visible) {
+            features.push(x.feature);
+          }
+        }
+      }
+    });
+    if (features.length) {
+      const extent = bbox({
+        type: 'FeatureCollection',
+        features,
+      });
+      this.ngwMap.fitBounds(extent, { maxZoom: 16, padding: 20 });
+    }
+  }
+
+  private _forEachGeomLayer(
+    cb: (opt: {
+      layer: FeatureLayerAdapter<OralProperties>;
+      geo: OralGeomType;
+    }) => boolean | void,
+  ): boolean {
+    const geoms: OralGeomType[] = ['poly', 'line', 'point'];
+    for (const geo of geoms) {
+      const layerId = this.layers[geo];
+      const layer = this.ngwMap.getLayer(
+        layerId,
+      ) as FeatureLayerAdapter<OralProperties>;
+      if (layer) {
+        const isStop = cb({ layer, geo });
+        if (isStop) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private async _drawOralLayer(geo: OralGeomType, features: OralFeature[]) {
-    const layer = this.layers[geo];
+    const layerId = this.layers[geo];
+    const layer = this.ngwMap.getLayer(
+      layerId,
+    ) as FeatureLayerAdapter<OralProperties>;
     if (!layer) {
       const typeAlias: Record<OralGeomType, VectorAdapterLayerType> = {
         point: 'point',
@@ -197,19 +252,20 @@ export class OralMap extends Mixins(VueNgwMapbox) {
       };
       const data = this._prepareLayerData(features, geo);
       const adapterOptions: GeoJsonAdapterOptions<OralFeature> = {
+        id: geo,
         data,
         type: typeAlias[geo] || 'point',
         paint: (feature) => {
           const geo = feature.properties.geo;
           if (geo && geo !== 'point') {
-            return getPathPaint(feature, { fillOpacity: 0.3 }, true);
+            return getPathPaint(feature, { weight: 2, fillOpacity: 0.4 }, true);
           }
           return getOralPaint(feature, { radius: 8 }, true);
         },
         selectedPaint: (feature) => {
           const geo = feature.properties.geo;
           if (geo && geo !== 'point') {
-            return getPathPaint(feature, { fillOpacity: 0.8 }, true);
+            return getPathPaint(feature, { weight: 4, fillOpacity: 0.8 });
           }
           return getOralPaint(feature, {
             radius: 13,
@@ -234,27 +290,13 @@ export class OralMap extends Mixins(VueNgwMapbox) {
         },
       };
 
-      // if (geo !== 'point') {
-      //   adapterOptions.paint = {
-      //     fill: true,
-      //     color: 'red',
-      //     opacity: 0.3,
-      //     type: 'path',
-      //   };
-      //   adapterOptions.selectedPaint = { opacity: 0.3 };
-      // }
-
-      await this.ngwMap.addGeoJsonLayer(adapterOptions).then((layerId) => {
-        const l = this.ngwMap.getLayer(layerId) as FeatureLayerAdapter<
-          OralProperties,
-          any
-        >;
-        this.layers[geo] = l;
+      await this.ngwMap.addGeoJsonLayer(adapterOptions).then(() => {
+        this.layers[geo] = geo;
       });
     } else if (layer.propertiesFilter) {
-      // layer.propertiesFilter([
-      //   ['id1', 'in', features.map((x) => x.properties.id1)],
-      // ]);
+      layer.propertiesFilter([
+        ['id1', 'in', features.map((x) => x.properties.id1)],
+      ]);
     }
   }
 
@@ -326,7 +368,6 @@ export class OralMap extends Mixins(VueNgwMapbox) {
         id: x.id,
         geometry: x.geometry,
         properties: {
-          id: x.id,
           id1: x.properties.id1,
           type: x.properties.type,
           name: x.properties.name,
@@ -341,19 +382,22 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     await this.ngwMap.addNgwLayer({ resource: config.districtsLayer });
     const items = this.filtered;
     if (items && items.length) {
-      const _items = JSON.parse(JSON.stringify(items));
-      await this.drawOralLayers(_items);
+      await this.drawOralLayers(items);
     }
     this.loaded = true;
   }
 
-  private _zoomToFeature(feature: Feature<Point>) {
-    const lngLat =
-      feature && (feature.geometry.coordinates as [number, number]);
-    if (lngLat) {
-      this.ngwMap.setView(lngLat, 14);
-      // reset zoomTo storage value
-      appModule.zoomTo(null);
+  private _zoomToFeature(feature: Feature) {
+    if (feature.geometry.type === 'Point') {
+      const lngLat =
+        feature && (feature.geometry.coordinates as [number, number]);
+      if (lngLat) {
+        this.ngwMap.setView(lngLat, 15);
+        // reset zoomTo storage value
+      }
+    } else {
+      const extent = bbox(feature);
+      this.ngwMap.fitBounds(extent, { maxZoom: 15 });
     }
   }
 }

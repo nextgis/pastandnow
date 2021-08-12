@@ -1,5 +1,5 @@
 import { CirclePaint } from '@nextgis/paint';
-import { getHistoryPaint, getPathPaint } from './getHistoryPaint';
+import { getHistoryPaint } from './getHistoryPaint';
 import { OralFeature } from '../interfaces';
 
 export function getOralPaint(

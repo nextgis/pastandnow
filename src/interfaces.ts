@@ -1,5 +1,5 @@
-import { PropertiesFilter } from '@nextgis/properties-filter';
-import { CirclePaint } from '@nextgis/paint';
+import type { PropertiesFilter } from '@nextgis/properties-filter';
+import type { PathPaint } from '@nextgis/paint';
 import type {
   Point,
   Feature,
@@ -23,7 +23,7 @@ export type OralFilter = Record<string, PropertiesFilter | undefined>;
 
 export interface LegendItem {
   name: string;
-  item: CirclePaint;
+  item: PathPaint;
 }
 
 export interface NarrativeTypeItem {

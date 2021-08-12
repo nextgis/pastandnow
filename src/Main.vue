@@ -236,7 +236,7 @@
             </div>
             <v-divider class="mx-1 my-2" inset vertical></v-divider>
             <div class="bottom-buttons__item">
-              <v-btn text @click="zoomTo = detail.id" color="primary">
+              <v-btn text @click="zoomTo = detail.properties.id1" color="primary">
                 <v-icon left>{{ svg.target }}</v-icon>
                 На карте
               </v-btn>

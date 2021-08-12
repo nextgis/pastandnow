@@ -1,5 +1,5 @@
 import { CirclePaint, PathPaint } from '@nextgis/paint';
-import { OralFeature } from '../interfaces';
+import { OralFeature, OralProperties } from '../interfaces';
 import { oralModule } from '../store/modules/oral';
 import { featureStyleKeys, featureStyles } from './featureStyleKeys';
 
@@ -9,12 +9,12 @@ export function getPathPaint(
   forLegend = false,
 ): PathPaint {
   const circle = getHistoryPaint(feature.properties, {}, forLegend);
-  const { color } = circle;
-  return { color, ...options };
+  const { color, strokeColor, stroke } = circle;
+  return { color, strokeColor, stroke, ...options };
 }
 
 export function getHistoryPaint(
-  properties?: Record<string, any> | null,
+  properties?: OralProperties | null,
   options?: CirclePaint,
   forLegend = false,
 ): CirclePaint {
@@ -40,7 +40,8 @@ export function getHistoryPaint(
     ...options,
   };
   if (style && styleId && forLegend) {
-    oralModule.setLegend({ name: styleId, item: paint });
+    const geo = properties?.geo || 'point';
+    oralModule.setLegend({ name: styleId, item: paint as PathPaint, geo });
   }
   return paint;
 }

@@ -6,26 +6,27 @@ import {
   getModule,
   MutationAction,
 } from 'vuex-module-decorators';
-import { CirclePaint } from '@nextgis/paint';
 import {
   PropertiesFilter,
   featureFilter,
   PropertyFilter,
 } from '@nextgis/properties-filter';
 
-import store from '../index';
-import { Ngw } from '../../services/ngw';
 import { FilterData } from '../../../scripts/FilterData';
+import { Ngw } from '../../services/ngw';
+import store from '../index';
+import { sortFeatures } from '../utils/sortFeatures';
 
+import type { PathPaint } from '@nextgis/paint';
 import type {
   OralFeature,
   OralFilter,
   LegendItem,
   LayerMetaItem,
+  OralPointFeature,
   OralPhotoProperties,
-  OralProperties,
+  OralGeomType,
 } from '../../interfaces';
-import { sortFeatures } from '../utils/sortFeatures';
 
 export const ALL_RAYON_STR = 'Все районы';
 
@@ -40,8 +41,8 @@ export interface FilterProperties {
 
 @Module({ dynamic: true, store, name: 'oral' })
 export class OralState extends VuexModule {
-  items: OralFeature[] = [];
-  filtered: OralFeature[] = [];
+  items: OralPointFeature[] = [];
+  filtered: OralPointFeature[] = [];
   photos: OralPhotoProperties[] = [];
   meta: LayerMetaItem[] = [];
   detailItem: OralFeature | false = false;
@@ -56,7 +57,8 @@ export class OralState extends VuexModule {
 
   legendItems: Array<{
     name: string;
-    item: CirclePaint;
+    geo: OralGeomType;
+    item: PathPaint;
   }> = [];
 
   filterData: FilterData = {
@@ -251,7 +253,11 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_setLegend' })
-  setLegend(legendItem: { name: string; item: CirclePaint }): LegendItem {
+  setLegend(legendItem: {
+    name: string;
+    item: PathPaint;
+    geo: OralGeomType;
+  }): LegendItem {
     return legendItem;
   }
 
@@ -335,13 +341,13 @@ export class OralState extends VuexModule {
   }
 
   @Mutation
-  protected _setItems(items: OralFeature[]): void {
+  protected _setItems(items: OralPointFeature[]): void {
     this.items = items;
   }
 
   @Mutation
   protected _updateFilter(filters: FilterProperties): void {
-    const items: OralFeature[] = this.items.filter((x) =>
+    const items: OralPointFeature[] = this.items.filter((x) =>
       featureFilter(
         x,
         Object.values(filters).filter((x) => x),
@@ -378,7 +384,11 @@ export class OralState extends VuexModule {
   }
 
   @Mutation
-  protected _setLegend(legendItem: { name: string; item: CirclePaint }): void {
+  protected _setLegend(legendItem: {
+    name: string;
+    item: PathPaint;
+    geo: OralGeomType;
+  }): void {
     const exist = this.legendItems.find((x) => x.name === legendItem.name);
     if (!exist) {
       this.legendItems.push(legendItem);

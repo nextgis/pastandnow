@@ -105,8 +105,8 @@ export class Main extends Mixins(WindowSizeMixin) {
     return appModule.centerId;
   }
 
-  set zoomTo(value: number | null) {
-    appModule.zoomTo(value);
+  set zoomTo(id1: number | null) {
+    appModule.zoomTo(id1);
   }
 
   get detailDrawer(): boolean {
@@ -205,7 +205,7 @@ export class Main extends Mixins(WindowSizeMixin) {
     if (id !== undefined) {
       try {
         const feature = await oralModule.setDetailById(id);
-        feature && appModule.zoomTo(Number(feature.id));
+        feature && appModule.zoomTo(Number(feature.properties.id1));
       } catch (er) {
         url.remove('id');
       }

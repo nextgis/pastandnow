@@ -10,6 +10,7 @@
         >
           <SymbolComponent
             :paint="getItemPaint(item)"
+            :geo="item.geo || 'point'"
             class="mr-2 mt-2 list-item-icon"
           ></SymbolComponent>
           <v-list-item-content>
