@@ -154,7 +154,6 @@ export class OralMap extends Mixins(VueNgwMapbox) {
 
   @Watch('centerId')
   zoomTo(id: number): void {
-    console.log(id);
     if (id) {
       this._forEachGeomLayer(({ layer }) => {
         if (id && layer && layer.getLayers) {
