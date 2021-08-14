@@ -49,6 +49,7 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   };
 
   initZoomSet = false;
+  zoomToFilteredFlag = false;
 
   selected!: VectorLayerAdapter;
 
@@ -101,10 +102,8 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   onFiltersChange(activeCity: string, oldCity: string): void {
     if (this.loaded) {
       if (activeCity !== oldCity) {
-        const watcher = this.$watch('filtered', () => {
-          this.zoomToFiltered();
-          watcher();
-        });
+        this._removeOralLayers();
+        this.zoomToFilteredFlag = true;
       }
     }
   }
@@ -188,7 +187,10 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     for (const g of geoms) {
       await this._drawOralLayer(g, oralFeatures[g]);
     }
-
+    if (this.zoomToFilteredFlag) {
+      this.zoomToFiltered();
+      this.zoomToFilteredFlag = false;
+    }
     if (this.centerId) {
       this.zoomTo(this.centerId);
     }
@@ -213,6 +215,12 @@ export class OralMap extends Mixins(VueNgwMapbox) {
         features,
       });
       this.ngwMap.fitBounds(extent, { maxZoom: 16, padding: 20 });
+    }
+  }
+
+  private _removeOralLayers() {
+    for (const l in this.layers) {
+      this.ngwMap.removeLayer(l);
     }
   }
 
