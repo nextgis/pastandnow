@@ -8,9 +8,9 @@
       readonly
       outlined
       hide-details
-      :append-icon="icons.copy"
       @click:append="copyUrl"
     ></v-text-field>
+    <!-- :append-icon="icons.copy" -->
     <v-divider></v-divider>
     <div class="share-network-list pt-2">
       <ShareNetwork
