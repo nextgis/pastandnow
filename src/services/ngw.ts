@@ -15,6 +15,12 @@ import type {
   LayerMetaItem,
 } from '../interfaces';
 
+let limit = 8000;
+
+if (process.env.NODE_ENV === 'development') {
+  limit = 100;
+}
+
 // export const url = config.baseUrl.replace(
 //   /^(https?|ftp):\/\//,
 //   (location.protocol === 'https:' ? 'https' : 'http') + '://',
@@ -38,7 +44,7 @@ export class Ngw {
       return fetchNgwLayerFeatures<Point, OralProperties>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 8000,
+        limit,
         // filters: [
         //   ['id1', 'in', [4418, 6687, 100001, 100002, 100003, 100004, 100005]],
         // ],
@@ -54,7 +60,7 @@ export class Ngw {
       return fetchNgwLayerItems<Point>({
         connector,
         resourceId: config.ngwMarkerLayerId,
-        limit: 8000,
+        limit,
         geom: false,
         fields,
         extensions: [],

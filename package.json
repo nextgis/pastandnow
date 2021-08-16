@@ -28,7 +28,6 @@
     "@turf/bbox": "^6.5.0",
     "canvg": "^3.0.7",
     "core-js": "^3.16.1",
-    "nouislider": "^15.3.0",
     "regenerator": "^0.14.7",
     "urlify": "^0.3.6",
     "vue": "^2.6.14",
@@ -49,7 +48,7 @@
     "@gfx/zopfli": "^1.0.15",
     "@types/events": "^3.0.0",
     "@types/geojson": "^7946.0.8",
-    "@types/node": "^16.4.13",
+    "@types/node": "^16.6.1",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^3.0.0",
     "compression-webpack-plugin": "^8.0.1",
@@ -72,7 +71,7 @@
     "vuetify-loader": "^1.7.2",
     "webpack": "^5.50.0",
     "webpack-bundle-analyzer": "^4.4.2",
-    "webpack-cli": "^4.7.2",
+    "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^3.11.2"
   }
 }

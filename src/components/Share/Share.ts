@@ -23,7 +23,7 @@ export class Comments extends Vue {
     copy: mdiClipboard,
   };
   get url(): string {
-    return 'https://pastandnow.ru/?id=' + this.item.id;
+    return 'https://pastandnow.ru/?id=' + this.item.properties.id1;
   }
   title = '';
   description = '';
