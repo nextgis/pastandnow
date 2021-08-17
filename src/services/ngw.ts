@@ -1,13 +1,11 @@
 import { Point, Feature } from 'geojson';
-import NgwConnector, {
-  FeatureItem,
-  FeatureProperties,
-} from '@nextgis/ngw-connector';
-import { PropertiesFilter } from '@nextgis/properties-filter';
+import NgwConnector, { FeatureItem } from '@nextgis/ngw-connector';
 import CancelablePromise from '@nextgis/cancelable-promise';
 import { fetchNgwLayerFeatures, fetchNgwLayerItems } from '@nextgis/ngw-kit';
-
 import config from '../config';
+
+import type { FeatureProperties } from '@nextgis/utils';
+import type { PropertiesFilter } from '@nextgis/properties-filter';
 import type { OralPointFeature } from '../interfaces';
 import type {
   OralProperties,

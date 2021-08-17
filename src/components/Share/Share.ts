@@ -25,7 +25,9 @@ export class Comments extends Vue {
   get url(): string {
     return 'https://pastandnow.ru/?id=' + this.item.properties.id1;
   }
-  title = '';
+  get title(): string {
+    return this.item.properties.name || '';
+  }
   description = '';
   snackbar = false;
   get quote(): string {
