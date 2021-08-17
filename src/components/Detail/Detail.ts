@@ -26,7 +26,7 @@ export class Detail extends Vue {
 
   get photos(): OralPhotoProperties[] {
     const photo = oralModule.photos.find((x: OralPhotoProperties) => {
-      return this.detail && x.link_small && x.id_obj === this.detail.id;
+      return this.detail && x.link_small && x.id_obj === this.detail.id1;
     });
     return photo ? [photo] : [];
   }

@@ -83,6 +83,7 @@ export class Ngw {
       resourceId: config.ngwMarkerLayerId,
       connector,
       filters: [['id1', 'eq', id1]],
+      cache: true,
     }).then((x) => {
       return x[0];
     });
