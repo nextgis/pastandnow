@@ -150,7 +150,7 @@ module.exports = (env, argv) => {
 
   const config = {
     mode: argv.mode || 'development',
-
+    context: path.join(__dirname, './'),
     devtool: isProd ? 'source-map' : 'inline-source-map',
 
     entry: './src/index.ts',

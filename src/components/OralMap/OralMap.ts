@@ -110,25 +110,25 @@ export class OralMap extends Mixins(VueNgwMapbox) {
 
   @Watch('detailItem')
   setSelected(item: OralFeature): void {
-    const isAlreadySelected = (l: FeatureLayerAdapter<OralProperties>) => {
-      return (
-        l.getSelected &&
-        l
-          .getSelected()
-          .some(
-            (x) =>
-              x.feature &&
-              x.feature.properties &&
-              x.feature.properties.id1 === item.properties.id1,
-          )
-      );
-    };
-    const someLayerSelected = () =>
-      this._forEachGeomLayer(({ layer }) => {
-        const a = isAlreadySelected(layer);
-        return a;
-      });
-    if (item) {
+    if (item && this.loaded) {
+      const isAlreadySelected = (l: FeatureLayerAdapter<OralProperties>) => {
+        return (
+          l.getSelected &&
+          l
+            .getSelected()
+            .some(
+              (x) =>
+                x.feature &&
+                x.feature.properties &&
+                x.feature.properties.id1 === item.properties.id1,
+            )
+        );
+      };
+      const someLayerSelected = () =>
+        this._forEachGeomLayer(({ layer }) => {
+          const a = isAlreadySelected(layer);
+          return a;
+        });
       if (someLayerSelected()) {
         return;
       }
@@ -154,8 +154,10 @@ export class OralMap extends Mixins(VueNgwMapbox) {
   @Watch('centerId')
   zoomTo(id: number): void {
     if (id) {
+      let layerInit = false;
       this._forEachGeomLayer(({ layer }) => {
-        if (id && layer && layer.getLayers) {
+        if (layer && layer.getLayers) {
+          layerInit = true;
           const layers = layer.getLayers();
           if (layers && layers.length) {
             const layer = layers.find(
@@ -169,7 +171,9 @@ export class OralMap extends Mixins(VueNgwMapbox) {
           }
         }
       });
-      appModule.zoomTo(null);
+      if (layerInit) {
+        appModule.zoomTo(null);
+      }
     }
   }
 
@@ -179,7 +183,8 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     });
   }
 
-  async drawOralLayers(features: OralPointFeature[]): Promise<OralFeature[]> {
+  async drawOralLayers(features: OralPointFeature[]): Promise<void> {
+    this.loaded = false;
     const geoms: OralGeomType[] = ['poly', 'line', 'point'];
     const oralFeatures = await this._getOralFeatures(
       JSON.parse(JSON.stringify(features)),
@@ -187,14 +192,17 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     for (const g of geoms) {
       await this._drawOralLayer(g, oralFeatures[g]);
     }
+    this.loaded = true;
     if (this.zoomToFilteredFlag) {
       this.zoomToFiltered();
       this.zoomToFilteredFlag = false;
     }
+    if (this.detailItem) {
+      this.setSelected(this.detailItem);
+    }
     if (this.centerId) {
       this.zoomTo(this.centerId);
     }
-    return features;
   }
 
   zoomToFiltered(): void {
@@ -286,14 +294,16 @@ export class OralMap extends Mixins(VueNgwMapbox) {
         labelField: 'name',
         labelOnHover: true,
         onSelect: (e) => {
-          const feature = e.features && e.features[0];
+          if (e.type !== 'api') {
+            const feature = e.features && e.features[0];
 
-          const id = feature
-            ? feature.properties
-              ? Number(feature.properties.id1)
-              : null
-            : null;
-          oralModule.setDetail(id);
+            const id = feature
+              ? feature.properties
+                ? Number(feature.properties.id1)
+                : null
+              : null;
+            oralModule.setDetail(id);
+          }
         },
       };
 

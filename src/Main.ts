@@ -164,7 +164,7 @@ export class Main extends Mixins(WindowSizeMixin) {
   }
 
   @Watch('detail')
-  resetScroll(val: OralFeature): void {
+  onDetailChange(val: OralFeature): void {
     const id = val && val.properties.id1;
     if (!id) {
       this.detailIsScrolled = false;
