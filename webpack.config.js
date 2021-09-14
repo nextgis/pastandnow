@@ -171,9 +171,7 @@ module.exports = (env, argv) => {
       rules,
     },
     devServer: {
-      contentBase: './dist',
       historyApiFallback: true,
-      noInfo: true,
     },
     plugins,
     performance: {
