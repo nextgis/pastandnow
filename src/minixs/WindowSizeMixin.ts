@@ -9,6 +9,10 @@ export class WindowSizeMixin extends Vue {
 
   removeEventListener: (() => void) | null = null;
 
+  get isMobile(): boolean {
+    return this.windowSize.x < 800;
+  }
+
   mounted(): void {
     this.onResize();
     // from vuetify navigation drawer
@@ -26,9 +30,5 @@ export class WindowSizeMixin extends Vue {
 
   onResize(): void {
     this.windowSize = { x: window.innerWidth, y: window.innerHeight };
-  }
-
-  get isMobile(): boolean {
-    return this.windowSize.x < 800;
   }
 }

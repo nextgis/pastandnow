@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Vue, Component, Emit, Watch } from 'vue-property-decorator';
 import { oralModule } from '../../store/modules/oral';
 import { NarrativeTypeItem } from '../../interfaces';
@@ -5,6 +6,10 @@ import type { LayerMetaItem } from '../../interfaces';
 
 @Component
 export default class FilterPanel extends Vue {
+  get meta(): LayerMetaItem[] {
+    return oralModule.meta;
+  }
+
   get specialFilters(): string[] {
     return oralModule.specialFilterSelected;
   }
@@ -21,8 +26,16 @@ export default class FilterPanel extends Vue {
     oralModule.setNarrativeTypeSelected(val);
   }
 
-  get meta(): LayerMetaItem[] {
-    return oralModule.meta;
+  get allSpecialFilters(): boolean {
+    return this.specialFilters.length === this.specialFilterItems.length;
+  }
+
+  set allSpecialFilters(val: boolean) {
+    if (val) {
+      oralModule.resetSpecialFilter();
+    } else {
+      oralModule.setSpecialFilterSelected([]);
+    }
   }
 
   get specialFilterItems(): LayerMetaItem[] {
@@ -35,18 +48,6 @@ export default class FilterPanel extends Vue {
     const types =
       oralModule.filterData.narrativeTypeItems[oralModule.activeCity];
     return (types || []).map((name) => ({ name }));
-  }
-
-  get allSpecialFilters(): boolean {
-    return this.specialFilters.length === this.specialFilterItems.length;
-  }
-
-  set allSpecialFilters(val: boolean) {
-    if (val) {
-      oralModule.resetSpecialFilter();
-    } else {
-      oralModule.setSpecialFilterSelected([]);
-    }
   }
 
   @Emit('close')

@@ -18,21 +18,12 @@ Vue.use(VueSocialSharing);
 @Component
 export class Comments extends Vue {
   @Prop() readonly item!: OralFeature;
-
+  description = '';
+  snackbar = false;
   icons = {
     copy: mdiClipboard,
   };
-  get url(): string {
-    return 'https://pastandnow.ru/?id=' + this.item.properties.id1;
-  }
-  get title(): string {
-    return this.item.properties.name || '';
-  }
-  description = '';
-  snackbar = false;
-  get quote(): string {
-    return this.item.properties.name || '';
-  }
+
   hashtags = 'pastandnow';
 
   networks = [
@@ -67,6 +58,16 @@ export class Comments extends Vue {
       color: '#4a76a8',
     },
   ];
+  get url(): string {
+    return 'https://pastandnow.ru/?id=' + this.item.properties.id1;
+  }
+  get title(): string {
+    return this.item.properties.name || '';
+  }
+
+  get quote(): string {
+    return this.item.properties.name || '';
+  }
 
   copyUrl(): void {
     const isCopy = Clipboard.copy(this.url);

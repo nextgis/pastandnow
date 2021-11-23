@@ -11,14 +11,6 @@ export class App extends Vue {
   tableSearch = '';
   pagination: any = null;
 
-  get page(): AppPages {
-    return appModule.page;
-  }
-
-  set page(value: AppPages) {
-    appModule.setPage(value);
-  }
-
   get pagesCount(): number {
     if (
       this.pagination &&
@@ -29,6 +21,14 @@ export class App extends Vue {
     }
 
     return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
+  }
+
+  get page(): AppPages {
+    return appModule.page;
+  }
+
+  set page(value: AppPages) {
+    appModule.setPage(value);
   }
 
   paginationSync(value: unknown): void {

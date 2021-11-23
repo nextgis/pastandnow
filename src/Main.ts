@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 // import './images/drawing.svg';
 
 import { Component, Watch, Mixins } from 'vue-property-decorator';
@@ -85,6 +86,38 @@ export class Main extends Mixins(WindowSizeMixin) {
   listIsScrolled = false;
   detailIsScrolled = false;
 
+  get detailDrawer(): boolean {
+    return !!this.detail;
+  }
+
+  get items(): OralProperties[] {
+    return oralModule.items.map((x) => x.properties);
+  }
+
+  get filtered(): OralFeature[] {
+    return oralModule.filtered;
+  }
+
+  get activeCityItems(): OralFeature[] {
+    return oralModule.activeCityItems;
+  }
+
+  get isFilterSet(): boolean {
+    return this.filtered.length !== this.activeCityItems.length;
+  }
+
+  get module(): OralState {
+    return oralModule;
+  }
+
+  get featuresLoading(): boolean {
+    return this.module.featuresLoading;
+  }
+
+  get searchReady(): boolean {
+    return this.module.searchReady;
+  }
+
   get listSearchText(): string {
     return oralModule.listSearchText;
   }
@@ -109,32 +142,12 @@ export class Main extends Mixins(WindowSizeMixin) {
     appModule.zoomTo(id1);
   }
 
-  get detailDrawer(): boolean {
-    return !!this.detail;
-  }
-
   get drawer(): boolean {
     return appModule.drawer;
   }
 
   set drawer(value: boolean) {
     appModule.toggleDrawer(value);
-  }
-
-  get items(): OralProperties[] {
-    return oralModule.items.map((x) => x.properties);
-  }
-
-  get filtered(): OralFeature[] {
-    return oralModule.filtered;
-  }
-
-  get activeCityItems(): OralFeature[] {
-    return oralModule.activeCityItems;
-  }
-
-  get isFilterSet(): boolean {
-    return this.filtered.length !== this.activeCityItems.length;
   }
 
   get detail(): false | OralFeature {
@@ -144,18 +157,6 @@ export class Main extends Mixins(WindowSizeMixin) {
   set detail(value: false | OralFeature) {
     const id1 = value && value.properties.id1;
     oralModule.setDetail(id1 ? Number(id1) : null);
-  }
-
-  get module(): OralState {
-    return oralModule;
-  }
-
-  get featuresLoading(): boolean {
-    return this.module.featuresLoading;
-  }
-
-  get searchReady(): boolean {
-    return this.module.searchReady;
   }
 
   @Watch('listSearchText')

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Vue, Component, Watch } from 'vue-property-decorator';
 
 import {
@@ -16,25 +17,8 @@ interface CountItem {
 @Component
 export class SelectPlace extends Vue {
   form = false;
-
-  get rayon(): string {
-    return oralModule.activeRayon;
-  }
-
-  set rayon(val: string) {
-    oralModule.setActiveRayon(val);
-  }
-
   areas: CountItem[] = [];
   areasByCities: Record<string, string> = {};
-
-  get city(): string {
-    return oralModule.activeCity;
-  }
-
-  set city(val: string) {
-    oralModule.setActiveCity(val);
-  }
 
   get cities(): CountItem[] {
     const cities = oralModule.filterData.cities;
@@ -52,6 +36,20 @@ export class SelectPlace extends Vue {
 
   get items(): OralFeature[] {
     return oralModule.items;
+  }
+
+  get city(): string {
+    return oralModule.activeCity;
+  }
+  set city(val: string) {
+    oralModule.setActiveCity(val);
+  }
+
+  get rayon(): string {
+    return oralModule.activeRayon;
+  }
+  set rayon(val: string) {
+    oralModule.setActiveRayon(val);
   }
 
   @Watch('city')

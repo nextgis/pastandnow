@@ -16,7 +16,7 @@ import type {
 let limit = 8000;
 
 if (process.env.NODE_ENV === 'development') {
-  limit = 10000;
+  limit = 100;
 }
 
 // export const url = config.baseUrl.replace(

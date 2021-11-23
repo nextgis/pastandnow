@@ -9,11 +9,11 @@ interface Remark {
 export class Comments extends Vue {
   @Prop() readonly id!: number;
 
+  remark42Instance?: Remark;
+
   get domId(): string {
     return 'comments' + this.id;
   }
-
-  remark42Instance?: Remark;
 
   initRemark42(): void {
     const REMARK42 = (window as any).REMARK42;
