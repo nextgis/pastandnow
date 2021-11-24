@@ -195,20 +195,27 @@ const defaultLayerMetaItems: LayerMetaItem[] = [
   },
   { text: 'Рассказчик', value: 'narrator', type: 'NarratorLink' },
   { text: 'Визуальные материалы', value: 'visual' },
+];
 
-  // fetch from getSpecialFields method
-  // { text: 'Дворы', value: 'mos1', detail: false, type: 'Special' },
-  // { text: 'Религия', value: 'mos2', detail: false, type: 'Special' },
-  // { text: 'Бездомные', value: 'mos3', detail: false, type: 'Special' },
-  // { text: 'Подземелья', value: 'mos4', detail: false, type: 'Special' },
-  // { text: 'Субкультуры', value: 'mos5', detail: false, type: 'Special' },
-  // { text: 'Легенды', value: 'mos6', detail: false, type: 'Special' },
+// try to fetch Special type of fields with getSpecialFields method
+// if error use this data
+const emergencySpecialFields: LayerMetaItem[] = [
+  { text: 'Дворы', value: 'mos1', detail: false, type: 'Special' },
+  { text: 'Религия', value: 'mos2', detail: false, type: 'Special' },
+  { text: 'Бездомные', value: 'mos3', detail: false, type: 'Special' },
+  { text: 'Подземелья', value: 'mos4', detail: false, type: 'Special' },
+  { text: 'Субкультуры', value: 'mos5', detail: false, type: 'Special' },
+  { text: 'Легенды', value: 'mos6', detail: false, type: 'Special' },
   // { text: 'Памятники', value: 'mos7', type: 'Special' },
   // { text: 'Последний адрес', value: 'mos8', type: 'Special' },
 ];
 
 export function getLayerMeta(): CancelablePromise<LayerMetaItem[]> {
-  return fetchSpecialFields().then((specialFields) => {
-    return [...defaultLayerMetaItems, ...specialFields];
-  });
+  return fetchSpecialFields()
+    .then((specialFields) => {
+      return [...defaultLayerMetaItems, ...specialFields];
+    })
+    .catch(() => {
+      return [...defaultLayerMetaItems, ...emergencySpecialFields];
+    });
 }
