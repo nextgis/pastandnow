@@ -33,7 +33,7 @@
     "src/**/*.json",
     "@nextgis/packages/mapboxgl-map-adapter/src/maplibregl.d.ts",
     "@nextgis/packages/global.d.ts"
-, "src/config.js"  ],
+, "src/config.ts"  ],
   "exclude": [
     "node_modules",
     "dist"

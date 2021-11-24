@@ -13,7 +13,13 @@ import {
 } from '@nextgis/properties-filter';
 
 import { FilterData } from '../../../scripts/FilterData';
-import { Ngw } from '../../services/ngw';
+import {
+  fetchOralFeature,
+  getLayerFeatures,
+  getLayerMeta,
+  getLayerStoryItems,
+  getPhotos,
+} from '../../services/ngw';
 import store from '../index';
 import { sortFeatures } from '../utils/sortFeatures';
 
@@ -103,7 +109,7 @@ export class OralState extends VuexModule {
   async getAllItems(): Promise<OralFeature[]> {
     this.setFeaturesLoading(true);
     await this.setMeta();
-    const features = await Ngw.getLayerFeatures();
+    const features = await getLayerFeatures();
     this.setFeaturesLoading(false);
     return features;
   }
@@ -118,7 +124,7 @@ export class OralState extends VuexModule {
   async loadStories(): Promise<OralFeature[]> {
     this.context.dispatch('setSearchReady', false);
     const features: OralFeature[] = [];
-    const items = await Ngw.getLayerStoryItems();
+    const items = await getLayerStoryItems();
     this.items.forEach((x) => {
       const storyItemIndex = items.findIndex((y) => y.id === x.id);
       const newOralFeature = { ...x };
@@ -134,13 +140,13 @@ export class OralState extends VuexModule {
 
   @Action({ commit: '_setMeta' })
   async setMeta(): Promise<LayerMetaItem[]> {
-    const meta = await Ngw.getLayerMeta();
+    const meta = await getLayerMeta();
     return meta;
   }
 
   @Action
   async setDetailById(id: number): Promise<OralFeature | undefined> {
-    const feature = await Ngw.fetchNgwLayerFeature(id);
+    const feature = await fetchOralFeature(id);
     if (feature) {
       const existActiveTypes = [...(this.activeTypes || [])];
       if (
@@ -166,7 +172,7 @@ export class OralState extends VuexModule {
 
   @Action({ commit: '_setPhotos' })
   async getPhotos(): Promise<OralPhotoProperties[]> {
-    const photos = await Ngw.getPhotos();
+    const photos = await getPhotos();
     return photos;
   }
 
@@ -205,7 +211,7 @@ export class OralState extends VuexModule {
       return { ...this.filters, fullText: undefined };
     }
     const filters_ = { ...this.filters };
-    const meta = await Ngw.getLayerMeta();
+    const meta = await getLayerMeta();
     const searchField = meta.filter((x) => x.search).map((x) => x.value);
     const propertiesFilter: PropertiesFilter = ['any'];
     searchField.forEach((x) => {
@@ -269,7 +275,7 @@ export class OralState extends VuexModule {
       (x: OralFeature) => x.properties.id1 === id1,
     );
     if (id1) {
-      const feature = await Ngw.fetchNgwLayerFeature(id1);
+      const feature = await fetchOralFeature(id1);
       if (feature) {
         return feature;
       }
