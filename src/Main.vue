@@ -91,11 +91,11 @@
                 <v-chip class="list-toolbar__count font-weight-medium" small>
                   <template v-if="isFilterSet">
                     {{ filtered.length }}&nbsp;<span class="text--secondary"
-                      >из&nbsp;{{ activeCityItems.length }}</span
+                      >из&nbsp;{{ activePlaceItems.length }}</span
                     >
                   </template>
                   <template v-else>
-                    {{ activeCityItems.length }}
+                    {{ activePlaceItems.length }}
                   </template>
                 </v-chip>
               </span>
@@ -106,9 +106,10 @@
                   text
                   color="primary"
                   v-if="isFilterSet"
-                  @click="resetFilter"
-                  >Сбросить</v-btn
+                  @click="resetNonPlaceFilter"
                 >
+                  Сбросить
+                </v-btn>
                 <v-btn
                   text
                   icon
@@ -236,7 +237,11 @@
             </div>
             <v-divider class="mx-1 my-2" inset vertical></v-divider>
             <div class="bottom-buttons__item">
-              <v-btn text @click="zoomTo = detail.properties.id1" color="primary">
+              <v-btn
+                text
+                @click="zoomTo = detail.properties.id1"
+                color="primary"
+              >
                 <v-icon left>{{ svg.target }}</v-icon>
                 На карте
               </v-btn>
@@ -251,14 +256,9 @@
         </div>
       </div>
     </v-navigation-drawer>
-    <v-dialog
-      v-model="shareDialog"
-      width="500"
-    >
+    <v-dialog v-model="shareDialog" width="500">
       <v-card>
-        <v-card-title class="text-h5 grey lighten-2">
-          Поделиться
-        </v-card-title>
+        <v-card-title class="text-h5 grey lighten-2"> Поделиться </v-card-title>
 
         <v-card-text>
           <Share v-if="detail" :item="detail"></Share>
@@ -268,11 +268,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            text
-            @click="shareDialog = false"
-          >
+          <v-btn color="primary" text @click="shareDialog = false">
             Закрыть
           </v-btn>
         </v-card-actions>

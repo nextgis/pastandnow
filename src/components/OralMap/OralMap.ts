@@ -5,9 +5,12 @@ import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 import { fetchNgwLayerFeatures } from '@nextgis/ngw-kit';
 
 import config from '../../config';
+import { connector } from '../../services/ngw';
 import { appModule } from '../../store/modules/app';
 import { oralModule } from '../../store/modules/oral';
 import { getOralPaint } from '../../utils/getHistoryIcons';
+import { getPathPaint } from '../../utils/getHistoryPaint';
+import { encodePlaceValue } from '../../utils/place';
 
 import type { Feature, Point, FeatureCollection } from 'geojson';
 import type {
@@ -20,12 +23,11 @@ import type {
   OralFeature,
   OralGeomType,
   OralProperties,
+  PlaceProperties,
   OralLineFeature,
   OralPointFeature,
   OralPolygonFeature,
 } from '../../interfaces';
-import { connector } from '../../services/ngw';
-import { getPathPaint } from '../../utils/getHistoryPaint';
 
 const { ngwLineLayerId, ngwPolygonLayerId } = config;
 
@@ -59,8 +61,8 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     return oralModule.filtered;
   }
 
-  get activeCity(): string {
-    return oralModule.activeCity;
+  get activePlace(): Partial<PlaceProperties> {
+    return oralModule.activePlace;
   }
 
   get items(): OralFeature[] {
@@ -98,9 +100,14 @@ export class OralMap extends Mixins(VueNgwMapbox) {
     }
   }
 
-  @Watch('activeCity')
-  onFiltersChange(activeCity: string, oldCity: string): void {
+  @Watch('activePlace')
+  onFiltersChange(
+    activePlace: Partial<PlaceProperties>,
+    oldPlace: Partial<PlaceProperties>,
+  ): void {
     if (this.loaded) {
+      const activeCity = encodePlaceValue(activePlace, 'city');
+      const oldCity = encodePlaceValue(oldPlace, 'city');
       if (activeCity !== oldCity) {
         this._removeOralLayers();
         this.zoomToFilteredFlag = true;

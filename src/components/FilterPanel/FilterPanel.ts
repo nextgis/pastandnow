@@ -46,8 +46,8 @@ export default class FilterPanel extends Vue {
   }
 
   get narrativeTypeItems(): NarrativeTypeItem[] {
-    const types =
-      oralModule.filterData.narrativeTypeItems[oralModule.activeCity];
+    const city = oralModule.activePlace.city;
+    const types = city ? oralModule.filterData.narrativeTypeItems[city] : [];
     return (types || []).map((name) => ({ name }));
   }
 

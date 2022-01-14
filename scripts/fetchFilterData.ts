@@ -1,5 +1,4 @@
 import { Point } from 'geojson';
-import { FilterData } from './FilterData';
 // import { BdMainItemProperties } from '../src/api/ngw';
 import { fetchNgwLayerItems } from '@nextgis/ngw-kit';
 const NgwConnector = require('@nextgis/ngw-connector');

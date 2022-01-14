@@ -8,6 +8,16 @@ import type {
   MultiPolygon,
 } from 'geojson';
 
+type PlaceFilter = Record<keyof PlaceProperties, PropertiesFilter | undefined>;
+interface NonPlaceFilter {
+  type?: PropertiesFilter;
+  fullText?: PropertiesFilter;
+  specialFilter?: PropertiesFilter;
+  narrativeType?: PropertiesFilter;
+}
+
+export type FilterProperties = PlaceFilter & NonPlaceFilter;
+
 export type OralPointFeature = Feature<Point, OralProperties>;
 export type OralLineFeature = Feature<LineString, OralProperties>;
 export type OralPolygonFeature = Feature<MultiPolygon, OralProperties>;
@@ -19,7 +29,7 @@ export type OralFeature =
 
 export type OralFeatureCollection = FeatureCollection<Point, OralProperties>;
 
-export type OralFilter = Record<string, PropertiesFilter | undefined>;
+export type OralFilter = FilterProperties;
 
 export interface LegendItem {
   name: string;
@@ -37,6 +47,9 @@ export interface OralProperties {
 
   id1: number;
   city: string;
+  cntry: string;
+  region: string;
+  rayon: string;
   status: string;
   narrator: string;
   nar_codes: string;
@@ -51,7 +64,6 @@ export interface OralProperties {
   mos3?: string;
   descript2?: string;
   lat: number;
-  rayon: string;
   geo?: OralGeomType | null;
   name?: string;
   narrativ_b?: string;
@@ -62,6 +74,11 @@ export interface OralProperties {
   narrativ_p?: string;
   type: string;
 }
+
+export type PlaceProperties = Pick<
+  OralProperties,
+  'cntry' | 'region' | 'city' | 'rayon'
+>;
 
 export interface OralPhotoProperties {
   id: number;

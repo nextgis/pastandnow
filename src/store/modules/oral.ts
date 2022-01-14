@@ -1,49 +1,41 @@
 import {
-  VuexModule,
-  Mutation,
   Action,
   Module,
+  Mutation,
   getModule,
+  VuexModule,
   MutationAction,
 } from 'vuex-module-decorators';
-import {
-  PropertiesFilter,
-  featureFilter,
-  PropertyFilter,
-} from '@nextgis/properties-filter';
+import { featureFilter } from '@nextgis/properties-filter';
 
-import { FilterData } from '../../../scripts/FilterData';
+import { DEFAULT_PLACE, PLACE_KEYS } from '../../constants';
 import {
+  getLayerStoryItems,
   fetchOralFeature,
   getLayerFeatures,
   getLayerMeta,
-  getLayerStoryItems,
   getPhotos,
 } from '../../services/ngw';
-import store from '../index';
 import { sortFeatures } from '../utils/sortFeatures';
+import store from '../index';
 
 import type { PathPaint } from '@nextgis/paint';
 import type {
-  OralFeature,
-  OralFilter,
-  LegendItem,
-  LayerMetaItem,
-  OralPointFeature,
+  PropertyFilter,
+  PropertiesFilter,
+} from '@nextgis/properties-filter';
+import type { FilterData } from '../../../scripts/FilterData';
+import type {
   OralPhotoProperties,
+  OralPointFeature,
+  PlaceProperties,
+  LayerMetaItem,
   OralGeomType,
+  OralFeature,
+  LegendItem,
+  OralFilter,
+  FilterProperties,
 } from '../../interfaces';
-
-export const ALL_RAYON_STR = 'Все районы';
-
-export interface FilterProperties {
-  city?: PropertiesFilter;
-  rayon?: PropertiesFilter;
-  type?: PropertiesFilter;
-  fullText?: PropertiesFilter;
-  specialFilter?: PropertiesFilter;
-  narrativeType?: PropertiesFilter;
-}
 
 @Module({ dynamic: true, store, name: 'oral' })
 export class OralState extends VuexModule {
@@ -58,8 +50,13 @@ export class OralState extends VuexModule {
   specialFilterSelected: string[] = [];
   listSearchText = '';
   activeTypes: string[] | false = false;
-  activeRayon = ALL_RAYON_STR;
-  activeCity = 'Москва';
+
+  activePlace: Partial<PlaceProperties> = {
+    cntry: 'Россия',
+    city: 'Москва',
+    region: undefined,
+    rayon: undefined,
+  };
 
   legendItems: Array<{
     name: string;
@@ -68,15 +65,19 @@ export class OralState extends VuexModule {
   }> = [];
 
   filterData: FilterData = {
-    cities: {},
-    rayonDict: {},
+    // cities: {},
+    // rayonDict: {},
     narrativeTypeItems: {},
   };
 
   filters: FilterProperties = {
     fullText: undefined,
+
     city: undefined,
     rayon: undefined,
+    region: undefined,
+    cntry: undefined,
+
     // in legend
     type: undefined,
     // meta field type is 'Special'
@@ -89,11 +90,25 @@ export class OralState extends VuexModule {
     return this.filtered;
   }
 
-  get activeCityItems(): OralFeature[] {
-    return this.items.filter((x) => {
-      return x.properties.city === this.activeCity;
-    });
+  get activePlaceItems(): OralFeature[] {
+    const placeFilters: PropertiesFilter[] = [];
+    for (const k of PLACE_KEYS) {
+      const filter = this.filters[k];
+      if (filter) {
+        placeFilters.push(filter);
+      }
+    }
+
+    const items: OralPointFeature[] = this.items.filter((x) =>
+      featureFilter(x, placeFilters),
+    );
+    return items;
   }
+  // get activePlaceItems(): OralFeature[] {
+  //   return this.items.filter((x) => {
+  //     return x.properties.city === this.activePlace.city;
+  //   });
+  // }
 
   get propertiesFilter(): PropertiesFilter {
     return Object.values(this.filters).filter((x) => x);
@@ -157,7 +172,7 @@ export class OralState extends VuexModule {
         await this.setActiveTypes([...existActiveTypes]);
         await this.setTypesFilter([...existActiveTypes]);
       }
-      await this.setActiveCity(feature.properties.city);
+      await this.setActivePlace(feature.properties);
       const items = [...this.items];
       const exist = items.find(
         (x) => x.properties.id1 === feature.properties.id1,
@@ -177,21 +192,20 @@ export class OralState extends VuexModule {
   }
 
   @Action({ commit: '_updateFilter' })
-  async updateFilter(filters: FilterProperties): Promise<OralFilter> {
+  async updateFilter(filters: Partial<FilterProperties>): Promise<OralFilter> {
     const filters_ = { ...this.filters, ...filters };
     return filters_;
   }
 
   @Action({ commit: '_updateFilter' })
-  async resetFilter(): Promise<OralFilter> {
+  async resetNonPlaceFilter(): Promise<OralFilter> {
     const filters = { ...this.filters };
     for (const f in filters) {
       const key = f as keyof FilterProperties;
-      if (key !== 'city') {
+      if (!PLACE_KEYS.includes(key as keyof PlaceProperties)) {
         filters[key] = undefined;
       }
     }
-    this.setActiveRayon(ALL_RAYON_STR);
     this.setListSearchText('');
     this.resetSpecialFilter();
     this.setActiveTypes(this.legendItems.map((x) => x.name));
@@ -283,6 +297,40 @@ export class OralState extends VuexModule {
     return item;
   }
 
+  @Action
+  async setActivePlace(place: Partial<PlaceProperties> | null): Promise<void> {
+    let activePlace: Partial<PlaceProperties> = {};
+    const parts = PLACE_KEYS;
+    if (place === null) {
+      activePlace = DEFAULT_PLACE;
+    } else {
+      for (const k of parts) {
+        if (k in place) {
+          activePlace[k] = place[k];
+        }
+      }
+    }
+
+    // if place part field is a list X1,X2,Xn
+    const ilikeFilterParts: (keyof PlaceProperties)[] = ['rayon'];
+    const filters: Partial<FilterProperties> = {};
+    for (const p of parts) {
+      const placePart = activePlace[p];
+      if (placePart) {
+        if (ilikeFilterParts.includes(p)) {
+          filters[p] = [[p, 'ilike', `%${placePart}%`]];
+        } else {
+          filters[p] = [[p, 'eq', placePart]];
+        }
+      } else {
+        filters[p] = undefined;
+      }
+    }
+
+    await this._setActivePlace(activePlace);
+    this.updateFilter(filters);
+  }
+
   @MutationAction({ mutate: ['searchReady'] })
   async setSearchReady(searchReady: boolean): Promise<{
     searchReady: boolean;
@@ -318,13 +366,6 @@ export class OralState extends VuexModule {
     return { activeTypes };
   }
 
-  @MutationAction({ mutate: ['activeRayon'] })
-  async setActiveRayon(activeRayon: string): Promise<{
-    activeRayon: string;
-  }> {
-    return { activeRayon };
-  }
-
   @MutationAction({ mutate: ['specialFilterSelected'] })
   async setSpecialFilterSelected(specialFilterSelected: string[]): Promise<{
     specialFilterSelected: string[];
@@ -339,13 +380,6 @@ export class OralState extends VuexModule {
     return { narrativeTypeSelected };
   }
 
-  @MutationAction({ mutate: ['activeCity'] })
-  async setActiveCity(activeCity: string): Promise<{
-    activeCity: string;
-  }> {
-    return { activeCity };
-  }
-
   @Mutation
   protected _setItems(items: OralPointFeature[]): void {
     this.items = items;
@@ -354,10 +388,7 @@ export class OralState extends VuexModule {
   @Mutation
   protected _updateFilter(filters: FilterProperties): void {
     const items: OralPointFeature[] = this.items.filter((x) =>
-      featureFilter(
-        x,
-        Object.values(filters).filter((x) => x),
-      ),
+      featureFilter(x, Object.values(filters).filter(Boolean)),
     );
     this.filtered = items;
 
@@ -377,6 +408,11 @@ export class OralState extends VuexModule {
   @Mutation
   protected _setDetail(item: OralFeature): void {
     this.detailItem = item;
+  }
+
+  @Mutation
+  protected _setActivePlace(place: Partial<PlaceProperties>): void {
+    this.activePlace = place;
   }
 
   @Mutation

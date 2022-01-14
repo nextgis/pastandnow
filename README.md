@@ -61,7 +61,6 @@ yarn run prod
 ## Docker
 
 ```bash
-docker build -t registry.nextgis.com/pastandnow:latest -f docker/Dockerfile . && docker push registry.nextgis.com/pastandnow:latest
-
+npm run docker
 docker run -it -p 8080:80 --rm --name pastandnow registry.nextgis.com/pastandnow:latest
 ```

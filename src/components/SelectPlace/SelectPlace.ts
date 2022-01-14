@@ -1,123 +1,137 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Vue, Component, Watch } from 'vue-property-decorator';
 
+import { oralModule } from '../../store/modules/oral';
 import {
-  oralModule,
-  FilterProperties,
-  ALL_RAYON_STR,
-} from '../../store/modules/oral';
-import { OralFeature } from '../../interfaces';
+  placesFromProperties,
+  encodePlaceValue,
+  decodePlaceValue,
+  joinPlaceParts,
+  getPlaceLevel,
+  getPlaceText,
+} from '../../utils/place';
+
+// import type { FilterProperties } from '../../store/modules/oral';
+import type { OralFeature, PlaceProperties } from '../../interfaces';
 
 interface CountItem {
   text: string;
   value: string;
   count: number;
+  level: number;
+  place: Partial<PlaceProperties>;
 }
 
 @Component
 export class SelectPlace extends Vue {
   form = false;
-  areas: CountItem[] = [];
-  areasByCities: Record<string, string> = {};
+  places: CountItem[] = [];
+  search: string | null = '';
 
-  get cities(): CountItem[] {
-    const cities = oralModule.filterData.cities;
-    return Object.keys(cities)
-      .sort()
-      .map((x) => {
-        const count = cities[x];
-        return {
-          text: `${x} (${count})`,
-          value: x,
-          count,
-        };
-      });
-  }
+  items: CountItem[] = [];
 
-  get items(): OralFeature[] {
+  get features(): OralFeature[] {
     return oralModule.items;
   }
 
-  get city(): string {
-    return oralModule.activeCity;
-  }
-  set city(val: string) {
-    oralModule.setActiveCity(val);
-  }
+  activePlace: CountItem | null = null;
 
-  get rayon(): string {
-    return oralModule.activeRayon;
-  }
-  set rayon(val: string) {
-    oralModule.setActiveRayon(val);
-  }
+  @Watch('search')
+  onSearch(val: string) {
+    const items: CountItem[] = [];
 
-  @Watch('city')
-  updateCity(): void {
-    this.rayon = ALL_RAYON_STR;
-    this.updateFilter();
-  }
+    const parts: string[] = this.searchParts(val);
+    const places = this.places.slice(0, 100);
+    for (const item of places) {
+      if (item.level > 2) {
+        const re = new RegExp(parts.map((x) => `(${x})`).join('|'), 'gi');
+        const m = item.value.match(re);
 
-  @Watch('rayon')
-  updateFilter(): void {
-    const filters: FilterProperties = {
-      city: [['city', 'eq', this.city]],
-    };
-
-    if (this.rayon && this.rayon !== ALL_RAYON_STR) {
-      filters.rayon = [['%rayon%', 'ilike', this.rayon]];
-    } else {
-      filters.rayon = undefined;
-    }
-
-    oralModule.updateFilter(filters);
-  }
-
-  @Watch('items')
-  updateFilterValues(items: OralFeature[]): void {
-    this.updateAreasItems(undefined, undefined, items);
-    setTimeout(() => this.updateFilter());
-  }
-
-  @Watch('city')
-  updateAreasItems(
-    city?: string,
-    oldCity?: string,
-    items?: OralFeature[],
-  ): void {
-    items = items ?? this.items;
-    const areas: Record<string, number> = {};
-
-    items.forEach((x) => {
-      const prop = x.properties;
-      const rayons = prop.rayon;
-      if (prop.city === this.city && rayons) {
-        const rayonList = rayons.split(';').map((y) => y.trim());
-        rayonList.forEach((y) => {
-          areas[y] = (areas[y] ?? 0) + 1;
-        });
+        if (m && m.length >= parts.length) {
+          items.push(item);
+        }
       }
-    });
-    const sortCities = Object.keys(areas)
-      .sort()
-      .map((x) => {
-        const count = areas[x];
-        return {
-          text: `${x} (${count})`,
-          value: x,
-          count,
-        };
-      });
-    sortCities.unshift({
-      value: ALL_RAYON_STR,
-      text: ALL_RAYON_STR,
-      count: items.length,
-    });
-    this.areas = sortCities;
+    }
+    items.sort((a, b) => b.count - a.count);
+
+    this.items = items;
+  }
+
+  @Watch('activePlace')
+  updateFilter(): void {
+    if (this.activePlace) {
+      oralModule.setActivePlace(this.activePlace.place);
+    }
+  }
+
+  @Watch('features')
+  onItemsChange(features: OralFeature[]) {
+    this.setPlaces();
+    this.updateFilterValues();
+  }
+
+  @Watch('places')
+  onPlacesChange() {
+    const a = this.getActivePlace();
+    if (a) {
+      this.items = [a];
+    }
+    this.activePlace = a;
   }
 
   mounted(): void {
-    this.updateFilterValues(oralModule.items);
+    this.onItemsChange(oralModule.items);
+  }
+
+  updateFilterValues(): void {
+    setTimeout(() => this.updateFilter());
+  }
+
+  setPlaces() {
+    const places: Record<string, CountItem> = {};
+
+    const plusOne = (val: string) => {
+      const allParts = val.split('__');
+      const collector: string[] = [];
+      for (const p of allParts) {
+        collector.push(p);
+        const placeVal = joinPlaceParts(collector);
+        const place = places[placeVal];
+        if (place) {
+          place.count += 1;
+        } else {
+          const placeItem = decodePlaceValue(placeVal);
+          const newPlace: CountItem = {
+            count: 1,
+            place: placeItem,
+            value: placeVal,
+            level: getPlaceLevel(placeVal),
+            text: getPlaceText(placeItem),
+          };
+          places[placeVal] = newPlace;
+        }
+      }
+    };
+
+    for (const i of this.features) {
+      const places_ = placesFromProperties(i.properties);
+      for (const place of places_) {
+        const value = encodePlaceValue(place);
+        const exist = places[value];
+        if (!exist) {
+          const newPlace: CountItem = {
+            count: 0,
+            place,
+            text: getPlaceText(place),
+            level: getPlaceLevel(value),
+            value,
+          };
+          places[value] = newPlace;
+        }
+        plusOne(value);
+      }
+    }
+    this.places = Object.values(places);
   }
 
   getItemStyle(item: CountItem): Record<string, any> {
@@ -128,5 +142,39 @@ export class SelectPlace extends Vue {
       weight = 600;
     }
     return { 'font-weight': weight };
+  }
+
+  getItemHtml(text: string): string {
+    if (this.search) {
+      const searchPart = this.searchParts(this.search);
+      for (const p of searchPart) {
+        const re = new RegExp(p, 'gi');
+        text = text.replace(re, (a) => `<b>${a}</b>`);
+      }
+    }
+    return `<span>${text}</span>`;
+  }
+
+  private searchParts(val: string | null): string[] {
+    const str = val ? val.replace(/,/g, ' ') : '';
+    return str
+      .split(' ')
+      .map((x) => x.trim())
+      .filter(Boolean);
+  }
+
+  private getActivePlace(): CountItem | null {
+    const encode = encodePlaceValue(oralModule.activePlace);
+    const parts = encode.split('__');
+    for (let fry = 0; fry < parts.length; fry++) {
+      const v = parts.slice(0, parts.length - fry);
+      const place = this.places.find((p) => {
+        return p.value === joinPlaceParts(v);
+      });
+      if (place) {
+        return place;
+      }
+    }
+    return null;
   }
 }

@@ -71,6 +71,7 @@ export function fetchOralFeatures<P extends FeatureProperties = OralProperties>(
   return fetchNgwLayerFeatures<Point, P>({
     resourceId: config.ngwMarkerLayerId,
     connector,
+    limit: Infinity,
     filters,
   });
 }
@@ -81,6 +82,7 @@ export function fetchOralFeature(
   return fetchNgwLayerFeatures<Point, OralProperties>({
     resourceId: config.ngwMarkerLayerId,
     connector,
+    limit: Infinity,
     filters: [['id1', 'eq', id1]],
     cache: true,
   }).then((x) => {
@@ -94,6 +96,7 @@ export function getPhotos(): CancelablePromise<OralPhotoProperties[]> {
     resourceId: config.layerWithPhotos,
     geom: false,
     extensions: false,
+    limit: Infinity,
     fields: ['link_small', 'link_big', 'id_obj'],
   }).then((features) => {
     return features.map((x) => {
@@ -128,7 +131,9 @@ const defaultLayerMetaItems: LayerMetaItem[] = [
   // { text: 'долгота', value: 'lat', noHide: true },
   // { text: 'широта', value: 'lon', noHide: true },
   { text: 'Адрес', value: 'addr', detail: true, search: true },
+  { text: 'Страна', value: 'cntry', detail: false, list: true },
   { text: 'Город', value: 'city', detail: false, list: true },
+  { text: 'Регион', value: 'region', detail: false, list: true },
   {
     text: 'Название объекта',
     value: 'name',

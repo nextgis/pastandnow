@@ -98,12 +98,12 @@ export class Main extends Mixins(WindowSizeMixin) {
     return oralModule.filtered;
   }
 
-  get activeCityItems(): OralFeature[] {
-    return oralModule.activeCityItems;
+  get activePlaceItems(): OralFeature[] {
+    return oralModule.activePlaceItems;
   }
 
   get isFilterSet(): boolean {
-    return this.filtered.length !== this.activeCityItems.length;
+    return this.filtered.length !== this.activePlaceItems.length;
   }
 
   get module(): OralState {
@@ -187,8 +187,8 @@ export class Main extends Mixins(WindowSizeMixin) {
     }
   }
 
-  resetFilter(): void {
-    oralModule.resetFilter();
+  resetNonPlaceFilter(): void {
+    oralModule.resetNonPlaceFilter();
   }
 
   mounted(): void {
