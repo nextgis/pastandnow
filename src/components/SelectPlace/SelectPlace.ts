@@ -41,7 +41,8 @@ export class SelectPlace extends Vue {
     const items: CountItem[] = [];
 
     const parts: string[] = this.searchParts(val);
-    const places = this.places.slice(0, 100);
+    const places = this.places;
+    const maxItems = 100;
     for (const item of places) {
       if (item.level > 2) {
         const re = new RegExp(parts.map((x) => `(${x})`).join('|'), 'gi');
@@ -49,6 +50,9 @@ export class SelectPlace extends Vue {
 
         if (m && m.length >= parts.length) {
           items.push(item);
+          if (items.length > maxItems) {
+            break;
+          }
         }
       }
     }
