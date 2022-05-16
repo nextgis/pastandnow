@@ -62,14 +62,18 @@ export function placesFromProperties(
   const forked = false;
   for (const k of placeKeys) {
     const val = props[k] && props[k].split(';').map((y) => y.trim());
-    if (val.length > 1) {
-      for (const v of val) {
-        places.push({ ...place, [k]: v });
+    if (Array.isArray(val)) {
+      if (val.length > 1) {
+        for (const v of val) {
+          places.push({ ...place, [k]: v });
+        }
+        // ignore all next place keys
+        break;
+      } else {
+        place[k] = val[0];
       }
-      // ignore all next place keys
-      break;
     } else {
-      place[k] = val[0];
+      place[k] = val || '';
     }
   }
   if (!forked) {

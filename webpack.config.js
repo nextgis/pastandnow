@@ -47,14 +47,6 @@ module.exports = (env, argv) => {
         loader: 'babel-loader',
       },
     },
-    // {
-    //   test: /\.tsx?$/,
-    //   loader: 'ts-loader',
-    //   exclude: /node_modules/,
-    //   options: {
-    //     appendTsSuffixTo: [/\.vue$/],
-    //   },
-    // },
     {
       test: /\.(png|jpg|gif|svg)$/,
       loader: 'file-loader',
