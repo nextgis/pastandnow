@@ -13,10 +13,10 @@ import type {
   LayerMetaItem,
 } from '../interfaces';
 
-let limit = 8000;
+let limit = 12000;
 
 if (process.env.NODE_ENV === 'development') {
-  limit = 100;
+  limit = 120;
 }
 
 // export const url = config.baseUrl.replace(
@@ -38,15 +38,34 @@ export function getLayerFeatures(): CancelablePromise<
       )
       .map((x) => x.value) as (keyof OralProperties)[];
 
-    return fetchNgwLayerFeatures<Point, OralProperties>({
+    return fetchNgwLayerItems<Point, OralProperties>({
       connector,
       resourceId: config.ngwMarkerLayerId,
+      geomFormat: 'wkt',
       limit,
       // filters: [
       //   ['id1', 'in', [4418, 6687, 100001, 100002, 100003, 100004, 100005]],
       // ],
       fields,
       extensions: [],
+    }).then((items) => {
+      const features: Feature<Point, OralProperties>[] = [];
+      for (const r of items) {
+        const [lng, lat] = (r.geom as unknown as string)
+          .slice(6, -1)
+          .split(' ')
+          .map(Number);
+        const feature: Feature<Point, OralProperties> = {
+          type: 'Feature',
+          properties: r.fields,
+          geometry: {
+            type: 'Point',
+            coordinates: [lng, lat],
+          },
+        };
+        features.push(feature);
+      }
+      return features;
     });
   });
 }

@@ -1,4 +1,4 @@
-FROM node:alpine as build-deps
+FROM node:lts-alpine as build-deps
 WORKDIR /usr/src/app
 COPY ./package.json ./package-lock.json ./
 RUN npm ci

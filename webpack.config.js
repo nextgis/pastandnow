@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-// const CompressionPlugin = require('compression-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -127,15 +127,7 @@ module.exports = (env, argv) => {
   if (isProd) {
     // const zopfli = require('@gfx/zopfli');
     plugins = plugins.concat([
-      // new CompressionPlugin({
-      //   cache: true,
-      //   compressionOptions: {
-      //     numiterations: 15,
-      //   },
-      //   algorithm(input, compressionOptions, callback) {
-      //     return zopfli.gzip(input, compressionOptions, callback);
-      //   },
-      // }),
+      new CompressionPlugin(),
       new MiniCssExtractPlugin(),
     ]);
   }

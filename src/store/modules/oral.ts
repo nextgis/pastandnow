@@ -54,7 +54,7 @@ export class OralState extends VuexModule {
   activePlace: Partial<PlaceProperties> = {
     cntry: 'Россия',
     city: 'Москва',
-    region: undefined,
+    region: 'Московская обл.',
     rayon: undefined,
   };
 
