@@ -104,11 +104,6 @@ export class OralState extends VuexModule {
     );
     return items;
   }
-  // get activePlaceItems(): OralFeature[] {
-  //   return this.items.filter((x) => {
-  //     return x.properties.city === this.activePlace.city;
-  //   });
-  // }
 
   get propertiesFilter(): PropertiesFilter {
     return Object.values(this.filters).filter((x) => x);
@@ -116,7 +111,6 @@ export class OralState extends VuexModule {
 
   get sortFeatures(): OralFeature[] {
     const filtered = [...this.filtered] as OralFeature[];
-    // return filtered;
     return sortFeatures(filtered);
   }
 
@@ -140,15 +134,17 @@ export class OralState extends VuexModule {
     this.context.dispatch('setSearchReady', false);
     const features: OralFeature[] = [];
     const items = await getLayerStoryItems();
-    this.items.forEach((x) => {
-      const storyItemIndex = items.findIndex((y) => y.id === x.id);
+    for (const x of this.items) {
+      const storyItemIndex = items.findIndex(
+        (y) => y.fields.id1 === x.properties.id1,
+      );
       const newOralFeature = { ...x };
       if (storyItemIndex) {
         const story = items.splice(storyItemIndex, 1)[0];
         newOralFeature.properties = { ...x.properties, ...story.fields };
       }
       features.push(newOralFeature);
-    });
+    }
     this.context.dispatch('setSearchReady', true);
     return features;
   }
@@ -387,9 +383,9 @@ export class OralState extends VuexModule {
 
   @Mutation
   protected _updateFilter(filters: FilterProperties): void {
-    const items: OralPointFeature[] = this.items.filter((x) =>
-      featureFilter(x, Object.values(filters).filter(Boolean)),
-    );
+    const items: OralPointFeature[] = this.items.filter((x) => {
+      return featureFilter(x, Object.values(filters).filter(Boolean));
+    });
     this.filtered = items;
 
     const detail = this.detailItem;

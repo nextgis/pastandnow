@@ -16,7 +16,7 @@ import type {
 let limit = 12000;
 
 if (process.env.NODE_ENV === 'development') {
-  limit = 120;
+  limit = 12000;
 }
 
 // export const url = config.baseUrl.replace(
@@ -78,7 +78,7 @@ export function getLayerStoryItems(): CancelablePromise<FeatureItem[]> {
       resourceId: config.ngwMarkerLayerId,
       limit,
       geom: false,
-      fields,
+      fields: ['id1', ...fields],
       extensions: [],
     });
   });
