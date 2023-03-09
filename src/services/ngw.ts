@@ -13,7 +13,7 @@ import type {
   LayerMetaItem,
 } from '../interfaces';
 
-let limit = 12000;
+let limit = Infinity;
 
 if (process.env.NODE_ENV === 'development') {
   limit = 12000;

@@ -141,7 +141,9 @@ export class OralState extends VuexModule {
       const newOralFeature = { ...x };
       if (storyItemIndex) {
         const story = items.splice(storyItemIndex, 1)[0];
-        newOralFeature.properties = { ...x.properties, ...story.fields };
+        if (story && story.fields) {
+          newOralFeature.properties = { ...x.properties, ...story.fields };
+        }
       }
       features.push(newOralFeature);
     }
@@ -391,8 +393,8 @@ export class OralState extends VuexModule {
     const detail = this.detailItem;
     if (detail) {
       const item = items.find((x: OralFeature) => {
-        const id = x.id;
-        return id === detail.id;
+        const id = x.properties.id1;
+        return id === detail.properties.id1;
       });
       if (!item) {
         this.detailItem = false;

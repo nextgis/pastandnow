@@ -174,8 +174,8 @@ export class Main extends Mixins(WindowSizeMixin) {
       url.set('id', id !== undefined ? String(id) : '');
     }
     // for work with IFRAME
-    if (parent) {
-      parent.postMessage(JSON.stringify({ detail: id }), '*');
+    if (window.parent) {
+      window.parent.postMessage(JSON.stringify({ detail: id }), '*');
     }
   }
 
