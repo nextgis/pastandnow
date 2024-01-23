@@ -1,6 +1,7 @@
-import { CirclePaint } from '@nextgis/paint';
 import { getHistoryPaint } from './getHistoryPaint';
-import { OralFeature } from '../interfaces';
+
+import type { OralFeature } from '../interfaces';
+import type { CirclePaint } from '@nextgis/paint';
 
 export function getOralPaint(
   feature: OralFeature,

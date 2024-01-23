@@ -1,5 +1,3 @@
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import VueSocialSharing from 'vue-social-sharing';
 import {
   mdiClipboard,
   mdiEmail,
@@ -8,8 +6,9 @@ import {
   mdiTwitter,
   mdiVk,
 } from '@mdi/js';
-
 import { Clipboard } from '@nextgis/utils';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import VueSocialSharing from 'vue-social-sharing';
 
 import type { OralFeature } from '../../interfaces';
 

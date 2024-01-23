@@ -1,11 +1,11 @@
-import { Vue, Component } from 'vue-property-decorator';
 import { capitalize } from '@nextgis/utils';
+import { Component, Vue } from 'vue-property-decorator';
 
 import { oralModule } from '../../store/modules/oral';
-
 import SymbolComponent from '../Symbol/Symbol.vue';
-import type { PathPaint } from '@nextgis/paint';
+
 import type { OralGeomType } from '../../interfaces';
+import type { PathPaint } from '@nextgis/paint';
 
 interface LegendItem {
   text: string;

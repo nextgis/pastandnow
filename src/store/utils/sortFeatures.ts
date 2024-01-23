@@ -1,4 +1,4 @@
-import { OralFeature } from '../../interfaces';
+import type { OralFeature } from '../../interfaces';
 
 export function sortFeatures(features: OralFeature[]): OralFeature[] {
   const filtered = [...features] as OralFeature[];

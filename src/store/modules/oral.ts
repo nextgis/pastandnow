@@ -1,41 +1,41 @@
+import { featureFilter } from '@nextgis/properties-filter';
 import {
   Action,
   Module,
   Mutation,
-  getModule,
-  VuexModule,
   MutationAction,
+  VuexModule,
+  getModule,
 } from 'vuex-module-decorators';
-import { featureFilter } from '@nextgis/properties-filter';
 
 import { DEFAULT_PLACE, PLACE_KEYS } from '../../constants';
 import {
-  getLayerStoryItems,
   fetchOralFeature,
   getLayerFeatures,
   getLayerMeta,
+  getLayerStoryItems,
   getPhotos,
 } from '../../services/ngw';
-import { sortFeatures } from '../utils/sortFeatures';
 import store from '../index';
+import { sortFeatures } from '../utils/sortFeatures';
 
-import type { PathPaint } from '@nextgis/paint';
-import type {
-  PropertyFilter,
-  PropertiesFilter,
-} from '@nextgis/properties-filter';
 import type { FilterData } from '../../../scripts/FilterData';
 import type {
+  FilterProperties,
+  LayerMetaItem,
+  LegendItem,
+  OralFeature,
+  OralFilter,
+  OralGeomType,
   OralPhotoProperties,
   OralPointFeature,
   PlaceProperties,
-  LayerMetaItem,
-  OralGeomType,
-  OralFeature,
-  LegendItem,
-  OralFilter,
-  FilterProperties,
 } from '../../interfaces';
+import type { PathPaint } from '@nextgis/paint';
+import type {
+  PropertiesFilter,
+  PropertyFilter,
+} from '@nextgis/properties-filter';
 
 @Module({ dynamic: true, store, name: 'oral' })
 export class OralState extends VuexModule {

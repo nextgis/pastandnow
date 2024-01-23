@@ -1,8 +1,7 @@
-import { Component, Mixins, Watch } from 'vue-property-decorator';
-import bbox from '@turf/bbox';
-
-import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
 import { fetchNgwLayerFeatures } from '@nextgis/ngw-kit';
+import VueNgwMapbox from '@nextgis/vue-ngw-mapbox';
+import bbox from '@turf/bbox';
+import { Component, Mixins, Watch } from 'vue-property-decorator';
 
 import config from '../../config';
 import { connector } from '../../services/ngw';
@@ -12,22 +11,22 @@ import { getOralPaint } from '../../utils/getHistoryIcons';
 import { getPathPaint } from '../../utils/getHistoryPaint';
 import { encodePlaceValue } from '../../utils/place';
 
-import type { Feature, Point, FeatureCollection } from 'geojson';
-import type {
-  GeoJsonAdapterOptions,
-  VectorAdapterLayerType,
-  FeatureLayerAdapter,
-  VectorLayerAdapter,
-} from '@nextgis/webmap';
 import type {
   OralFeature,
   OralGeomType,
-  OralProperties,
-  PlaceProperties,
   OralLineFeature,
   OralPointFeature,
   OralPolygonFeature,
+  OralProperties,
+  PlaceProperties,
 } from '../../interfaces';
+import type {
+  FeatureLayerAdapter,
+  GeoJsonAdapterOptions,
+  VectorAdapterLayerType,
+  VectorLayerAdapter,
+} from '@nextgis/webmap';
+import type { Feature, FeatureCollection, Point } from 'geojson';
 
 const { ngwLineLayerId, ngwPolygonLayerId } = config;
 

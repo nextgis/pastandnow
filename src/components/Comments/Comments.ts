@@ -1,4 +1,5 @@
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
 import { initRemark42, remarkConfig } from './remark42';
 
 interface Remark {

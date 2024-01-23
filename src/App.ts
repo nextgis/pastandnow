@@ -1,8 +1,11 @@
-import { Vue, Component } from 'vue-property-decorator';
-import { appModule, AppPages } from './store/modules/app';
+import { Component, Vue } from 'vue-property-decorator';
+
+import MainComponent from './Main.vue';
 import AboutComponent from './components/NextGIS/About.vue';
 import TableComponent from './components/Table/Table.vue';
-import MainComponent from './Main.vue';
+import { appModule } from './store/modules/app';
+
+import type { AppPages } from './store/modules/app';
 
 @Component({
   components: { MainComponent, TableComponent, AboutComponent },

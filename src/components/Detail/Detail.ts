@@ -1,17 +1,17 @@
-import { Vue, Component } from 'vue-property-decorator';
 import { mdiClose } from '@mdi/js';
 // @ts-ignore add types
 import Urlify from 'urlify';
-import { oralModule } from '../../store/modules/oral';
+import { Component, Vue } from 'vue-property-decorator';
 
-import { isValidUrl } from '../../utils/isValidUrl';
 import { appModule } from '../../store/modules/app';
+import { oralModule } from '../../store/modules/oral';
+import { isValidUrl } from '../../utils/isValidUrl';
 import Comments from '../Comments/Comments.vue';
 
 import type {
-  OralProperties,
-  OralPhotoProperties,
   LayerMetaItem,
+  OralPhotoProperties,
+  OralProperties,
 } from '../../interfaces';
 
 const urlify = Urlify.create({ toLower: true });

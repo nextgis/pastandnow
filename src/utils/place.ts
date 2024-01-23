@@ -1,4 +1,5 @@
 import { PLACE_KEYS } from '../constants';
+
 import type { OralProperties, PlaceProperties } from '../interfaces';
 
 export function decodePlaceValue(val: string): Partial<PlaceProperties> {

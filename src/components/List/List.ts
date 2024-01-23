@@ -1,12 +1,13 @@
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import { CirclePaint } from '@nextgis/paint';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 import { appModule } from '../../store/modules/app';
 import { oralModule } from '../../store/modules/oral';
-import SymbolComponent from '../Symbol/Symbol.vue';
-import { OralFeature } from '../../interfaces';
 import { getHistoryPaint } from '../../utils/getHistoryPaint';
-import { OralProperties } from '../../interfaces';
+import SymbolComponent from '../Symbol/Symbol.vue';
+
+import type { OralFeature } from '../../interfaces';
+import type { OralProperties } from '../../interfaces';
+import type { CirclePaint } from '@nextgis/paint';
 
 @Component({ components: { SymbolComponent } })
 export class List extends Vue {

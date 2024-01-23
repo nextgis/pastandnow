@@ -1,22 +1,24 @@
-import { Point, Feature } from 'geojson';
-import NgwConnector, { FeatureItem } from '@nextgis/ngw-connector';
-import CancelablePromise from '@nextgis/cancelable-promise';
+import NgwConnector from '@nextgis/ngw-connector';
 import { fetchNgwLayerFeatures, fetchNgwLayerItems } from '@nextgis/ngw-kit';
+
 import config from '../config';
 
-import type { FeatureProperties } from '@nextgis/utils';
-import type { PropertiesFilter } from '@nextgis/properties-filter';
 import type { OralPointFeature } from '../interfaces';
 import type {
-  OralProperties,
-  OralPhotoProperties,
   LayerMetaItem,
+  OralPhotoProperties,
+  OralProperties,
 } from '../interfaces';
+import type CancelablePromise from '@nextgis/cancelable-promise';
+import type { FeatureItem } from '@nextgis/ngw-connector';
+import type { PropertiesFilter } from '@nextgis/properties-filter';
+import type { FeatureProperties } from '@nextgis/utils';
+import type { Feature, Point } from 'geojson';
 
 let limit = Infinity;
 
 if (process.env.NODE_ENV === 'development') {
-  limit = 12000;
+  limit = 1200;
 }
 
 // export const url = config.baseUrl.replace(

@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { OralState } from './modules/oral';
-import { AppState } from './modules/app';
+
+import type { AppState } from './modules/app';
+import type { OralState } from './modules/oral';
 
 Vue.use(Vuex);
 

@@ -1,7 +1,9 @@
-import { CirclePaint, PathPaint } from '@nextgis/paint';
-import { OralFeature, OralProperties } from '../interfaces';
 import { oralModule } from '../store/modules/oral';
+
 import { featureStyleKeys, featureStyles } from './featureStyleKeys';
+
+import type { OralFeature, OralProperties } from '../interfaces';
+import type { CirclePaint, PathPaint } from '@nextgis/paint';
 
 export function getPathPaint(
   feature: OralFeature,

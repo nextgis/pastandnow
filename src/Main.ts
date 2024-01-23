@@ -1,41 +1,42 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-// import './images/drawing.svg';
-
-import { Component, Watch, Mixins } from 'vue-property-decorator';
-import { NgwMapOptions } from '@nextgis/ngw-map';
 
 import {
+  mdiArrowLeft,
+  mdiChevronRight,
   mdiClose,
+  mdiCrosshairsGps,
   mdiFilter,
+  mdiFormatListBulleted,
   mdiMagnify,
   mdiMapMarker,
-  mdiArrowLeft,
   mdiMessageAlert,
-  mdiChevronRight,
   mdiShareVariant,
-  mdiCrosshairsGps,
-  mdiFormatListBulleted,
 } from '@mdi/js';
+import { VueNgwControl } from '@nextgis/vue-ngw-map';
+import { Component, Mixins, Watch } from 'vue-property-decorator';
 
 import { prepareFilterData } from '../scripts/prepareFilterData';
-import config from './config';
-import { connector } from './services/ngw';
-import { url } from './services/url';
-import { VueNgwControl } from '@nextgis/vue-ngw-map';
+
+import Detail from './components/Detail/Detail.vue';
+import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
+import FilterPanel from './components/FilterPanel/FilterPanel.vue';
+import Legend from './components/Legend/Legend.vue';
 import List from './components/List/List.vue';
 import { OralMap } from './components/OralMap/OralMap';
 import SelectPlace from './components/SelectPlace/SelectPlace.vue';
-import Detail from './components/Detail/Detail.vue';
-import Legend from './components/Legend/Legend.vue';
 import Share from './components/Share/Share.vue';
-import DrawerContainer from './components/DrawerContainer/DrawerContainer.vue';
-import FilterPanel from './components/FilterPanel/FilterPanel.vue';
-import { appModule, AppPages } from './store/modules/app';
-import { oralModule, OralState } from './store/modules/oral';
-import throttle from './store/utils/throttle';
+import config from './config';
 import { WindowSizeMixin } from './minixs/WindowSizeMixin';
+import { connector } from './services/ngw';
+import { url } from './services/url';
+import { appModule } from './store/modules/app';
+import { oralModule } from './store/modules/oral';
+import throttle from './store/utils/throttle';
 
 import type { OralFeature, OralProperties } from './interfaces';
+import type { AppPages } from './store/modules/app';
+import type { OralState } from './store/modules/oral';
+import type { NgwMapOptions } from '@nextgis/ngw-map';
 
 const { qmsId, feedbackUrl } = config;
 @Component({

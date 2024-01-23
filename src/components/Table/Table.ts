@@ -1,6 +1,8 @@
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+
 import { oralModule } from '../../store/modules/oral';
 import ShowMoreField from '../ShowMoreField/ShowMoreField.vue';
+
 import type { OralProperties } from '../../interfaces';
 
 @Component({

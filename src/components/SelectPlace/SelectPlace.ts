@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 import { oralModule } from '../../store/modules/oral';
 import {
-  placesFromProperties,
-  encodePlaceValue,
   decodePlaceValue,
-  joinPlaceParts,
+  encodePlaceValue,
   getPlaceLevel,
   getPlaceText,
+  joinPlaceParts,
+  placesFromProperties,
 } from '../../utils/place';
 
-// import type { FilterProperties } from '../../store/modules/oral';
 import type { OralFeature, PlaceProperties } from '../../interfaces';
 
 interface CountItem {

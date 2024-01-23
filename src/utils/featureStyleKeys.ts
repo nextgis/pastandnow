@@ -1,5 +1,6 @@
-import { CirclePaint } from '@nextgis/paint';
 import { shadeColor } from './shadeColor';
+
+import type { CirclePaint } from '@nextgis/paint';
 
 export const featureStyles: Record<string, CirclePaint> = {
   водоем: { color: '#4163aa', strokeColor: '' },

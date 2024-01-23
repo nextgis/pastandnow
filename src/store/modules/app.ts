@@ -1,10 +1,11 @@
 import {
-  VuexModule,
-  Mutation,
   Action,
   Module,
+  Mutation,
+  VuexModule,
   getModule,
 } from 'vuex-module-decorators';
+
 import store from '../../store';
 
 export type AppPages = 'main' | 'table' | 'about';

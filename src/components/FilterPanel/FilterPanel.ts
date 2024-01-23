@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/member-ordering */
-import { Vue, Component, Emit, Watch } from 'vue-property-decorator';
+import { Component, Emit, Vue, Watch } from 'vue-property-decorator';
+
 import { oralModule } from '../../store/modules/oral';
 
 import type { NarrativeTypeItem } from '../../interfaces';

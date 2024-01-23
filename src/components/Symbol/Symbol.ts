@@ -1,6 +1,8 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { PathPaint, Expression } from '@nextgis/paint';
-import { OralGeomType } from '../../interfaces';
+
+import type { OralGeomType } from '../../interfaces';
+import type { Expression } from '@nextgis/expression';
+import type { PathPaint } from '@nextgis/paint';
 
 @Component
 export default class Legend extends Vue {
