@@ -1,28 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export default function throttle(
   fn: (...args: any[]) => void,
   time: number,
   context?: Record<string, any>,
-): () => void {
-  let lock: boolean;
-  let args: any;
+): (...args: any[]) => void {
+  let lock = false;
+  let args: any[] | null = null;
 
   function later() {
     // reset lock and call if queued
     lock = false;
     if (args) {
       wrapperFn.apply(context, args);
-      args = false;
+      args = null;
     }
   }
 
-  function wrapperFn() {
+  function wrapperFn(this: any, ...innerArgs: any[]) {
     if (lock) {
       // called too soon, queue to call later
-      args = arguments;
+      args = innerArgs;
     } else {
       // call and lock until later
-      //@ts-ignore
-      fn.apply(context, arguments);
+      fn.apply(context || this, innerArgs);
       setTimeout(later, time);
       lock = true;
     }

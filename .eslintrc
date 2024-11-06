@@ -1,9 +1,0 @@
-{
-  "extends": [
-    "@nextgis/eslint-config"
-  ],
-  "rules": {
-    "prefer-rest-params": 0,
-    "@typescript-eslint/no-use-before-define": 0
-  }
-}

@@ -10,13 +10,13 @@
       hide-details
       @click:append="copyUrl"
     ></v-text-field>
-    <!-- :append-icon="icons.copy" -->
+
     <v-divider></v-divider>
     <div class="share-network-list pt-2">
       <ShareNetwork
         v-for="n in networks"
-        :network="n.network"
         :key="n.network"
+        :network="n.network"
         :style="{ backgroundColor: n.color }"
         :url="url"
         :title="title"
@@ -30,7 +30,7 @@
     </div>
     <v-snackbar v-model="snackbar" timeout="2000">
       Ссылка скопирована в буфер обмена
-      <template v-slot:action="{ attrs }">
+      <template #action="{ attrs }">
         <v-btn color="success" text v-bind="attrs" @click="snackbar = false">
           Закрыть
         </v-btn>
@@ -39,11 +39,64 @@
   </div>
 </template>
 
-<script lang="ts">
-export { Comments as default } from './Share';
+<script setup lang="ts">
+import { mdiEmail, mdiTelegram, mdiVk } from '@mdi/js';
+import { Clipboard } from '@nextgis/utils';
+import Vue, { computed, ref } from 'vue';
+import VueSocialSharing from 'vue-social-sharing';
+
+import type { OralFeature } from '../../interfaces';
+
+Vue.use(VueSocialSharing);
+
+const props = defineProps({
+  item: {
+    type: Object as () => OralFeature,
+    required: true,
+  },
+});
+
+const description = ref('');
+const snackbar = ref(false);
+
+const hashtags = 'pastandnow';
+
+const networks = [
+  {
+    network: 'email',
+    name: 'Email',
+    icon: mdiEmail,
+    color: '#333333',
+  },
+  {
+    network: 'telegram',
+    name: 'Telegram',
+    icon: mdiTelegram,
+    color: '#0088cc',
+  },
+  {
+    network: 'vk',
+    name: 'Vk',
+    icon: mdiVk,
+    color: '#4a76a8',
+  },
+];
+
+const url = computed(
+  () => `https://pastandnow.ru/?id=${props.item.properties.id1}`,
+);
+const title = computed(() => props.item.properties.name || '');
+const quote = computed(() => props.item.properties.name || '');
+
+const copyUrl = () => {
+  const isCopy = Clipboard.copy(url.value);
+  if (isCopy) {
+    snackbar.value = true;
+  }
+};
 </script>
 
-<style lang="scss" scoped>
+<style setup lang="scss" scoped>
 .share-network-list {
   display: flex;
   flex-direction: row;

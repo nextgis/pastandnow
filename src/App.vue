@@ -1,54 +1,23 @@
 <template>
   <v-app>
-    <main-component></main-component>
-    <!-- <v-dialog :value="page === 'table'" fullscreen scrollable transition="dialog-bottom-transition">
-      <v-card class="fullscreen-dialog">
-        <v-toolbar dark color="primary" class="dialog-titlebar">
-          <v-btn icon dark @click.native="page = 'main'">
-            <v-icon>close</v-icon>
-          </v-btn>
-          <span class="title ml-3 mr-5">
-            Устная память&nbsp;
-            <span class="font-weight-light">Таблица</span>
-          </span>
-          <v-text-field
-            v-model="tableSearch"
-            solo-inverted
-            text
-            hide-details
-            label="Поиск"
-            prepend-inner-icon="search"
-          ></v-text-field>
-
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn dark text>Сохранить</v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-
-        <div class="dialog-body">
-          <table-component
-            v-if="page === 'table'"
-            :search="tableSearch"
-            :paginationSync="paginationSync"
-          ></table-component>
-          <about-component v-else-if="page === 'about'"></about-component>
-        </div>
-
-        <v-footer class="pt-3 pb-4" v-if="pagination && pagination.page">
-          <div class="text-center pt-1">
-            <v-pagination v-model="pagination.page" :length="pagesCount" :total-visible="7"></v-pagination>
-          </div>
-        </v-footer>
-      </v-card>
-    </v-dialog> -->
+    <MainComponent></MainComponent>
   </v-app>
 </template>
 
 <script lang="ts">
-export { App as default } from "./App";
-</script>
+import { defineComponent } from 'vue';
 
+import MainComponent from './MainComponent.vue';
+
+export default defineComponent({
+  components: {
+    MainComponent,
+  },
+  setup() {
+    return {};
+  },
+});
+</script>
 
 <style lang="scss">
 * {
@@ -76,27 +45,25 @@ body {
   }
 }
 
-*::-webkit-scrollbar-track{
+*::-webkit-scrollbar-track {
   background-color: inherit;
 }
 
-
-*::-webkit-scrollbar{
+*::-webkit-scrollbar {
   width: 8px;
   background-color: inherit;
 }
 
-
-*::-webkit-scrollbar-thumb{
-  background-color: rgba(0, 0, 0, .35);
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.35);
 }
-*::-webkit-scrollbar-corner{
+*::-webkit-scrollbar-corner {
   background-color: transparent;
 }
 
-.theme--dark{
-  *::-webkit-scrollbar-thumb{
-  background-color: rgba(0, 0, 0, .55);
-}
+.theme--dark {
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.55);
+  }
 }
 </style>

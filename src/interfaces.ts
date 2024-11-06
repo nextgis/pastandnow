@@ -1,14 +1,16 @@
-import type { PropertiesFilter } from '@nextgis/properties-filter';
 import type { PathPaint } from '@nextgis/paint';
+import type { PropertiesFilter } from '@nextgis/properties-filter';
 import type {
-  Point,
   Feature,
   FeatureCollection,
   LineString,
   MultiPolygon,
+  Point,
 } from 'geojson';
 
-type PlaceFilter = Record<keyof PlaceProperties, PropertiesFilter | undefined>;
+type PlaceFilter = {
+  [key in keyof PlaceProperties]?: PropertiesFilter;
+};
 interface NonPlaceFilter {
   type?: PropertiesFilter;
   fullText?: PropertiesFilter;
@@ -34,6 +36,7 @@ export type OralFilter = FilterProperties;
 export interface LegendItem {
   name: string;
   item: PathPaint;
+  geo?: OralGeomType;
 }
 
 export interface NarrativeTypeItem {
@@ -45,7 +48,7 @@ export type OralGeomType = 'point' | 'line' | 'poly';
 export interface OralProperties {
   id: number;
 
-  id1: number;
+  id1: string;
   city: string;
   cntry: string;
   region: string;
@@ -97,4 +100,15 @@ export interface LayerMetaItem {
   type?: 'NarratorLink' | 'Special' | 'Story';
   detail?: boolean;
   search?: boolean;
+}
+
+export interface OralFeatures {
+  point: OralPointFeature[];
+  line: OralLineFeature[];
+  poly: OralPolygonFeature[];
+}
+export interface OralLayers {
+  point: string;
+  line: string;
+  poly: string;
 }

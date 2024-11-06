@@ -9,7 +9,6 @@ import type {
   OralPhotoProperties,
   OralProperties,
 } from '../interfaces';
-import type CancelablePromise from '@nextgis/cancelable-promise';
 import type { FeatureItem } from '@nextgis/ngw-connector';
 import type { PropertiesFilter } from '@nextgis/properties-filter';
 import type { FeatureProperties } from '@nextgis/utils';
@@ -29,66 +28,62 @@ export const url = config.baseUrl;
 
 export const connector = new NgwConnector({ baseUrl: url });
 
-export function getLayerFeatures(): CancelablePromise<
+export async function getLayerFeatures(): Promise<
   Feature<Point, OralProperties>[]
 > {
-  return getLayerMeta().then((meta) => {
-    const fields = meta
-      .filter(
-        (x) =>
-          x.type !== 'Story' && (x.search || x.list || x.type === 'Special'),
-      )
-      .map((x) => x.value) as (keyof OralProperties)[];
+  const meta = await getLayerMeta();
+  const fields = meta
+    .filter(
+      (x) => x.type !== 'Story' && (x.search || x.list || x.type === 'Special'),
+    )
+    .map((x) => x.value) as (keyof OralProperties)[];
 
-    return fetchNgwLayerItems<Point, OralProperties>({
-      connector,
-      resourceId: config.ngwMarkerLayerId,
-      geomFormat: 'wkt',
-      limit,
-      // filters: [
-      //   ['id1', 'in', [4418, 6687, 100001, 100002, 100003, 100004, 100005]],
-      // ],
-      fields,
-      extensions: [],
-    }).then((items) => {
-      const features: Feature<Point, OralProperties>[] = [];
-      for (const r of items) {
-        const [lng, lat] = (r.geom as unknown as string)
-          .slice(6, -1)
-          .split(' ')
-          .map(Number);
-        const feature: Feature<Point, OralProperties> = {
-          type: 'Feature',
-          properties: r.fields,
-          geometry: {
-            type: 'Point',
-            coordinates: [lng, lat],
-          },
-        };
-        features.push(feature);
-      }
-      return features;
-    });
+  const items = await fetchNgwLayerItems<Point, OralProperties>({
+    connector,
+    resourceId: config.ngwMarkerLayerId,
+    geomFormat: 'wkt',
+    limit,
+    // filters: [
+    //   ['id1', 'in', [4418, 6687, 100001, 100002, 100003, 100004, 100005]],
+    // ],
+    fields,
+    extensions: [],
   });
+  const features: Feature<Point, OralProperties>[] = [];
+  for (const r of items) {
+    const [lng, lat] = (r.geom as unknown as string)
+      .slice(6, -1)
+      .split(' ')
+      .map(Number);
+    const feature: Feature<Point, OralProperties> = {
+      type: 'Feature',
+      properties: r.fields,
+      geometry: {
+        type: 'Point',
+        coordinates: [lng, lat],
+      },
+    };
+    features.push(feature);
+  }
+  return features;
 }
 
-export function getLayerStoryItems(): CancelablePromise<FeatureItem[]> {
-  return getLayerMeta().then((meta) => {
-    const fields = meta.filter((x) => x.type === 'Story').map((x) => x.value);
-    return fetchNgwLayerItems<Point>({
-      connector,
-      resourceId: config.ngwMarkerLayerId,
-      limit,
-      geom: false,
-      fields: ['id1', ...fields],
-      extensions: [],
-    });
+export async function getLayerStoryItems(): Promise<FeatureItem[]> {
+  const meta = await getLayerMeta();
+  const fields = meta.filter((x) => x.type === 'Story').map((x) => x.value);
+  return fetchNgwLayerItems<Point>({
+    connector,
+    resourceId: config.ngwMarkerLayerId,
+    limit,
+    geom: false,
+    fields: ['id1', ...fields],
+    extensions: [],
   });
 }
 
 export function fetchOralFeatures<P extends FeatureProperties = OralProperties>(
   filters: PropertiesFilter<P>,
-): CancelablePromise<Feature<Point, P>[]> {
+): Promise<Feature<Point, P>[]> {
   return fetchNgwLayerFeatures<Point, P>({
     resourceId: config.ngwMarkerLayerId,
     connector,
@@ -97,54 +92,51 @@ export function fetchOralFeatures<P extends FeatureProperties = OralProperties>(
   });
 }
 
-export function fetchOralFeature(
-  id1: number,
-): CancelablePromise<OralPointFeature> {
-  return fetchNgwLayerFeatures<Point, OralProperties>({
+export async function fetchOralFeature(
+  id1: number | string,
+): Promise<OralPointFeature> {
+  const x = await fetchNgwLayerFeatures<Point, OralProperties>({
     resourceId: config.ngwMarkerLayerId,
     connector,
     limit: Infinity,
     filters: [['id1', 'eq', id1]],
     cache: true,
-  }).then((x) => {
-    return x[0];
   });
+  return x[0];
 }
 
-export function getPhotos(): CancelablePromise<OralPhotoProperties[]> {
-  return fetchNgwLayerItems<Point, OralPhotoProperties>({
+export async function getNgwPhotos(): Promise<OralPhotoProperties[]> {
+  const features = await fetchNgwLayerItems<Point, OralPhotoProperties>({
     connector,
     resourceId: config.layerWithPhotos,
     geom: false,
     extensions: false,
     limit: Infinity,
     fields: ['link_small', 'link_big', 'id_obj'],
-  }).then((features) => {
-    return features.map((x) => {
-      if (x.id) {
-        x.fields.id = Number(x.id);
-      }
-      return x.fields;
-    });
+  });
+  return features.map((x) => {
+    if (x.id) {
+      x.fields.id = Number(x.id);
+    }
+    return x.fields;
   });
 }
 
-export function fetchSpecialFields(): CancelablePromise<LayerMetaItem[]> {
-  return connector
-    .getResourceOrFail(config.specialFieldsLookupId, { cache: true })
-    .then((resp) => {
-      if (resp.lookup_table) {
-        return Object.entries(resp.lookup_table.items).map(([value, text]) => ({
-          text,
-          value: value as keyof OralProperties,
-          detail: false,
-          type: 'Special',
-        }));
-      }
-      throw new Error(
-        `Resource ${config.specialFieldsLookupId} is not a lookup table`,
-      );
-    });
+export async function fetchSpecialFields(): Promise<LayerMetaItem[]> {
+  const resp = await connector.getResourceOrFail(config.specialFieldsLookupId, {
+    cache: true,
+  });
+  if (resp.lookup_table) {
+    return Object.entries(resp.lookup_table.items).map(([value, text]) => ({
+      text,
+      value: value as keyof OralProperties,
+      detail: false,
+      type: 'Special',
+    }));
+  }
+  throw new Error(
+    `Resource ${config.specialFieldsLookupId} is not a lookup table`,
+  );
 }
 
 const defaultLayerMetaItems: LayerMetaItem[] = [
@@ -236,12 +228,11 @@ const emergencySpecialFields: LayerMetaItem[] = [
   // { text: 'Последний адрес', value: 'mos8', type: 'Special' },
 ];
 
-export function getLayerMeta(): CancelablePromise<LayerMetaItem[]> {
-  return fetchSpecialFields()
-    .then((specialFields) => {
-      return [...defaultLayerMetaItems, ...specialFields];
-    })
-    .catch(() => {
-      return [...defaultLayerMetaItems, ...emergencySpecialFields];
-    });
+export async function getLayerMeta(): Promise<LayerMetaItem[]> {
+  try {
+    const specialFields = await fetchSpecialFields();
+    return [...defaultLayerMetaItems, ...specialFields];
+  } catch {
+    return [...defaultLayerMetaItems, ...emergencySpecialFields];
+  }
 }

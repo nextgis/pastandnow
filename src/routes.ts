@@ -1,7 +1,10 @@
-import VueRouter, { RouteConfig } from 'vue-router';
+import VueRouter from 'vue-router';
+
+import Main from './MainComponent.vue';
 import About from './components/NextGIS/About.vue';
 import Table from './components/Table/Table.vue';
-import Main from './Main.vue';
+
+import type { RouteConfig } from 'vue-router';
 
 const routes: RouteConfig[] = [
   // { path: '/test', component: TestRouter }

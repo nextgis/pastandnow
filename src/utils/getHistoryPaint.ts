@@ -1,4 +1,4 @@
-import { oralModule } from '../store/modules/oral';
+import { useOralStore } from '../store/modules/oral';
 
 import { featureStyleKeys, featureStyles } from './featureStyleKeys';
 
@@ -43,7 +43,7 @@ export function getHistoryPaint(
   };
   if (style && styleId && forLegend) {
     const geo = properties?.geo || 'point';
-    oralModule.setLegend({ name: styleId, item: paint as PathPaint, geo });
+    useOralStore().setLegend({ name: styleId, item: paint as PathPaint, geo });
   }
   return paint;
 }

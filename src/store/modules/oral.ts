@@ -1,12 +1,6 @@
 import { featureFilter } from '@nextgis/properties-filter';
-import {
-  Action,
-  Module,
-  Mutation,
-  MutationAction,
-  VuexModule,
-  getModule,
-} from 'vuex-module-decorators';
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 
 import { DEFAULT_PLACE, PLACE_KEYS } from '../../constants';
 import {
@@ -14,9 +8,8 @@ import {
   getLayerFeatures,
   getLayerMeta,
   getLayerStoryItems,
-  getPhotos,
+  getNgwPhotos,
 } from '../../services/ngw';
-import store from '../index';
 import { sortFeatures } from '../utils/sortFeatures';
 
 import type { FilterData } from '../../../scripts/FilterData';
@@ -25,278 +18,226 @@ import type {
   LayerMetaItem,
   LegendItem,
   OralFeature,
-  OralFilter,
-  OralGeomType,
   OralPhotoProperties,
   OralPointFeature,
   PlaceProperties,
 } from '../../interfaces';
-import type { PathPaint } from '@nextgis/paint';
 import type {
   PropertiesFilter,
   PropertyFilter,
 } from '@nextgis/properties-filter';
 
-@Module({ dynamic: true, store, name: 'oral' })
-export class OralState extends VuexModule {
-  items: OralPointFeature[] = [];
-  filtered: OralPointFeature[] = [];
-  photos: OralPhotoProperties[] = [];
-  meta: LayerMetaItem[] = [];
-  detailItem: OralFeature | false = false;
-  featuresLoading = false;
-
-  narrativeTypeSelected: string[] = [];
-  specialFilterSelected: string[] = [];
-  listSearchText = '';
-  activeTypes: string[] | false = false;
-
-  activePlace: Partial<PlaceProperties> = {
+export const useOralStore = defineStore('oral', () => {
+  const items = ref<OralPointFeature[]>([]);
+  const filtered = ref<OralPointFeature[]>([]);
+  const photos = ref<OralPhotoProperties[]>([]);
+  const meta = ref<LayerMetaItem[]>([]);
+  const detailItem = ref<OralFeature | null>(null);
+  const featuresLoading = ref(false);
+  const narrativeTypeSelected = ref<string[]>([]);
+  const specialFilterSelected = ref<string[]>([]);
+  const listSearchText = ref('');
+  const activeTypes = ref<string[] | false>([]);
+  const activePlace = ref<Partial<PlaceProperties>>({
     cntry: 'Россия',
     city: 'Москва',
     region: 'Московская обл.',
-    rayon: undefined,
-  };
-
-  legendItems: Array<{
-    name: string;
-    geo: OralGeomType;
-    item: PathPaint;
-  }> = [];
-
-  filterData: FilterData = {
-    // cities: {},
-    // rayonDict: {},
-    narrativeTypeItems: {},
-  };
-
-  filters: FilterProperties = {
+  });
+  const legendItems = ref<LegendItem[]>([]);
+  const filterData = ref<FilterData>({ narrativeTypeItems: {} });
+  const filters = ref<FilterProperties>({
     fullText: undefined,
-
     city: undefined,
     rayon: undefined,
     region: undefined,
     cntry: undefined,
-
-    // in legend
     type: undefined,
-    // meta field type is 'Special'
     specialFilter: undefined,
-  };
+  });
+  const searchReady = ref(false);
 
-  searchReady = false;
+  const features = computed(() => filtered.value);
 
-  get features(): OralFeature[] {
-    return this.filtered;
-  }
-
-  get activePlaceItems(): OralFeature[] {
+  const activePlaceItems = computed(() => {
     const placeFilters: PropertiesFilter[] = [];
-    for (const k of PLACE_KEYS) {
-      const filter = this.filters[k];
+    PLACE_KEYS.forEach((key) => {
+      const filter = filters.value[key];
       if (filter) {
         placeFilters.push(filter);
       }
-    }
+    });
+    return items.value.filter((item) => featureFilter(item, placeFilters));
+  });
 
-    const items: OralPointFeature[] = this.items.filter((x) =>
-      featureFilter(x, placeFilters),
-    );
-    return items;
-  }
+  const propertiesFilter = computed(() => {
+    // @ts-expect-error Type instantiation is excessively deep and possibly infinite.
+    return Object.values(filters.value).filter(Boolean) as PropertiesFilter[];
+  });
 
-  get propertiesFilter(): PropertiesFilter {
-    return Object.values(this.filters).filter((x) => x);
-  }
+  const sortedFeatures = computed(() => {
+    return sortFeatures([...filtered.value] as OralFeature[]);
+  });
 
-  get sortFeatures(): OralFeature[] {
-    const filtered = [...this.filtered] as OralFeature[];
-    return sortFeatures(filtered);
-  }
-
-  @Action({ commit: '_setItems' })
-  async getAllItems(): Promise<OralFeature[]> {
-    this.setFeaturesLoading(true);
-    await this.setMeta();
+  // Actions
+  const getAllItems = async () => {
+    setFeaturesLoading(true);
+    await setMeta();
     const features = await getLayerFeatures();
-    this.setFeaturesLoading(false);
-    return features;
-  }
+    setFeaturesLoading(false);
+    _setItems(features);
+  };
 
-  @Action({ commit: '_setItems' })
-  async setItems(features: OralFeature[]): Promise<OralFeature[]> {
-    await this.setMeta();
-    return features;
-  }
+  const setItems = async (features: OralPointFeature[]) => {
+    await setMeta();
+    _setItems(features);
+  };
 
-  @Action({ commit: '_setItems' })
-  async loadStories(): Promise<OralFeature[]> {
-    this.context.dispatch('setSearchReady', false);
-    const features: OralFeature[] = [];
-    const items = await getLayerStoryItems();
-    for (const x of this.items) {
-      const storyItemIndex = items.findIndex(
-        (y) => y.fields.id1 === x.properties.id1,
+  const loadStories = async () => {
+    setSearchReady(false);
+    const updatedFeatures: OralPointFeature[] = [];
+    const itemsFromLayer = await getLayerStoryItems();
+    items.value.forEach((item) => {
+      const storyIndex = itemsFromLayer.findIndex(
+        (storyItem) => storyItem.fields.id1 === item.properties.id1,
       );
-      const newOralFeature = { ...x };
-      if (storyItemIndex) {
-        const story = items.splice(storyItemIndex, 1)[0];
-        if (story && story.fields) {
-          newOralFeature.properties = { ...x.properties, ...story.fields };
-        }
+      const updatedFeature = { ...item };
+      if (storyIndex !== -1) {
+        const story = itemsFromLayer.splice(storyIndex, 1)[0];
+        updatedFeature.properties = { ...item.properties, ...story.fields };
       }
-      features.push(newOralFeature);
-    }
-    this.context.dispatch('setSearchReady', true);
-    return features;
-  }
+      updatedFeatures.push(updatedFeature);
+    });
+    setSearchReady(true);
+    _setItems(updatedFeatures);
+  };
 
-  @Action({ commit: '_setMeta' })
-  async setMeta(): Promise<LayerMetaItem[]> {
-    const meta = await getLayerMeta();
-    return meta;
-  }
+  const setMeta = async () => {
+    const metadata = await getLayerMeta();
+    _setMeta(metadata);
+  };
 
-  @Action
-  async setDetailById(id: number): Promise<OralFeature | undefined> {
+  const setDetailById = async (id: string | number) => {
     const feature = await fetchOralFeature(id);
     if (feature) {
-      const existActiveTypes = [...(this.activeTypes || [])];
       if (
-        existActiveTypes.length &&
-        !existActiveTypes.includes(feature.properties.type)
+        activeTypes.value &&
+        !activeTypes.value.includes(feature.properties.type)
       ) {
-        existActiveTypes.push(feature.properties.type);
-        await this.setActiveTypes([...existActiveTypes]);
-        await this.setTypesFilter([...existActiveTypes]);
+        setActiveTypes([...(activeTypes.value || []), feature.properties.type]);
+        setTypesFilter(activeTypes.value as string[]);
       }
-      await this.setActivePlace(feature.properties);
-      const items = [...this.items];
-      const exist = items.find(
-        (x) => x.properties.id1 === feature.properties.id1,
-      );
-      if (!exist) {
-        await this.setItems([...items, feature]);
+      setActivePlace(feature.properties);
+      if (
+        !items.value.some(
+          (item) =>
+            String(item.properties.id1) === String(feature.properties.id1),
+        )
+      ) {
+        setItems([...items.value, feature]);
       }
-      this.setDetail(Number(feature.properties.id1));
+      setDetail(feature.properties.id1);
       return feature;
     }
-  }
+  };
 
-  @Action({ commit: '_setPhotos' })
-  async getPhotos(): Promise<OralPhotoProperties[]> {
-    const photos = await getPhotos();
-    return photos;
-  }
+  const getPhotos = async () => {
+    const photosFromLayer = await getNgwPhotos();
+    _setPhotos(photosFromLayer);
+  };
 
-  @Action({ commit: '_updateFilter' })
-  async updateFilter(filters: Partial<FilterProperties>): Promise<OralFilter> {
-    const filters_ = { ...this.filters, ...filters };
-    return filters_;
-  }
+  const updateFilter = (newFilters: Partial<FilterProperties>) => {
+    _updateFilter({ ...filters.value, ...newFilters });
+  };
 
-  @Action({ commit: '_updateFilter' })
-  async resetNonPlaceFilter(): Promise<OralFilter> {
-    const filters = { ...this.filters };
-    for (const f in filters) {
-      const key = f as keyof FilterProperties;
+  const resetNonPlaceFilter = () => {
+    const resetFilters = { ...filters.value };
+    Object.keys(resetFilters).forEach((key) => {
       if (!PLACE_KEYS.includes(key as keyof PlaceProperties)) {
-        filters[key] = undefined;
+        resetFilters[key as keyof FilterProperties] = undefined;
       }
-    }
-    this.setListSearchText('');
-    this.resetSpecialFilter();
-    this.setActiveTypes(this.legendItems.map((x) => x.name));
-    return filters;
-  }
-
-  @Action
-  resetSpecialFilter(): void {
-    this.setSpecialFilterSelected(
-      this.meta.filter((x) => x.type === 'Special').map((x) => x.value),
-    );
-  }
-
-  @Action({ commit: '_updateFilter' })
-  async setFullTextFilter(query: string): Promise<OralFilter> {
-    if (!query) {
-      return { ...this.filters, fullText: undefined };
-    }
-    const filters_ = { ...this.filters };
-    const meta = await getLayerMeta();
-    const searchField = meta.filter((x) => x.search).map((x) => x.value);
-    const propertiesFilter: PropertiesFilter = ['any'];
-    searchField.forEach((x) => {
-      propertiesFilter.push([`%${x}%`, 'ilike', query]);
     });
-    filters_.fullText = propertiesFilter;
-    return filters_;
-  }
+    setListSearchText('');
+    resetSpecialFilter();
+    setActiveTypes(legendItems.value.map((item) => item.name));
+    _updateFilter(resetFilters);
+  };
 
-  @Action({ commit: '_updateFilter' })
-  async setTypesFilter(types: string[] | undefined): Promise<OralFilter> {
-    if (!types) {
-      return { ...this.filters, type: undefined };
-    }
-    const filters_ = { ...this.filters };
-
-    filters_.type = [['type', 'in', types]];
-    return filters_;
-  }
-
-  @Action({ commit: '_updateFilter' })
-  async setSpecialFilter(selected: string[] = []): Promise<OralFilter> {
-    if (!selected) {
-      return { ...this.filters, specialFilter: undefined };
-    }
-    const filters_ = { ...this.filters };
-    const properties: PropertyFilter[] = selected.map((x) => [x, 'eq', 1]);
-    filters_.specialFilter = ['any', ...properties];
-    return filters_;
-  }
-
-  @Action({ commit: '_updateFilter' })
-  async setNarrativeType(selected: string[] | undefined): Promise<OralFilter> {
-    if (!selected) {
-      return { ...this.filters, narrativeType: undefined };
-    }
-    const filters_ = { ...this.filters };
-    const properties: PropertyFilter[] = selected.map((x) => [
-      '%narrativ_t%',
-      'ilike',
-      x,
-    ]);
-    filters_.narrativeType = ['any', ...properties];
-    return filters_;
-  }
-
-  @Action({ commit: '_setLegend' })
-  setLegend(legendItem: {
-    name: string;
-    item: PathPaint;
-    geo: OralGeomType;
-  }): LegendItem {
-    return legendItem;
-  }
-
-  @Action({ commit: '_setDetail' })
-  async setDetail(
-    id1: number | null,
-  ): Promise<false | OralFeature | undefined> {
-    const item = this.filtered.find(
-      (x: OralFeature) => x.properties.id1 === id1,
+  const resetSpecialFilter = () => {
+    setSpecialFilterSelected(
+      meta.value
+        .filter((item) => item.type === 'Special')
+        .map((item) => item.value),
     );
-    if (id1) {
-      const feature = await fetchOralFeature(id1);
-      if (feature) {
-        return feature;
-      }
-    }
-    return item;
-  }
+  };
 
-  @Action
-  async setActivePlace(place: Partial<PlaceProperties> | null): Promise<void> {
+  const setFullTextFilter = async (query: string) => {
+    if (!query) {
+      _updateFilter({ ...filters.value, fullText: undefined });
+      return;
+    }
+    const meta = await getLayerMeta();
+    const searchFields = meta
+      .filter((item) => item.search)
+      .map((item) => item.value);
+    const propertiesFilter: PropertiesFilter = ['any'];
+    searchFields.forEach((field) => {
+      propertiesFilter.push([`%${field}%`, 'ilike', query]);
+    });
+    _updateFilter({ ...filters.value, fullText: propertiesFilter });
+  };
+
+  const setTypesFilter = (types: string[] | undefined) => {
+    _updateFilter({
+      ...filters.value,
+      type: types ? [['type', 'in', types]] : undefined,
+    });
+  };
+
+  const setSpecialFilter = (selected: string[] = []) => {
+    const properties: PropertyFilter[] = selected.map((value) => [
+      value,
+      'eq',
+      '1',
+    ]);
+    _updateFilter({
+      ...filters.value,
+      specialFilter: selected.length ? ['any', ...properties] : undefined,
+    });
+  };
+
+  const setNarrativeType = (selected: string[] | undefined) => {
+    const properties: PropertyFilter[] =
+      selected?.map((value) => ['%narrativ_t%', 'ilike', value]) || [];
+    _updateFilter({
+      ...filters.value,
+      narrativeType: selected ? ['any', ...properties] : undefined,
+    });
+  };
+
+  const setLegend = (legendItem: LegendItem) => {
+    const newLegendItems = [...legendItems.value];
+    if (!legendItems.value.find((item) => item.name === legendItem.name)) {
+      // @ts-expect-error Type instantiation is excessively deep and possibly infinite.
+      newLegendItems.push(legendItem);
+      activeTypes.value = legendItems.value.map((item) => item.name);
+    }
+    legendItems.value = newLegendItems;
+  };
+
+  const setDetail = async (id1: number | string | null) => {
+    const item = filtered.value.find(
+      (item) => String(item.properties.id1) === String(id1),
+    );
+    if (id1 && !item) {
+      const feature = await fetchOralFeature(id1);
+      _setDetail(feature ?? null);
+      return feature;
+    }
+    _setDetail(item ?? null);
+    return item;
+  };
+
+  const setActivePlace = (place: Partial<PlaceProperties> | null) => {
     let activePlace: Partial<PlaceProperties> = {};
     const parts = PLACE_KEYS;
     if (place === null) {
@@ -311,130 +252,131 @@ export class OralState extends VuexModule {
 
     // if place part field is a list X1,X2,Xn
     const ilikeFilterParts: (keyof PlaceProperties)[] = ['rayon'];
-    const filters: Partial<FilterProperties> = {};
+    const placeFilters: Partial<FilterProperties> = {};
     for (const p of parts) {
       const placePart = activePlace[p];
       if (placePart) {
         if (ilikeFilterParts.includes(p)) {
-          filters[p] = [[p, 'ilike', `%${placePart}%`]];
+          placeFilters[p] = [[p, 'ilike', `%${placePart}%`]];
         } else {
-          filters[p] = [[p, 'eq', placePart]];
+          placeFilters[p] = [[p, 'eq', placePart]];
         }
       } else {
-        filters[p] = undefined;
+        placeFilters[p] = undefined;
       }
     }
+    _setActivePlace(place || DEFAULT_PLACE);
+    updateFilter(placeFilters);
+  };
 
-    await this._setActivePlace(activePlace);
-    this.updateFilter(filters);
-  }
+  const setSearchReady = (ready: boolean) => {
+    searchReady.value = ready;
+  };
 
-  @MutationAction({ mutate: ['searchReady'] })
-  async setSearchReady(searchReady: boolean): Promise<{
-    searchReady: boolean;
-  }> {
-    return { searchReady };
-  }
+  const setFeaturesLoading = (loading: boolean) => {
+    featuresLoading.value = loading;
+  };
 
-  @MutationAction({ mutate: ['featuresLoading'] })
-  async setFeaturesLoading(featuresLoading: boolean): Promise<{
-    featuresLoading: boolean;
-  }> {
-    return { featuresLoading };
-  }
+  const setFilterData = (data: FilterData) => {
+    filterData.value = data;
+  };
 
-  @MutationAction({ mutate: ['filterData'] })
-  async setFilterData(filterData: FilterData): Promise<{
-    filterData: FilterData;
-  }> {
-    return { filterData };
-  }
+  const setListSearchText = (text: string) => {
+    listSearchText.value = text;
+  };
 
-  @MutationAction({ mutate: ['listSearchText'] })
-  async setListSearchText(listSearchText: string): Promise<{
-    listSearchText: string;
-  }> {
-    return { listSearchText };
-  }
+  const setActiveTypes = (types: string[]) => {
+    activeTypes.value = types;
+  };
 
-  @MutationAction({ mutate: ['activeTypes'] })
-  async setActiveTypes(activeTypes: string[]): Promise<{
-    activeTypes: string[];
-  }> {
-    return { activeTypes };
-  }
+  const setSpecialFilterSelected = (selected: string[]) => {
+    specialFilterSelected.value = selected;
+  };
 
-  @MutationAction({ mutate: ['specialFilterSelected'] })
-  async setSpecialFilterSelected(specialFilterSelected: string[]): Promise<{
-    specialFilterSelected: string[];
-  }> {
-    return { specialFilterSelected };
-  }
+  const setNarrativeTypeSelected = (selected: string[]) => {
+    narrativeTypeSelected.value = selected;
+  };
 
-  @MutationAction({ mutate: ['narrativeTypeSelected'] })
-  async setNarrativeTypeSelected(narrativeTypeSelected: string[]): Promise<{
-    narrativeTypeSelected: string[];
-  }> {
-    return { narrativeTypeSelected };
-  }
-
-  @Mutation
-  protected _setItems(items: OralPointFeature[]): void {
-    this.items = items;
-  }
-
-  @Mutation
-  protected _updateFilter(filters: FilterProperties): void {
-    const items: OralPointFeature[] = this.items.filter((x) => {
-      return featureFilter(x, Object.values(filters).filter(Boolean));
-    });
-    this.filtered = items;
-
-    const detail = this.detailItem;
-    if (detail) {
-      const item = items.find((x: OralFeature) => {
-        const id = x.properties.id1;
-        return id === detail.properties.id1;
-      });
-      if (!item) {
-        this.detailItem = false;
-      }
+  const _updateFilter = (newFilters: FilterProperties) => {
+    const filteredItems = items.value.filter((item) =>
+      featureFilter(item, Object.values(newFilters).filter(Boolean)),
+    );
+    filtered.value = filteredItems;
+    const currentDetail = detailItem.value;
+    if (
+      currentDetail &&
+      !filteredItems.find(
+        (item) => item.properties.id1 === currentDetail.properties.id1,
+      )
+    ) {
+      _setDetail(null);
     }
-    this.filters = filters;
-  }
+    filters.value = newFilters;
+  };
 
-  @Mutation
-  protected _setDetail(item: OralFeature): void {
-    this.detailItem = item;
-  }
+  const _setItems = (newItems: OralPointFeature[]) => {
+    items.value = newItems;
+  };
 
-  @Mutation
-  protected _setActivePlace(place: Partial<PlaceProperties>): void {
-    this.activePlace = place;
-  }
+  const _setDetail = (item: OralFeature | null) => {
+    console.log(item);
+    detailItem.value = item;
+  };
 
-  @Mutation
-  protected _setMeta(meta: LayerMetaItem[]): void {
-    this.meta = meta;
-  }
+  const _setActivePlace = (place: Partial<PlaceProperties>) => {
+    activePlace.value = place;
+  };
 
-  @Mutation
-  protected _setPhotos(photos: OralPhotoProperties[]): void {
-    this.photos = photos;
-  }
+  const _setMeta = (newMeta: LayerMetaItem[]) => {
+    meta.value = newMeta;
+  };
 
-  @Mutation
-  protected _setLegend(legendItem: {
-    name: string;
-    item: PathPaint;
-    geo: OralGeomType;
-  }): void {
-    const exist = this.legendItems.find((x) => x.name === legendItem.name);
-    if (!exist) {
-      this.legendItems.push(legendItem);
-      this.activeTypes = this.legendItems.map((x) => x.name);
-    }
-  }
-}
+  const _setPhotos = (newPhotos: OralPhotoProperties[]) => {
+    photos.value = newPhotos;
+  };
 
-export const oralModule = getModule(OralState);
+  return {
+    meta,
+    items,
+    photos,
+    filters,
+    filtered,
+    features,
+    detailItem,
+    filterData,
+    activePlace,
+    searchReady,
+    legendItems,
+    activeTypes,
+    sortedFeatures,
+    listSearchText,
+    featuresLoading,
+    activePlaceItems,
+    propertiesFilter,
+    specialFilterSelected,
+    narrativeTypeSelected,
+    setNarrativeTypeSelected,
+    setSpecialFilterSelected,
+    resetNonPlaceFilter,
+    setFeaturesLoading,
+    setListSearchText,
+    resetSpecialFilter,
+    setFullTextFilter,
+    setSpecialFilter,
+    setNarrativeType,
+    setActivePlace,
+    setSearchReady,
+    setFilterData,
+    setTypesFilter,
+    setActiveTypes,
+    setDetailById,
+    updateFilter,
+    loadStories,
+    getAllItems,
+    setLegend,
+    setDetail,
+    getPhotos,
+    setItems,
+    setMeta,
+  };
+});

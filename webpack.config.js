@@ -1,20 +1,22 @@
 const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { VueLoaderPlugin } = require('vue-loader');
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
 const CompressionPlugin = require('compression-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { VueLoaderPlugin } = require('vue-loader');
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
+const webpack = require('webpack');
 
-let alias = {};
-try {
-  const { getAliases } = require('./@nextgis/scripts/aliases');
-  alias = getAliases();
-} catch (er) {
-  // ignore
-}
+const alias = {};
+const getAliases = require('./@nextgis/packages/build-tools/lib/aliases.cjs');
+
+Object.assign(alias, getAliases());
+Object.assign(
+  alias,
+  getAliases(path.resolve(__dirname, '@nextgis_vue2/packages')),
+);
 
 const sassLoaderOptions = {
   implementation: require('sass'),
@@ -40,8 +42,22 @@ module.exports = (env, argv) => {
       loader: 'vue-loader',
     },
     {
-      // test: /\.jsx?$/,
-      test: /\.(js|ts)x?$/,
+      test: /\.ts$/,
+      exclude: /node_modules/,
+      use: [
+        {
+          loader: 'babel-loader',
+        },
+        {
+          loader: 'ts-loader',
+          options: {
+            appendTsSuffixTo: [/\.vue$/],
+          },
+        },
+      ],
+    },
+    {
+      test: /\.(js|jsx)$/,
       exclude: /node_modules/,
       use: {
         loader: 'babel-loader',
@@ -106,7 +122,7 @@ module.exports = (env, argv) => {
 
   let plugins = [
     new ForkTsCheckerWebpackPlugin(),
-    new ESLintPlugin({ fix: true, files: ['src/'], extensions: ['ts'] }),
+    new ESLintPlugin({ fix: true, files: ['src/'], extensions: ['ts', 'vue'] }),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       template: 'index.html',
@@ -141,6 +157,7 @@ module.exports = (env, argv) => {
 
     output: {
       filename: '[name]-[hash:7].js',
+      path: path.resolve(__dirname, 'dist'),
     },
 
     resolve: {

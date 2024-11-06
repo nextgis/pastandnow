@@ -1,5 +1,22 @@
 import { loadScript } from '@nextgis/dom';
 
+export interface Remark {
+  destroy: () => void;
+}
+
+declare global {
+  interface Window {
+    remark_config: Partial<typeof remarkConfig>;
+    REMARK42: {
+      createInstance: (options: {
+        [key: string]: unknown;
+        node: HTMLElement;
+      }) => Remark;
+      destroy: () => void;
+    };
+  }
+}
+
 export const remarkConfig = {
   host: 'https://remark42.staging.nextgis.com', // hostname of Remark42 server, same as REMARK_URL in backend config, e.g. "https://demo.remark42.com"
   // host: 'http://127.0.0.1:8090',
@@ -45,7 +62,7 @@ export function initRemark42(
   config_: Partial<typeof remarkConfig> = {},
 ): Promise<unknown[]> {
   const config = { ...remarkConfig, ...config_ };
-  // @ts-ignore
+
   window.remark_config = config;
   const promises = config.components.map((c) => {
     const url = config.host + '/web/' + c + '.js';
