@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 
 import pkg from '../package.json';
 
@@ -6,21 +6,19 @@ import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import pinia from './store';
 
-//styles
-import './style/mapbox.sass';
-import './style/custom-vuetify.sass';
-
-const app = new Vue({
-  vuetify,
-  pinia,
-  render: (h) => h(App),
-});
-app.$mount('#app');
+// import './style/mapbox.scss';
+// import './style/custom-vuetify.scss';
 
 declare global {
   interface Window {
     version: string;
   }
 }
-
 window.version = pkg.version;
+
+const app = createApp(App);
+
+app.use(vuetify);
+app.use(pinia);
+
+app.mount('#app');

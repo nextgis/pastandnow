@@ -71,7 +71,8 @@ export const useOralStore = defineStore('oral', () => {
 
   const propertiesFilter = computed(() => {
     // @ts-expect-error Type instantiation is excessively deep and possibly infinite.
-    return Object.values(filters.value).filter(Boolean) as PropertiesFilter[];
+    const values = Object.values(filters.value);
+    return values.filter(Boolean);
   });
 
   const sortedFeatures = computed(() => {

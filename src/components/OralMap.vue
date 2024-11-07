@@ -5,7 +5,7 @@
 </template>
 <script setup lang="ts">
 import { fetchNgwLayerFeatures } from '@nextgis/ngw-kit';
-import VueNgwMaplibre from '@nextgis/vue2-ngw-maplibre-gl';
+import VueNgwMaplibre from '@nextgis/vue-ngw-maplibre-gl';
 import bbox from '@turf/bbox';
 import { computed, ref, watch } from 'vue';
 

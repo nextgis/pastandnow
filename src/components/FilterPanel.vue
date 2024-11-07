@@ -1,67 +1,75 @@
 <template>
   <div class="filter-panel">
-    <h5 class="text--secondary mb-1">СПЕЦИАЛЬНЫЕ ФИЛЬТРЫ</h5>
+    <h5 class="text-secondary mb-1">СПЕЦИАЛЬНЫЕ ФИЛЬТРЫ</h5>
 
-    <v-checkbox
-      key="allSpecialFilters"
+    <VCheckbox
+      :key="'allSpecialFilters'"
       v-model="allSpecialFilters"
       class="filter-panel__checkbox mt-0"
-      dense
+      density="compact"
       hide-details
       label="Все"
       :indeterminate="
         !!specialFilters.length &&
         specialFilters.length < specialFilterItems.length
       "
-      @change="toggleAllSpecialFilters"
-    ></v-checkbox>
-    <v-divider></v-divider>
-    <v-checkbox
+      @update:model-value="toggleAllSpecialFilters"
+    ></VCheckbox>
+    <VDivider></VDivider>
+    <VCheckbox
       v-for="v in specialFilterItems"
       :key="v.value"
-      :input-value="specialFilters.includes(v.value)"
+      :model-value="specialFilters.includes(v.value)"
       class="filter-panel__checkbox mt-0"
-      dense
+      density="compact"
       hide-details
       :label="v.text"
-      @change="toggleSpecialFilter(v.value)"
-    ></v-checkbox>
-    <h5 class="text--secondary mt-5 mb-1">ТИПЫ СЮЖЕТОВ</h5>
-    <v-autocomplete
+      @update:model-value="toggleSpecialFilter(v.value)"
+    ></VCheckbox>
+    <h5 class="text-secondary mt-5 mb-1">ТИПЫ СЮЖЕТОВ</h5>
+    <VAutocomplete
       v-model="narrativeTypesSelected"
       :items="narrativeTypeItems"
-      dense
-      outlined
+      density="compact"
+      variant="outlined"
       chips
-      item-text="name"
+      item-title="name"
       item-value="name"
       multiple
     >
-      <template #selection="data">
-        <v-chip
-          class="filter-panel__chip primary--text my-1 mx-0"
-          small
+      <template #chip="{ props, item }">
+        <VChip
+          class="filter-panel__chip text-primary my-1 mx-0"
+          size="small"
           label
-          v-bind="data.attrs"
-          :input-value="data.selected"
-          close
-          @click="data.select"
-          @click:close="removeNarrativeType(data.item)"
+          v-bind="props"
+          closable
+          @click:close="removeNarrativeType(item.raw)"
         >
-          <span class="text-truncate">{{ data.item.name }}</span>
-        </v-chip>
+          <span class="text-truncate">{{ item.raw.name }}</span>
+        </VChip>
       </template>
-      <template #item="data">
-        <v-list-item-content>
-          {{ data.item.name }}
-        </v-list-item-content>
+      <template #item="{ props, item }">
+        <VListItem v-bind="props">
+          <VListItemTitle>
+            {{ item.raw.name }}
+          </VListItemTitle>
+        </VListItem>
       </template>
-    </v-autocomplete>
+    </VAutocomplete>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, watch } from 'vue';
+import {
+  VAutocomplete,
+  VCheckbox,
+  VChip,
+  VDivider,
+  VListItem,
+  VListItemTitle,
+} from 'vuetify/components';
 
 import { useOralStore } from '../store/modules/oral';
 
@@ -151,7 +159,7 @@ const removeNarrativeType = (item: NarrativeTypeItem) => {
   }
 
   &__chip {
-    &::v-deep .v-icon {
+    :deep(.v-icon) {
       color: inherit;
     }
   }

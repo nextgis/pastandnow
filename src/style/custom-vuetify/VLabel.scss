@@ -1,0 +1,5 @@
+@use 'vuetify/styles' as *;
+
+.theme--light .v-label {
+  color: map.get($material-light, 'text', 'primary');
+}

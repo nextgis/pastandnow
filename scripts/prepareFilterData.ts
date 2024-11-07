@@ -1,4 +1,4 @@
-import { FilterData } from './FilterData';
+import type { FilterData } from './FilterData';
 import type { OralProperties } from '../src/interfaces';
 
 export function prepareFilterData(items: OralProperties[]): FilterData {

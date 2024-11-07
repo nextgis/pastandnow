@@ -1,19 +1,20 @@
-import VueRouter from 'vue-router';
+import {
+  type RouteRecordRaw,
+  createRouter,
+  createWebHistory,
+} from 'vue-router';
 
 import Main from './MainComponent.vue';
 import About from './components/NextGIS/About.vue';
 import Table from './components/Table/Table.vue';
 
-import type { RouteConfig } from 'vue-router';
-
-const routes: RouteConfig[] = [
-  // { path: '/test', component: TestRouter }
+const routes: RouteRecordRaw[] = [
   { path: '/table', component: Table },
-  { path: './about', component: About },
-  { path: '*', component: Main },
+  { path: '/about', component: About },
+  { path: '/:catchAll(.*)', component: Main },
 ];
-export const router: VueRouter = new VueRouter({
-  // base:  window.location.pathname,
-  mode: 'history',
+
+export const router = createRouter({
+  history: createWebHistory(),
   routes,
 });

@@ -22,13 +22,14 @@
     "paths": {
       "@nextgis/*": [
         "@nextgis/packages/*/src/",
-        "@nextgis_vue2/packages/*/src/"
+        "@nextgis_vue/packages/*/src/"
       ]
     }
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.json",
+    "@nextgis_vue/src/**/*.ts",
     "@nextgis/packages/maplibre-gl-map-adapter/src/maplibregl.d.ts",
     "@nextgis/packages/global.d.ts",
     "src/config.ts",

@@ -1,0 +1,37 @@
+.v-input--switch {
+  &--inset {
+    padding-top: 0;
+
+    .v-input--switch__track {
+      background-color: #fff;
+    }
+  }
+
+  &.v-input--dense {
+    .v-input--selection-controls__ripple {
+      width: 22px;
+      height: 22px;
+      top: calc(50% - 18px);
+      left: -10px;
+    }
+
+    .v-input--selection-controls__input {
+      height: 16px;
+      margin-right: 0;
+
+      &:hover .v-input--selection-controls__ripple:before {
+        background-color: #fff;
+      }
+    }
+
+    .v-input--switch__track {
+      left: 0;
+      top: 0;
+    }
+
+    .v-input--switch__thumb {
+      top: calc(50% - 5px);
+      left: 3px;
+    }
+  }
+}

@@ -1,0 +1,100 @@
+.maplibregl-map {
+  font-family: 'Roboto', sans-serif;
+}
+
+.maplibregl-ctrl-top-left .maplibregl-ctrl {
+  margin: 16px 0 0 16px;
+}
+
+.maplibregl-ctrl-top-right {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.maplibregl-ctrl-top-right .maplibregl-ctrl {
+  margin: 16px 16px 0 0;
+  float: none;
+}
+
+.maplibregl-ctrl-bottom-left .maplibregl-ctrl {
+  margin: 0 0 16px 16px;
+}
+
+.maplibregl-ctrl-bottom-right .maplibregl-ctrl-attrib {
+  margin: 0;
+}
+
+.maplibregl-ctrl-group,
+.maplibregl-ctrl-group:not(:empty) {
+  border-radius: $border-radius-root;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+
+  > button {
+    width: #{map-get($btn-sizes, 'default')}px;
+    height: #{map-get($btn-sizes, 'default')}px;
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:not(:disabled):hover {
+      background-color: rgba(0, 0, 0, $btn-hover-opacity);
+    }
+  }
+}
+
+.maplibregl-ctrl button.maplibregl-ctrl-zoom-in,
+.maplibregl-ctrl button.maplibregl-ctrl-zoom-out {
+  &::before {
+    font: normal normal normal 24px/1 "Material Design Icons";
+    color: rgba(0, 0, 0, 0.5);
+    line-height: #{map-get($btn-sizes, 'default')}px;
+  }
+
+  &:hover::before {
+    color: $primary;
+  }
+
+  .maplibregl-ctrl-icon {
+    background-image: none;
+  }
+}
+
+.maplibregl-ctrl button.maplibregl-ctrl-zoom-in {
+  &::before {
+    content: "\F0415";
+  }
+}
+
+.maplibregl-ctrl button.maplibregl-ctrl-zoom-out {
+  &::before {
+    content: "\F0374";
+  }
+}
+
+.maplibregl-popup-content {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35);
+  border-radius: $border-radius-root;
+  padding: 12px;
+  font-size: 12px;
+  line-height: 1.25;
+  max-height: 210px;
+  overflow: auto;
+}
+
+.maplibregl-popup-tip {
+  border-width: 6px;
+}
+
+.maplibregl-popup-close-button {
+  width: 12px;
+  height: 12px;
+  line-height: 12px;
+  border-radius: 0 $border-radius-root 0 0;
+  opacity: 0.5;
+
+  &:hover {
+    background-color: transparent;
+  }
+}

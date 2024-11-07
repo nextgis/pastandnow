@@ -1,22 +1,13 @@
 <template>
-  <v-app>
+  <VApp>
     <MainComponent></MainComponent>
-  </v-app>
+  </VApp>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { VApp } from 'vuetify/components';
 
 import MainComponent from './MainComponent.vue';
-
-export default defineComponent({
-  components: {
-    MainComponent,
-  },
-  setup() {
-    return {};
-  },
-});
 </script>
 
 <style lang="scss">

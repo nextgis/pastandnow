@@ -42,12 +42,12 @@
 <script setup lang="ts">
 import { mdiEmail, mdiTelegram, mdiVk } from '@mdi/js';
 import { Clipboard } from '@nextgis/utils';
-import Vue, { computed, ref } from 'vue';
-import VueSocialSharing from 'vue-social-sharing';
+import { computed, ref } from 'vue';
+// import VueSocialSharing from 'vue-social-sharing';
 
 import type { OralFeature } from '../../interfaces';
 
-Vue.use(VueSocialSharing);
+// Vue.use(VueSocialSharing);
 
 const props = defineProps({
   item: {

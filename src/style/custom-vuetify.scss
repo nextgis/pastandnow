@@ -1,0 +1,13 @@
+@import './custom-vuetify/VSwitch.scss';
+@import './custom-vuetify/VSelect.scss';
+@import './custom-vuetify/VTextField.scss';
+@import './custom-vuetify/VIcon.scss';
+@import './custom-vuetify/VLabel.scss';
+
+a {
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}

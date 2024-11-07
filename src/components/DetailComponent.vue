@@ -1,77 +1,79 @@
 <template>
   <div v-if="detail && meta" class="detail">
-    <v-list dense class="pt-0">
-      <v-list-item
+    <VList density="compact" class="pt-0">
+      <VListItem
         v-for="item in properties"
         :key="item.value"
         class="detail-prop-list px-0 pb-0"
       >
-        <v-list-item-content>
-          <span class="caption text--secondary">{{ item.text }}</span>
-          <span class="body-2" v-html="getText(item)"></span>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item
+        <span class="text-caption text-secondary">{{ item.text }}</span>
+        <span class="text-body-2" v-html="getText(item)"></span>
+      </VListItem>
+      <VListItem
         v-if="photos && photos.length"
         class="detail-prop-list px-0 pb-2"
       >
-        <v-list-item-content>
-          <v-list-item-subtitle>Фото</v-list-item-subtitle>
-          <div class="photo-containerr">
-            <a
-              v-for="(photo, i) in photos"
-              :key="photo.id"
-              @click="
-                dialog = true;
-                selectedPhoto = i;
-              "
-            >
-              <v-img
-                :src="photo.link_small"
-                class="grey lighten-2 mt-2"
-              ></v-img>
-            </a>
-          </div>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item class="detail-prop-list px-0 pb-2">
+        <VListItemSubtitle>Фото</VListItemSubtitle>
+        <div class="photo-containerr">
+          <a
+            v-for="(photo, i) in photos"
+            :key="photo.id"
+            @click="
+              dialog = true;
+              selectedPhoto = i;
+            "
+          >
+            <VImg :src="photo.link_small" class="bg-grey-lighten-2 mt-2"></VImg>
+          </a>
+        </div>
+      </VListItem>
+      <VListItem class="detail-prop-list px-0 pb-2">
         <Comments v-if="id" :id="id" :key="id"></Comments>
-      </v-list-item>
-    </v-list>
+      </VListItem>
+    </VList>
 
-    <v-dialog
+    <VDialog
       v-model="dialog"
       class="ma-0 pa-3"
       fullscreen
       content-class="photo-dialog"
     >
-      <v-carousel
+      <VCarousel
         v-model="selectedPhoto"
         height="75vh"
-        hide-delimiters
         :show-arrows="photos.length > 1"
       >
-        <v-carousel-item v-for="(photo, k) in photos" :key="k">
-          <v-img :src="photo.link_big" height="100%" contain></v-img>
-        </v-carousel-item>
-      </v-carousel>
-      <v-btn
-        icon
-        text
-        dark
-        small
+        <VCarouselItem v-for="(photo, k) in photos" :key="k">
+          <VImg :src="photo.link_big" height="100%" cover></VImg>
+        </VCarouselItem>
+      </VCarousel>
+      <VBtn
+        :icon="true"
+        variant="text"
+        size="small"
         class="close-img-dialog-btn"
         @click="dialog = false"
       >
-        <v-icon>{{ svg.close }}</v-icon>
-      </v-btn>
-    </v-dialog>
+        <VIcon>{{ svg.close }}</VIcon>
+      </VBtn>
+    </VDialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { mdiClose } from '@mdi/js';
 import { computed, ref } from 'vue';
+import {
+  VBtn,
+  VCarousel,
+  VCarouselItem,
+  VDialog,
+  VIcon,
+  VImg,
+  VList,
+  VListItem,
+  VListItemSubtitle,
+} from 'vuetify/components';
 
 import { useAppStore } from '../store/modules/app';
 import { useOralStore } from '../store/modules/oral';
@@ -179,13 +181,13 @@ const getText = (alias: LayerMetaItem): string | number | undefined | null => {
       return value === 1
         ? `<i
           aria-hidden="true"
-          class="v-icon material-icons theme--light lighten-1--text"
+          class="v-icon material-icons"
           style="color: green;"
         >check
         </i>`
         : `<i
           aria-hidden="true"
-          class="v-icon material-icons theme--light lighten-1--text"
+          class="v-icon material-icons"
           style="color: red;"
         >close
         </i>`;
@@ -208,12 +210,9 @@ const getAuthorLinks = (names: string[]): string[] => {
 <style lang="scss" scoped>
 .detail-prop-list {
   &:first-child {
-    .v-list-item__content {
+    :deep(.v-list-item-text) {
       padding-top: 0;
     }
-  }
-  .v-list__tile {
-    height: auto !important;
   }
 }
 
@@ -222,11 +221,11 @@ const getAuthorLinks = (names: string[]): string[] => {
   overflow: hidden;
 }
 
-.show-photo-card .v-card__text {
+.show-photo-card :deep(.v-card-text) {
   padding: 0;
 }
 
-.v-dialog__content::v-deep .photo-dialog {
+:deep(.photo-dialog) {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -234,7 +233,7 @@ const getAuthorLinks = (names: string[]): string[] => {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.v-dialog__content::v-deep .v-carousel__controls {
+:deep(.v-carousel__controls) {
   position: fixed;
   bottom: 12px;
   left: 0;
@@ -249,7 +248,7 @@ const getAuthorLinks = (names: string[]): string[] => {
 }
 
 .detail {
-  .v-list-item__content {
+  :deep(.v-list-item-text) {
     padding-top: 6px;
     padding-bottom: 6px;
   }

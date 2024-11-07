@@ -1,33 +1,41 @@
 <template>
   <div>
-    <v-list class="items-list" dense>
-      <v-list-item-group v-model="active">
-        <v-list-item
-          v-for="(item, i) in portion"
-          :key="i"
-          class="align-start"
-          @click="setDetail(Number(item.id1))"
-        >
+    <VList class="items-list" density="compact">
+      <VListItem
+        v-for="(item, i) in portion"
+        :key="i"
+        :active="isItemActive(item)"
+        class="align-start"
+        @click="setDetail(Number(item.id1))"
+      >
+        <template #prepend>
           <SymbolComponent
             :paint="getItemPaint(item)"
             :geo="item.geo || 'point'"
             class="mr-2 mt-2 list-item-icon"
           />
-          <v-list-item-content>
-            <div>{{ item.name }}</div>
-            <v-list-item-subtitle>{{ item.type }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item-group>
-    </v-list>
+        </template>
+        <VListItemTitle>{{ item.name }}</VListItemTitle>
+        <VListItemSubtitle>{{ item.type }}</VListItemSubtitle>
+      </VListItem>
+    </VList>
     <div v-if="displayItems.length > portion.length" class="text-center">
-      <v-btn text color="primary" @click="addPortion">Показать ещё</v-btn>
+      <VBtn variant="text" color="primary" @click="addPortion">
+        Показать ещё
+      </VBtn>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
+import {
+  VBtn,
+  VList,
+  VListItem,
+  VListItemSubtitle,
+  VListItemTitle,
+} from 'vuetify/components';
 
 import { useAppStore } from '../../store/modules/app';
 import { useOralStore } from '../../store/modules/oral';
@@ -73,6 +81,10 @@ const getItemPaint = (item: OralProperties) =>
 const setDetail = (id: number) => {
   oralStore.setDetail(id);
   appStore.zoomTo(id);
+};
+
+const isItemActive = (item: OralProperties) => {
+  return detail.value?.properties.id1 === item.id1;
 };
 
 watch([detail, items, filtered], () => {

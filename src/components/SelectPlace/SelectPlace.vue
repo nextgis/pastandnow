@@ -1,42 +1,77 @@
 <template>
-  <v-form ref="form" :value="false" class="filter-form">
-    <div class="subtitle-1 font-weight-medium white--text mb-4">
+  <VForm ref="form" v-model="formModel" class="filter-form">
+    <div class="text-subtitle-1 font-weight-medium text-white mb-4">
       Выберите место
     </div>
-    <v-row dense>
-      <v-col>
-        <v-autocomplete
+    <VRow density="compact">
+      <VCol>
+        <VAutocomplete
           v-model="activePlace"
           class="filter-form__control"
           :items="items"
           :disabled="places.length < 2"
-          :search-input.sync="search"
+          :search="search"
           :loading="!places.length"
-          item-text="text"
+          item-title="text"
           item-value="value"
-          dense
-          dark
-          flat
-          hide-no-data
+          variant="solo-inverted"
+          density="compact"
+          theme="dark"
           hide-details
-          solo-inverted
+          hide-no-data
           return-object
-          no-filter
+          :custom-filter="() => true"
           no-data-text="Не найдено"
+          :menu-props="{ maxHeight: '400px' }"
+          :bg-color="'grey-darken-3'"
         >
-          <template #item="data">
-            <v-list-item-content>
-              <div v-html="getItemHtml(data.item.text)"></div>
-            </v-list-item-content>
+          <template #selection="{ item }">
+            <span v-html="getItemHtml(item.raw.text)"></span>
           </template>
-        </v-autocomplete>
-      </v-col>
-    </v-row>
-  </v-form>
+
+          <template #item="{ item, props }">
+            <VListItem v-bind="props">
+              <template #title>
+                <span v-html="getItemHtml(item.raw.text)"></span>
+              </template>
+            </VListItem>
+          </template>
+
+          <template #prepend-inner>
+            <VIcon color="grey-lighten-1" icon="mdi-map-marker" />
+          </template>
+
+          <template v-if="activePlace" #append-inner>
+            <VIcon
+              color="grey-lighten-1"
+              icon="mdi-close"
+              @click.stop="clearSelection"
+            />
+          </template>
+
+          <template #no-data>
+            <VListItem>
+              <template #title>
+                <span class="text-grey">Не найдено</span>
+              </template>
+            </VListItem>
+          </template>
+        </VAutocomplete>
+      </VCol>
+    </VRow>
+  </VForm>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
+import {
+  VAutocomplete,
+  VCol,
+  VForm,
+  VIcon,
+  VListItem,
+  VRow,
+} from 'vuetify/components';
 
 import { useOralStore } from '../../store/modules/oral';
 import {
@@ -59,9 +94,10 @@ interface CountItem {
 }
 
 const oralStore = useOralStore();
-const form = ref(false);
+const form = ref(null);
+const formModel = ref(false);
 const places = ref<CountItem[]>([]);
-const search = ref<string | null>('');
+const search = ref<string>();
 const items = ref<CountItem[]>([]);
 const activePlace = ref<CountItem | null>(null);
 
@@ -111,6 +147,12 @@ onMounted(() => {
   setPlaces();
   updateFilterValues();
 });
+
+const clearSelection = () => {
+  activePlace.value = null;
+  search.value = '';
+  oralStore.setActivePlace({});
+};
 
 const updateFilterValues = () => {
   setTimeout(() => {
@@ -177,7 +219,7 @@ const getItemHtml = (text: string): string => {
   return `<span>${text}</span>`;
 };
 
-const searchParts = (val: string | null): string[] => {
+const searchParts = (val?: string): string[] => {
   const str = val ? val.replace(/,/g, ' ') : '';
   return str
     .split(' ')
@@ -208,6 +250,12 @@ const getActivePlace = (): CountItem | null => {
 
   &__control + &__control {
     margin-top: 10px;
+  }
+
+  :deep(.v-field__input) {
+    min-height: 36px;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 </style>
