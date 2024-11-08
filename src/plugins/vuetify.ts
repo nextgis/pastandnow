@@ -1,5 +1,5 @@
 import { createVuetify } from 'vuetify';
-import { mdi } from 'vuetify/iconsets/mdi-svg';
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
 
 import type { ThemeDefinition } from 'vuetify';
 
@@ -43,6 +43,7 @@ export default createVuetify({
   },
   icons: {
     defaultSet: 'mdi',
+    aliases,
     sets: {
       mdi,
     },

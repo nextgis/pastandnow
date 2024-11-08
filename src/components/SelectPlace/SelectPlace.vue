@@ -38,13 +38,13 @@
           </template>
 
           <template #prepend-inner>
-            <VIcon color="grey-lighten-1" icon="mdi-map-marker" />
+            <VIcon color="grey-lighten-1" :icon="mdiMapMarker" />
           </template>
 
           <template v-if="activePlace" #append-inner>
             <VIcon
               color="grey-lighten-1"
-              icon="mdi-close"
+              :icon="mdiClose"
               @click.stop="clearSelection"
             />
           </template>
@@ -63,6 +63,7 @@
 </template>
 
 <script setup lang="ts">
+import { mdiClose, mdiMapMarker } from '@mdi/js';
 import { computed, onMounted, ref, watch } from 'vue';
 import {
   VAutocomplete,

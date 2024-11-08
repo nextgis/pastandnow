@@ -28,7 +28,7 @@
         </div>
       </VListItem>
       <VListItem class="detail-prop-list px-0 pb-2">
-        <Comments v-if="id" :id="id" :key="id"></Comments>
+        <!-- <Comments v-if="id" :id="id" :key="id"></Comments> -->
       </VListItem>
     </VList>
 
@@ -48,7 +48,7 @@
         </VCarouselItem>
       </VCarousel>
       <VBtn
-        :icon="true"
+        icon
         variant="text"
         size="small"
         class="close-img-dialog-btn"
@@ -79,7 +79,7 @@ import { useAppStore } from '../store/modules/app';
 import { useOralStore } from '../store/modules/oral';
 import { isValidUrl } from '../utils/isValidUrl';
 
-import Comments from './Comments/CommentsComponent.vue';
+// import Comments from './Comments/CommentsComponent.vue';
 
 import type {
   LayerMetaItem,
@@ -114,9 +114,9 @@ const photos = computed(() => {
   return photo ? [photo] : [];
 });
 
-const id = computed(() => {
-  return oralStore.detailItem && oralStore.detailItem.properties.id1;
-});
+// const id = computed(() => {
+//   return oralStore.detailItem && oralStore.detailItem.properties.id1;
+// });
 
 const meta = computed(() => {
   return oralStore.meta;

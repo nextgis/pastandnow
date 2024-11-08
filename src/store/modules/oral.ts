@@ -70,7 +70,6 @@ export const useOralStore = defineStore('oral', () => {
   });
 
   const propertiesFilter = computed(() => {
-    // @ts-expect-error Type instantiation is excessively deep and possibly infinite.
     const values = Object.values(filters.value);
     return values.filter(Boolean);
   });
@@ -79,18 +78,17 @@ export const useOralStore = defineStore('oral', () => {
     return sortFeatures([...filtered.value] as OralFeature[]);
   });
 
-  // Actions
   const getAllItems = async () => {
     setFeaturesLoading(true);
     await setMeta();
     const features = await getLayerFeatures();
     setFeaturesLoading(false);
-    _setItems(features);
+    items.value = features;
   };
 
   const setItems = async (features: OralPointFeature[]) => {
     await setMeta();
-    _setItems(features);
+    items.value = features;
   };
 
   const loadStories = async () => {
@@ -109,12 +107,12 @@ export const useOralStore = defineStore('oral', () => {
       updatedFeatures.push(updatedFeature);
     });
     setSearchReady(true);
-    _setItems(updatedFeatures);
+    items.value = updatedFeatures;
   };
 
   const setMeta = async () => {
     const metadata = await getLayerMeta();
-    _setMeta(metadata);
+    meta.value = metadata;
   };
 
   const setDetailById = async (id: string | number) => {
@@ -143,7 +141,7 @@ export const useOralStore = defineStore('oral', () => {
 
   const getPhotos = async () => {
     const photosFromLayer = await getNgwPhotos();
-    _setPhotos(photosFromLayer);
+    photos.value = photosFromLayer;
   };
 
   const updateFilter = (newFilters: Partial<FilterProperties>) => {
@@ -159,7 +157,9 @@ export const useOralStore = defineStore('oral', () => {
     });
     setListSearchText('');
     resetSpecialFilter();
-    setActiveTypes(legendItems.value.map((item) => item.name));
+    // @ts-expect-error Type instantiation is excessively deep and possibly infinite.
+    const newActiveTypes = legendItems.value.map((item) => item.name);
+    setActiveTypes(newActiveTypes);
     _updateFilter(resetFilters);
   };
 
@@ -180,11 +180,11 @@ export const useOralStore = defineStore('oral', () => {
     const searchFields = meta
       .filter((item) => item.search)
       .map((item) => item.value);
-    const propertiesFilter: PropertiesFilter = ['any'];
+    const propertiesFilter_: PropertiesFilter = ['any'];
     searchFields.forEach((field) => {
-      propertiesFilter.push([`%${field}%`, 'ilike', query]);
+      propertiesFilter_.push([`%${field}%`, 'ilike', query]);
     });
-    _updateFilter({ ...filters.value, fullText: propertiesFilter });
+    _updateFilter({ ...filters.value, fullText: propertiesFilter_ });
   };
 
   const setTypesFilter = (types: string[] | undefined) => {
@@ -218,7 +218,6 @@ export const useOralStore = defineStore('oral', () => {
   const setLegend = (legendItem: LegendItem) => {
     const newLegendItems = [...legendItems.value];
     if (!legendItems.value.find((item) => item.name === legendItem.name)) {
-      // @ts-expect-error Type instantiation is excessively deep and possibly infinite.
       newLegendItems.push(legendItem);
       activeTypes.value = legendItems.value.map((item) => item.name);
     }
@@ -231,22 +230,22 @@ export const useOralStore = defineStore('oral', () => {
     );
     if (id1 && !item) {
       const feature = await fetchOralFeature(id1);
-      _setDetail(feature ?? null);
+      detailItem.value = feature ?? null;
       return feature;
     }
-    _setDetail(item ?? null);
+    detailItem.value = item ?? null;
     return item;
   };
 
   const setActivePlace = (place: Partial<PlaceProperties> | null) => {
-    let activePlace: Partial<PlaceProperties> = {};
+    let newActivePlace: Partial<PlaceProperties> = {};
     const parts = PLACE_KEYS;
     if (place === null) {
-      activePlace = DEFAULT_PLACE;
+      newActivePlace = DEFAULT_PLACE;
     } else {
       for (const k of parts) {
         if (k in place) {
-          activePlace[k] = place[k];
+          newActivePlace[k] = place[k];
         }
       }
     }
@@ -255,7 +254,7 @@ export const useOralStore = defineStore('oral', () => {
     const ilikeFilterParts: (keyof PlaceProperties)[] = ['rayon'];
     const placeFilters: Partial<FilterProperties> = {};
     for (const p of parts) {
-      const placePart = activePlace[p];
+      const placePart = newActivePlace[p];
       if (placePart) {
         if (ilikeFilterParts.includes(p)) {
           placeFilters[p] = [[p, 'ilike', `%${placePart}%`]];
@@ -266,7 +265,7 @@ export const useOralStore = defineStore('oral', () => {
         placeFilters[p] = undefined;
       }
     }
-    _setActivePlace(place || DEFAULT_PLACE);
+    activePlace.value = place || DEFAULT_PLACE;
     updateFilter(placeFilters);
   };
 
@@ -310,30 +309,9 @@ export const useOralStore = defineStore('oral', () => {
         (item) => item.properties.id1 === currentDetail.properties.id1,
       )
     ) {
-      _setDetail(null);
+      detailItem.value = null;
     }
     filters.value = newFilters;
-  };
-
-  const _setItems = (newItems: OralPointFeature[]) => {
-    items.value = newItems;
-  };
-
-  const _setDetail = (item: OralFeature | null) => {
-    console.log(item);
-    detailItem.value = item;
-  };
-
-  const _setActivePlace = (place: Partial<PlaceProperties>) => {
-    activePlace.value = place;
-  };
-
-  const _setMeta = (newMeta: LayerMetaItem[]) => {
-    meta.value = newMeta;
-  };
-
-  const _setPhotos = (newPhotos: OralPhotoProperties[]) => {
-    photos.value = newPhotos;
   };
 
   return {

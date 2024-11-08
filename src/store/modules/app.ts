@@ -1,7 +1,7 @@
 import { type FeatureLayerAdapter } from '@nextgis/ngw-map';
 import bbox from '@turf/bbox';
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 import type {
   OralGeomType,
@@ -18,6 +18,8 @@ export const useAppStore = defineStore('app', () => {
   const drawer = ref(true);
   const mapReady = ref(true);
   const page = ref<AppPages>('main');
+  const legendOpen = ref(true);
+  const shareDialog = ref(false);
 
   const ngwMap = ref<NgwMap>();
 
@@ -29,8 +31,11 @@ export const useAppStore = defineStore('app', () => {
     drawer.value = false;
   };
 
-  const toggleDrawer = (value: boolean) => {
+  const setDrawer = (value: boolean) => {
     drawer.value = value;
+  };
+  const setShareDialog = (value: boolean) => {
+    shareDialog.value = value;
   };
 
   const setPage = (newPage: AppPages) => {
@@ -43,6 +48,14 @@ export const useAppStore = defineStore('app', () => {
 
   const setMapReady = (mapReadyVal: boolean) => {
     mapReady.value = mapReadyVal;
+  };
+
+  const setLegendOpen = (val: boolean) => {
+    legendOpen.value = val;
+  };
+
+  const toggleLegend = () => {
+    legendOpen.value = !legendOpen.value;
   };
 
   const zoomToFeature = (feature: Feature) => {
@@ -102,17 +115,22 @@ export const useAppStore = defineStore('app', () => {
   };
 
   return {
-    page: computed(() => page.value),
-    drawer: computed(() => drawer.value),
+    page,
+    drawer,
     ngwMap,
     layers,
     mapReady,
+    legendOpen,
+    shareDialog,
     forEachGeomLayer,
+    setShareDialog,
     zoomToFeature,
-    toggleDrawer,
+    setLegendOpen,
+    toggleLegend,
     setMapReady,
     showDrawer,
     hideDrawer,
+    setDrawer,
     setNgwMap,
     setPage,
     zoomTo,
