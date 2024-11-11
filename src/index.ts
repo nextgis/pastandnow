@@ -6,9 +6,6 @@ import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import pinia from './store';
 
-// import './style/mapbox.scss';
-// import './style/custom-vuetify.scss';
-
 declare global {
   interface Window {
     version: string;

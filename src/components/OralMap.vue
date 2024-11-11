@@ -1,13 +1,13 @@
 <template>
-  <VueNgwMaplibre v-bind="$attrs" @load="onMapLoad">
+  <VueNgwMap v-bind="attrs" @load="onMapLoad">
     <slot></slot>
-  </VueNgwMaplibre>
+  </VueNgwMap>
 </template>
 <script setup lang="ts">
 import { fetchNgwLayerFeatures } from '@nextgis/ngw-kit';
-import VueNgwMaplibre from '@nextgis/vue-ngw-maplibre-gl';
+import VueNgwMap from '@nextgis/vue-ngw-maplibre-gl';
 import bbox from '@turf/bbox';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, useAttrs, watch } from 'vue';
 
 import config from '../config';
 import { connector } from '../services/ngw';
@@ -37,6 +37,7 @@ import type { Feature, FeatureCollection } from 'geojson';
 
 const { ngwLineLayerId, ngwPolygonLayerId } = config;
 
+const attrs = useAttrs();
 const app = useAppStore();
 
 const initZoomSet = ref(false);
@@ -321,11 +322,11 @@ const setSelected = (item: OralFeature) => {
 const onMapLoad = async (ngwMap_: NgwMap) => {
   app.setNgwMap(ngwMap_);
   await ngwMap_.addNgwLayer({ resource: config.districtsLayer });
-  const items = filtered.value;
-  if (items && items.length) {
-    await drawOralLayers(items);
-  }
-  app.setMapReady(true);
-  loaded.value = true;
+  // const items = filtered.value;
+  // if (items && items.length) {
+  //   await drawOralLayers(items);
+  // }
+  // app.setMapReady(true);
+  // loaded.value = true;
 };
 </script>

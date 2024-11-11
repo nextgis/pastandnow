@@ -6,11 +6,13 @@ import { defineConfig } from 'vite';
 // import eslint from 'vite-plugin-eslint';
 import vuetify from 'vite-plugin-vuetify';
 
-// import getAliases from './@nextgis/packages/build-tools/lib/aliases';
+import getAliases from './@nextgis/packages/build-tools/lib/aliases';
 
-// const baseAliases = getAliases();
-// const vueAliases = getAliases(path.resolve(__dirname, '@nextgis_vue/packages'));
-// const aliases = { ...baseAliases, ...vueAliases };
+const baseAliases = getAliases();
+const vueAliases = getAliases(
+  fileURLToPath(new URL('@nextgis_vue/packages', import.meta.url)),
+);
+const aliases = { ...baseAliases, ...vueAliases } as Record<string, string>;
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -19,9 +21,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       vue(),
-      vuetify({
-        // styles: { configFile: 'src/style/variables.scss' },
-      }),
+      vuetify(),
       // eslint({
       //   fix: true,
       //   include: ['src/**/*.ts', 'src/**/*.vue'],
@@ -31,22 +31,19 @@ export default defineConfig(({ mode }) => {
 
     resolve: {
       alias: {
-        // ...aliases,
+        ...aliases,
         '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
       extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue'],
     },
 
-    // css: {
-    //   preprocessorOptions: {
-    //     scss: {
-    //       additionalData: '@import "@/style/variables.scss";',
-    //     },
-    //     sass: {
-    //       additionalData: '@import "@/style/variables.scss"',
-    //     },
-    //   },
-    // },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler',
+        },
+      },
+    },
 
     build: {
       sourcemap: true,

@@ -1,6 +1,6 @@
 <template>
   <OralMap :map-options="mapOptions" full-filling>
-    <vue-ngw-control position="top-left" margin>
+    <!-- <vue-ngw-control position="top-left" margin>
       <VBtn
         v-if="!appStore.drawer"
         :size="'small'"
@@ -50,27 +50,27 @@
           <VIcon :class="{ active: appStore.drawer }">{{ svg.list }}</VIcon>
         </VBtn>
       </div>
-    </vue-ngw-control>
+    </vue-ngw-control> -->
   </OralMap>
 </template>
 
 <script setup lang="ts">
-import { VBtn, VCard, VIcon } from 'vuetify/components';
+// import { VBtn, VCard, VIcon } from 'vuetify/components';
 
-import LegendComponent from '../components/LegendComponent.vue';
+// import LegendComponent from '../components/LegendComponent.vue';
 import OralMap from '../components/OralMap.vue';
 import config from '../config';
-import { svg } from '../constants';
+// import { svg } from '../constants';
 import { connector } from '../services/ngw';
-import { useAppStore } from '../store/modules/app';
-import { useOralStore } from '../store/modules/oral';
+// import { useAppStore } from '../store/modules/app';
+// import { useOralStore } from '../store/modules/oral';
 
 import type { NgwMapOptions } from '@nextgis/ngw-map';
 
 const { qmsId } = config;
 
-const appStore = useAppStore();
-const oralStore = useOralStore();
+// const appStore = useAppStore();
+// const oralStore = useOralStore();
 
 const mapOptions: NgwMapOptions = {
   connector,

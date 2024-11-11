@@ -1,7 +1,7 @@
 <template>
   <VApp>
     <VMain>
-      <!-- <MainPart /> -->
+      <MainPart />
     </VMain>
 
     <LeftDrawer />
@@ -18,8 +18,8 @@ import { prepareFilterData } from '../scripts/prepareFilterData';
 
 import DetailDrawer from './components/DetailDrawer.vue';
 import LeftDrawer from './components/LeftDrawer.vue';
+import MainPart from './components/MainPart.vue';
 import ShareDialog from './components/Share/ShareDialog .vue';
-// import MainPart from './components/MainPart.vue';
 import { url } from './services/url';
 import { useAppStore } from './store/modules/app';
 import { useOralStore } from './store/modules/oral';
@@ -99,6 +99,44 @@ body {
 
 .shadowed {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
+}
+
+.drawer-content {
+  height: 100%;
+}
+
+.drawer-content {
+  height: 100%;
+}
+
+.sidebar-drawer {
+  &__header,
+  &__content,
+  &__footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  &__header {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  &__footer {
+    background-color: #f1f4f5;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  &__header-close {
+    position: absolute;
+    top: 15px;
+    right: 16px;
+  }
+
+  &__header-chip {
+    font-size: 10px;
+  }
 }
 
 *::-webkit-scrollbar-track {

@@ -1,19 +1,19 @@
 <template>
   <VNavigationDrawer
     v-model="detailDrawer"
-    class="detail-drawer"
+    class="sidebar-drawer"
     location="right"
     width="360"
   >
     <div v-if="detail" class="drawer-content d-flex flex-column">
       <div
         v-scroll:#detail-content="onDetailScroll"
-        class="detail-drawer__header flex-header-content"
+        class="sidebar-drawer__header flex-header-content"
         :class="{ shadowed: detailIsScrolled }"
       >
         <div class="pb-3 d-flex justify-space-between align-center">
           <VBtn
-            class="detail-drawer__header-close"
+            class="sidebar-drawer__header-close"
             variant="text"
             :size="'small'"
             @click="detail = null"
@@ -21,7 +21,7 @@
             <VIcon>{{ svg.close }}</VIcon>
           </VBtn>
           <VChip
-            class="detail-drawer__header-chip text-uppercase font-weight-bold"
+            class="sidebar-drawer__header-chip text-uppercase font-weight-bold"
             :color="
               detail.properties.status === 'существующий'
                 ? '#7bd235'
@@ -42,11 +42,11 @@
       </div>
       <div
         id="detail-content"
-        class="detail-drawer__content flex-grow-1 flex-body-content"
+        class="sidebar-drawer__content flex-grow-1 flex-body-content"
       >
         <DetailComponent />
       </div>
-      <div class="detail-drawer__footer flex-footer-content">
+      <div class="sidebar-drawer__footer flex-footer-content">
         <div class="bottom-buttons">
           <div class="bottom-buttons__item">
             <VBtn variant="text" color="primary" @click="openFeedbackPage">
@@ -161,36 +161,6 @@ watch(detail, resolveDrawer);
   .v-btn {
     flex-grow: 1;
     margin: 0;
-  }
-}
-
-.detail-drawer {
-  &__header,
-  &__content,
-  &__footer {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  &__header {
-    padding-top: 16px;
-    padding-bottom: 16px;
-  }
-
-  &__footer {
-    background-color: #f1f4f5;
-    padding-top: 4px;
-    padding-bottom: 4px;
-  }
-
-  &__header-close {
-    position: absolute;
-    top: 15px;
-    right: 16px;
-  }
-
-  &__header-chip {
-    font-size: 10px;
   }
 }
 </style>

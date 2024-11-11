@@ -69,11 +69,6 @@ export const useOralStore = defineStore('oral', () => {
     return items.value.filter((item) => featureFilter(item, placeFilters));
   });
 
-  const propertiesFilter = computed(() => {
-    const values = Object.values(filters.value);
-    return values.filter(Boolean);
-  });
-
   const sortedFeatures = computed(() => {
     return sortFeatures([...filtered.value] as OralFeature[]);
   });
@@ -180,11 +175,11 @@ export const useOralStore = defineStore('oral', () => {
     const searchFields = meta
       .filter((item) => item.search)
       .map((item) => item.value);
-    const propertiesFilter_: PropertiesFilter = ['any'];
+    const propertiesFilter: PropertiesFilter = ['any'];
     searchFields.forEach((field) => {
-      propertiesFilter_.push([`%${field}%`, 'ilike', query]);
+      propertiesFilter.push([`%${field}%`, 'ilike', query]);
     });
-    _updateFilter({ ...filters.value, fullText: propertiesFilter_ });
+    _updateFilter({ ...filters.value, fullText: propertiesFilter });
   };
 
   const setTypesFilter = (types: string[] | undefined) => {
@@ -331,7 +326,7 @@ export const useOralStore = defineStore('oral', () => {
     listSearchText,
     featuresLoading,
     activePlaceItems,
-    propertiesFilter,
+
     specialFilterSelected,
     narrativeTypeSelected,
     setNarrativeTypeSelected,

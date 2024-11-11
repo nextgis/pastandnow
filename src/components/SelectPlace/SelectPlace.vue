@@ -23,7 +23,6 @@
           :custom-filter="() => true"
           no-data-text="Не найдено"
           :menu-props="{ maxHeight: '400px' }"
-          :bg-color="'grey-darken-3'"
         >
           <template #selection="{ item }">
             <span v-html="getItemHtml(item.raw.text)"></span>

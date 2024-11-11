@@ -3,9 +3,8 @@
     <div class="drawer-content d-flex flex-column">
       <div class="flex-header-content">
         <VBtn
-          class="detail-drawer__header-close"
+          class="sidebar-drawer__header-close"
           variant="text"
-          :size="'small'"
           @click="drawer = false"
         >
           <VIcon>{{ svg.close }}</VIcon>
@@ -68,7 +67,7 @@
             v-model="listSearchText"
             :loading="!searchReady"
             flat
-            variant="solo"
+            variant="outlined"
             density="compact"
             hide-details
             clearable
@@ -164,19 +163,11 @@ const filterPanelOpen = ref(false);
 </script>
 
 <style scoped lang="scss">
-.drawer-content {
-  height: 100%;
+.list-toolbar {
+  padding: 16px 20px 20px;
 }
 
 .place-select {
-  /* background: $primary; */
-}
-
-.drawer-content {
-  height: 100%;
-}
-
-.list-toolbar {
-  padding: 16px 20px 20px;
+  background: rgb(var(--v-theme-primary));
 }
 </style>
