@@ -2,12 +2,8 @@
   <div class="legend" dense>
     <div v-for="(item, i) in legendItems" :key="i" class="legend__item">
       <div class="legend__item-label">
-        <SymbolComponent
-          class="mr-2"
-          :paint="item.icon"
-          :geo="item.geo"
-        ></SymbolComponent>
-        <span class="" v-text="capitalize(item.text)"></span>
+        <SymbolComponent class="mr-2" :paint="item.icon" :geo="item.geo" />
+        <span class="" v-text="capitalize(item.text)" />
       </div>
       <v-switch
         :input-value="activeTypes.includes(item.text)"
@@ -17,7 +13,7 @@
         hide-details
         color="primary"
         @change="onSwitchChange(item.text, $event)"
-      ></v-switch>
+      />
     </div>
   </div>
 </template>

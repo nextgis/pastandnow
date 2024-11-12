@@ -3,16 +3,17 @@ import { fetchNgwLayerFeatures, fetchNgwLayerItems } from '@nextgis/ngw-kit';
 
 import config from '../config';
 
+import type { FeatureItem } from '@nextgis/ngw-connector';
+import type { PropertiesFilter } from '@nextgis/properties-filter';
+import type { FeatureProperties } from '@nextgis/utils';
+import type { Feature, Point } from 'geojson';
+
 import type { OralPointFeature } from '../interfaces';
 import type {
   LayerMetaItem,
   OralPhotoProperties,
   OralProperties,
 } from '../interfaces';
-import type { FeatureItem } from '@nextgis/ngw-connector';
-import type { PropertiesFilter } from '@nextgis/properties-filter';
-import type { FeatureProperties } from '@nextgis/utils';
-import type { Feature, Point } from 'geojson';
 
 let limit = Infinity;
 

@@ -1,13 +1,14 @@
-import { Point } from 'geojson';
 // import { BdMainItemProperties } from '../src/api/ngw';
 import { fetchNgwLayerItems } from '@nextgis/ngw-kit';
+
+import type { Point } from 'geojson';
 const NgwConnector = require('@nextgis/ngw-connector');
 const config = require('../config.json');
 
 const connector = new NgwConnector({ baseUrl: config.baseUrl });
 
-async function fetchFilterData() {
-  const features = await fetchNgwLayerItems<Point>({
+function fetchFilterData() {
+  return fetchNgwLayerItems<Point>({
     connector,
     resourceId: config.ngwMarkerLayerId,
     fields: [],

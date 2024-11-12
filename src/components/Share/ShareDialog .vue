@@ -10,10 +10,10 @@
         />
       </VCardText>
 
-      <VDivider></VDivider>
+      <VDivider />
 
       <VCardActions>
-        <VSpacer></VSpacer>
+        <VSpacer />
         <VBtn
           color="primary"
           variant="text"

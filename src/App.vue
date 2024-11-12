@@ -49,7 +49,7 @@ onMounted(async () => {
           { immediate: true },
         );
       }
-    } catch (er) {
+    } catch {
       url.remove('id');
     }
   }

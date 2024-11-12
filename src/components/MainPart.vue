@@ -62,9 +62,9 @@ import OralMap from '../components/OralMap.vue';
 import config from '../config';
 // import { svg } from '../constants';
 import { connector } from '../services/ngw';
+
 // import { useAppStore } from '../store/modules/app';
 // import { useOralStore } from '../store/modules/oral';
-
 import type { NgwMapOptions } from '@nextgis/ngw-map';
 
 const { qmsId } = config;

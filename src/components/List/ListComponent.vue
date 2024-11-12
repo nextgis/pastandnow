@@ -42,8 +42,9 @@ import { useOralStore } from '../../store/modules/oral';
 import { getHistoryPaint } from '../../utils/getHistoryPaint';
 import SymbolComponent from '../SymbolComponent.vue';
 
-import type { OralFeature, OralProperties } from '../../interfaces';
 import type { PathPaint } from '@nextgis/paint';
+
+import type { OralFeature, OralProperties } from '../../interfaces';
 
 const portionCount = 30;
 const portion = ref<OralProperties[]>([]);

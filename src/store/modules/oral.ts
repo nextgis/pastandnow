@@ -12,6 +12,11 @@ import {
 } from '../../services/ngw';
 import { sortFeatures } from '../utils/sortFeatures';
 
+import type {
+  PropertiesFilter,
+  PropertyFilter,
+} from '@nextgis/properties-filter';
+
 import type { FilterData } from '../../../scripts/FilterData';
 import type {
   FilterProperties,
@@ -22,10 +27,6 @@ import type {
   OralPointFeature,
   PlaceProperties,
 } from '../../interfaces';
-import type {
-  PropertiesFilter,
-  PropertyFilter,
-} from '@nextgis/properties-filter';
 
 export const useOralStore = defineStore('oral', () => {
   const items = ref<OralPointFeature[]>([]);

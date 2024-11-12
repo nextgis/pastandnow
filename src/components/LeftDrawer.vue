@@ -15,7 +15,9 @@
         <VList v-if="filterPanelOpen">
           <VListItem @click="filterPanelOpen = false">
             <template #prepend>
-              <VIcon color="secondary">{{ svg.arrow_back }}</VIcon>
+              <VIcon color="secondary">
+                {{ svg.arrow_back }}
+              </VIcon>
             </template>
             <VListItemTitle class="text-secondary">
               Вернуться к списку объектов
@@ -73,7 +75,7 @@
             clearable
             placeholder="Поиск..."
             :prepend-inner-icon="svg.search"
-          ></VTextField>
+          />
         </div>
       </div>
       <div id="panel-content" class="flex-grow-1 flex-body-content">
@@ -85,15 +87,12 @@
           <FilterPanel
             v-if="filterPanelOpen"
             @close="filterPanelOpen = false"
-          ></FilterPanel>
-          <ListComponent v-else class="pt-0"></ListComponent>
+          />
+          <ListComponent v-else class="pt-0" />
         </div>
         <div v-if="featuresLoading">
           <div class="pa-3 text-center">
-            <VProgressCircular
-              indeterminate
-              color="primary"
-            ></VProgressCircular>
+            <VProgressCircular indeterminate color="primary" />
           </div>
         </div>
       </div>

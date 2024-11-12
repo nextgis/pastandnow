@@ -1,21 +1,19 @@
 <template>
   <span class="symbol-component-wrapper" :style="style">
-    <span
-      :class="'symbol-component symbol-fill ' + geo"
-      :style="fillStyle"
-    ></span>
+    <span :class="'symbol-component symbol-fill ' + geo" :style="fillStyle" />
     <span
       :class="'symbol-component symbol-stroke ' + geo"
       :style="strokeStyle"
-    ></span>
+    />
   </span>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { OralGeomType } from '../interfaces';
 import type { PathPaint } from '@nextgis/paint';
+
+import type { OralGeomType } from '../interfaces';
 
 const props = defineProps({
   paint: {

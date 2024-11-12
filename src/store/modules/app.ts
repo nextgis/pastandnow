@@ -3,13 +3,14 @@ import bbox from '@turf/bbox';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+import type { NgwMap } from '@nextgis/ngw-map';
+import type { Feature, Point } from 'geojson';
+
 import type {
   OralGeomType,
   OralLayers,
   OralProperties,
 } from '../../interfaces';
-import type { NgwMap } from '@nextgis/ngw-map';
-import type { Feature, Point } from 'geojson';
 
 export type AppPages = 'main' | 'table' | 'about';
 

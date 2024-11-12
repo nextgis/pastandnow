@@ -14,8 +14,8 @@
         specialFilters.length < specialFilterItems.length
       "
       @update:model-value="toggleAllSpecialFilters"
-    ></VCheckbox>
-    <VDivider></VDivider>
+    />
+    <VDivider />
     <VCheckbox
       v-for="v in specialFilterItems"
       :key="v.value"
@@ -25,7 +25,7 @@
       hide-details
       :label="v.text"
       @update:model-value="toggleSpecialFilter(v.value)"
-    ></VCheckbox>
+    />
     <h5 class="text-secondary mt-5 mb-1">ТИПЫ СЮЖЕТОВ</h5>
     <VAutocomplete
       v-model="narrativeTypesSelected"

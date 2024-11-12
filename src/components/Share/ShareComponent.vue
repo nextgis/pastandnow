@@ -9,9 +9,9 @@
       outlined
       hide-details
       @click:append="copyUrl"
-    ></v-text-field>
+    />
 
-    <v-divider></v-divider>
+    <v-divider />
     <div class="share-network-list pt-2">
       <ShareNetwork
         v-for="n in networks"
@@ -43,8 +43,8 @@
 import { mdiEmail, mdiTelegram, mdiVk } from '@mdi/js';
 import { Clipboard } from '@nextgis/utils';
 import { computed, ref } from 'vue';
-// import VueSocialSharing from 'vue-social-sharing';
 
+// import VueSocialSharing from 'vue-social-sharing';
 import type { OralFeature } from '../../interfaces';
 
 // Vue.use(VueSocialSharing);

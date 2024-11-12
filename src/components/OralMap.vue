@@ -1,6 +1,6 @@
 <template>
   <VueNgwMap v-bind="attrs" @load="onMapLoad">
-    <slot></slot>
+    <slot />
   </VueNgwMap>
 </template>
 <script setup lang="ts">
@@ -17,6 +17,14 @@ import { getOralPaint } from '../utils/getHistoryIcons';
 import { getPathPaint } from '../utils/getHistoryPaint';
 import { encodePlaceValue } from '../utils/place';
 
+import type { NgwMap } from '@nextgis/ngw-map';
+import type {
+  FeatureLayerAdapter,
+  GeoJsonAdapterOptions,
+  VectorAdapterLayerType,
+} from '@nextgis/webmap';
+import type { Feature, FeatureCollection } from 'geojson';
+
 import type {
   OralFeature,
   OralFeatures,
@@ -27,13 +35,6 @@ import type {
   OralProperties,
   PlaceProperties,
 } from '../interfaces';
-import type { NgwMap } from '@nextgis/ngw-map';
-import type {
-  FeatureLayerAdapter,
-  GeoJsonAdapterOptions,
-  VectorAdapterLayerType,
-} from '@nextgis/webmap';
-import type { Feature, FeatureCollection } from 'geojson';
 
 const { ngwLineLayerId, ngwPolygonLayerId } = config;
 
@@ -236,7 +237,7 @@ const getOralFeatures = async (
     const [geo, resourceId, ids] = r;
     if (ids.length) {
       ids.filter(Boolean).sort();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const geoFeatures = await fetchNgwLayerFeatures<any, OralProperties>({
         connector,
         resourceId,

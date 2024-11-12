@@ -7,7 +7,7 @@
         class="detail-prop-list px-0 pb-0"
       >
         <span class="text-caption text-secondary">{{ item.text }}</span>
-        <span class="text-body-2" v-html="getText(item)"></span>
+        <span class="text-body-2" v-html="getText(item)" />
       </VListItem>
       <VListItem
         v-if="photos && photos.length"
@@ -23,7 +23,7 @@
               selectedPhoto = i;
             "
           >
-            <VImg :src="photo.link_small" class="bg-grey-lighten-2 mt-2"></VImg>
+            <VImg :src="photo.link_small" class="bg-grey-lighten-2 mt-2" />
           </a>
         </div>
       </VListItem>
@@ -44,7 +44,7 @@
         :show-arrows="photos.length > 1"
       >
         <VCarouselItem v-for="(photo, k) in photos" :key="k">
-          <VImg :src="photo.link_big" height="100%" cover></VImg>
+          <VImg :src="photo.link_big" height="100%" cover />
         </VCarouselItem>
       </VCarousel>
       <VBtn
@@ -78,8 +78,6 @@ import {
 import { useAppStore } from '../store/modules/app';
 import { useOralStore } from '../store/modules/oral';
 import { isValidUrl } from '../utils/isValidUrl';
-
-// import Comments from './Comments/CommentsComponent.vue';
 
 import type {
   LayerMetaItem,
@@ -140,7 +138,9 @@ const getDetail = (key: string): undefined | string | number | null => {
         url_ = window.location.origin + '/?id=' + id1;
         window.openDetail = async (e: string) => {
           const feature = await oralStore.setDetailById(Number(e));
-          feature && appStore.zoomTo(String(feature.properties.id1));
+          if (feature) {
+            appStore.zoomTo(String(feature.properties.id1));
+          }
         };
         return `<a target="_blank" onclick="return openDetail(${id1})">${
           text || url

@@ -1,15 +1,15 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable import/newline-after-import */
 /* eslint-disable import/order */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 declare module "@nextgisweb/pyramid/type/api" {
     import type * as ns1588 from "@nextgisweb/cadaster/type/api";
+    import type * as ns155 from "@nextgisweb/file-upload/type/api";
+    import type * as ns1592 from "@nextgisweb/ngwcluster/type/api";
+    import type * as ns355 from "@nextgisweb/resource/type/api";
     import type * as ns594 from "@nextgisweb/tracker/type/api";
     import type * as ns426 from "@nextgisweb/webmap/type/api";
-    import type * as ns355 from "@nextgisweb/resource/type/api";
-    import type * as ns1592 from "@nextgisweb/ngwcluster/type/api";
-    import type * as ns155 from "@nextgisweb/file-upload/type/api";
 
     export {};
     export type HealthcheckResponse = {
@@ -221,29 +221,29 @@ declare module "@nextgisweb/auth/type/api" {
 }
 
 declare module "@nextgisweb/resource/type/api" {
+    import type * as ns527 from "@nextgisweb/basemap/type/api";
+    import type * as ns542 from "@nextgisweb/collector/type/api";
+    import type * as ns410 from "@nextgisweb/feature-layer/type/api";
+    import type * as ns548 from "@nextgisweb/formbuilder/type/api";
+    import type * as ns395 from "@nextgisweb/lookup-table/type/api";
+    import type * as ns551 from "@nextgisweb/mapserver/type/api";
+    import type * as ns509 from "@nextgisweb/ogcfserver/type/api";
+    import type * as ns464 from "@nextgisweb/postgis/type/api";
     import type * as ns555 from "@nextgisweb/qgis/type/api";
+    import type * as ns469 from "@nextgisweb/raster-layer/type/api";
+    import type * as ns416 from "@nextgisweb/render/type/api";
+    import type * as ns389 from "@nextgisweb/resmeta/type/api";
+    import type * as ns392 from "@nextgisweb/social/type/api";
+    import type * as ns421 from "@nextgisweb/svg-marker-library/type/api";
+    import type * as ns524 from "@nextgisweb/tileset/type/api";
+    import type * as ns519 from "@nextgisweb/tmsclient/type/api";
+    import type * as ns594 from "@nextgisweb/tracker/type/api";
+    import type * as ns459 from "@nextgisweb/vector-layer/type/api";
+    import type * as ns426 from "@nextgisweb/webmap/type/api";
+    import type * as ns483 from "@nextgisweb/wfsclient/type/api";
+    import type * as ns476 from "@nextgisweb/wfsserver/type/api";
     import type * as ns494 from "@nextgisweb/wmsclient/type/api";
     import type * as ns503 from "@nextgisweb/wmsserver/type/api";
-    import type * as ns509 from "@nextgisweb/ogcfserver/type/api";
-    import type * as ns524 from "@nextgisweb/tileset/type/api";
-    import type * as ns469 from "@nextgisweb/raster-layer/type/api";
-    import type * as ns527 from "@nextgisweb/basemap/type/api";
-    import type * as ns594 from "@nextgisweb/tracker/type/api";
-    import type * as ns542 from "@nextgisweb/collector/type/api";
-    import type * as ns426 from "@nextgisweb/webmap/type/api";
-    import type * as ns551 from "@nextgisweb/mapserver/type/api";
-    import type * as ns548 from "@nextgisweb/formbuilder/type/api";
-    import type * as ns389 from "@nextgisweb/resmeta/type/api";
-    import type * as ns395 from "@nextgisweb/lookup-table/type/api";
-    import type * as ns392 from "@nextgisweb/social/type/api";
-    import type * as ns459 from "@nextgisweb/vector-layer/type/api";
-    import type * as ns410 from "@nextgisweb/feature-layer/type/api";
-    import type * as ns416 from "@nextgisweb/render/type/api";
-    import type * as ns483 from "@nextgisweb/wfsclient/type/api";
-    import type * as ns519 from "@nextgisweb/tmsclient/type/api";
-    import type * as ns464 from "@nextgisweb/postgis/type/api";
-    import type * as ns476 from "@nextgisweb/wfsserver/type/api";
-    import type * as ns421 from "@nextgisweb/svg-marker-library/type/api";
 
     export {};
     export type ResourceCls = ("resource" | "resource_group" | "lookup_table" | "svg_marker_library" | "webmap" | "vector_layer" | "postgis_connection" | "postgis_layer" | "raster_layer" | "raster_style" | "wfsserver_service" | "wfsclient_connection" | "wfsclient_layer" | "wmsclient_connection" | "wmsclient_layer" | "wmsserver_service" | "ogcfserver_service" | "tmsclient_connection" | "tmsclient_layer" | "tileset" | "basemap_layer" | "collector_project" | "demo_project" | "formbuilder_form" | "mapserver_style" | "qgis_raster_style" | "qgis_vector_style" | "trackers_group" | "tracker");
@@ -545,8 +545,8 @@ declare module "@nextgisweb/lookup-table/type/api" {
 }
 
 declare module "@nextgisweb/feature-layer/type/api" {
-    import type * as ns355 from "@nextgisweb/resource/type/api";
     import type * as ns227 from "@nextgisweb/auth/type/api";
+    import type * as ns355 from "@nextgisweb/resource/type/api";
 
     export {};
     export type FeatureLayerFieldRead = {
@@ -980,8 +980,8 @@ declare module "@nextgisweb/webmap/type/api" {
 }
 
 declare module "@nextgisweb/vector-layer/type/api" {
-    import type * as ns355 from "@nextgisweb/resource/type/api";
     import type * as ns155 from "@nextgisweb/file-upload/type/api";
+    import type * as ns355 from "@nextgisweb/resource/type/api";
 
     export {};
     export type VectorLayerRead = {
@@ -1134,8 +1134,8 @@ declare module "@nextgisweb/postgis/type/api" {
 }
 
 declare module "@nextgisweb/raster-layer/type/api" {
-    import type * as ns355 from "@nextgisweb/resource/type/api";
     import type * as ns155 from "@nextgisweb/file-upload/type/api";
+    import type * as ns355 from "@nextgisweb/resource/type/api";
 
     export {};
     export type RasterLayerRead = {
@@ -1393,8 +1393,8 @@ declare module "@nextgisweb/tmsclient/type/api" {
 }
 
 declare module "@nextgisweb/tileset/type/api" {
-    import type * as ns355 from "@nextgisweb/resource/type/api";
     import type * as ns155 from "@nextgisweb/file-upload/type/api";
+    import type * as ns355 from "@nextgisweb/resource/type/api";
 
     export {};
     export type TilesetRead = {srs: ns355.RelationshipRef};
@@ -1546,9 +1546,9 @@ declare module "@nextgisweb/mapserver/type/api" {
 }
 
 declare module "@nextgisweb/qgis/type/api" {
+    import type * as ns155 from "@nextgisweb/file-upload/type/api";
     import type * as ns355 from "@nextgisweb/resource/type/api";
     import type * as ns569 from "@nextgisweb/sld/type/api";
-    import type * as ns155 from "@nextgisweb/file-upload/type/api";
 
     export {};
     export type QgisStyleFormat = ("default" | "qml_file" | "sld_file" | "sld");
@@ -1851,28 +1851,28 @@ declare module "@nextgisweb/ngwcluster/type/api" {
 }
 
 declare module "@nextgisweb/pyramid/type/route" {
-    import type * as ns555 from "@nextgisweb/qgis/type/api";
-    import type * as ns1165 from "@nextgisweb/feature-attachment/type/api";
-    import type * as ns149 from "@nextgisweb/core/type/api";
-    import type * as ns1592 from "@nextgisweb/ngwcluster/type/api";
-    import type * as ns155 from "@nextgisweb/file-upload/type/api";
-    import type * as ns939 from "@nextgisweb/spatial-ref-sys/type/api";
-    import type * as ns106 from "@nextgisweb/pyramid/type/api";
-    import type * as ns594 from "@nextgisweb/tracker/type/api";
-    import type * as ns542 from "@nextgisweb/collector/type/api";
-    import type * as ns426 from "@nextgisweb/webmap/type/api";
     import type * as ns1399 from "@nextgisweb/audit/type/api";
-    import type * as ns1588 from "@nextgisweb/cadaster/type/api";
-    import type * as ns459 from "@nextgisweb/vector-layer/type/api";
     import type * as ns227 from "@nextgisweb/auth/type/api";
+    import type * as ns1588 from "@nextgisweb/cadaster/type/api";
+    import type * as ns542 from "@nextgisweb/collector/type/api";
+    import type * as ns149 from "@nextgisweb/core/type/api";
+    import type * as ns1165 from "@nextgisweb/feature-attachment/type/api";
+    import type * as ns1163 from "@nextgisweb/feature-description/type/api";
     import type * as ns410 from "@nextgisweb/feature-layer/type/api";
+    import type * as ns155 from "@nextgisweb/file-upload/type/api";
+    import type * as ns1014 from "@nextgisweb/layer/type/api";
+    import type * as ns1592 from "@nextgisweb/ngwcluster/type/api";
+    import type * as ns464 from "@nextgisweb/postgis/type/api";
+    import type * as ns106 from "@nextgisweb/pyramid/type/api";
+    import type * as ns555 from "@nextgisweb/qgis/type/api";
     import type * as ns416 from "@nextgisweb/render/type/api";
     import type * as ns355 from "@nextgisweb/resource/type/api";
-    import type * as ns1014 from "@nextgisweb/layer/type/api";
-    import type * as ns483 from "@nextgisweb/wfsclient/type/api";
-    import type * as ns1163 from "@nextgisweb/feature-description/type/api";
+    import type * as ns939 from "@nextgisweb/spatial-ref-sys/type/api";
     import type * as ns519 from "@nextgisweb/tmsclient/type/api";
-    import type * as ns464 from "@nextgisweb/postgis/type/api";
+    import type * as ns594 from "@nextgisweb/tracker/type/api";
+    import type * as ns459 from "@nextgisweb/vector-layer/type/api";
+    import type * as ns426 from "@nextgisweb/webmap/type/api";
+    import type * as ns483 from "@nextgisweb/wfsclient/type/api";
 
     export {};
     export type Routes = {

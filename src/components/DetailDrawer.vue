@@ -30,8 +30,9 @@
             size="small"
             label
             variant="elevated"
-            >{{ detail.properties.status }}</VChip
           >
+            {{ detail.properties.status }}
+          </VChip>
         </div>
         <div class="text-subtitle-1 font-weight-medium">
           {{ detail.properties.name }}
@@ -50,25 +51,31 @@
         <div class="bottom-buttons">
           <div class="bottom-buttons__item">
             <VBtn variant="text" color="primary" @click="openFeedbackPage">
-              <VIcon start>{{ svg.feedback }}</VIcon>
+              <VIcon start>
+                {{ svg.feedback }}
+              </VIcon>
               Обратная связь
             </VBtn>
           </div>
-          <VDivider class="mx-1 my-2" inset vertical></VDivider>
+          <VDivider class="mx-1 my-2" inset vertical />
           <div class="bottom-buttons__item">
             <VBtn
               variant="text"
               color="primary"
               @click="zoomTo(detail.properties.id1)"
             >
-              <VIcon start>{{ svg.target }}</VIcon>
+              <VIcon start>
+                {{ svg.target }}
+              </VIcon>
               На карте
             </VBtn>
           </div>
-          <VDivider class="mx-1 my-2" inset vertical></VDivider>
+          <VDivider class="mx-1 my-2" inset vertical />
           <div class="bottom-buttons__item">
             <VBtn variant="text" color="primary" @click="shareDialog = true">
-              <VIcon start>{{ svg.share }}</VIcon>
+              <VIcon start>
+                {{ svg.share }}
+              </VIcon>
             </VBtn>
           </div>
         </div>

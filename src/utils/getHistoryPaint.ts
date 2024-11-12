@@ -2,8 +2,9 @@ import { useOralStore } from '../store/modules/oral';
 
 import { featureStyleKeys, featureStyles } from './featureStyleKeys';
 
-import type { OralFeature, OralProperties } from '../interfaces';
 import type { CirclePaint, PathPaint } from '@nextgis/paint';
+
+import type { OralFeature, OralProperties } from '../interfaces';
 
 export function getPathPaint(
   feature: OralFeature,

@@ -1,5 +1,5 @@
 <template>
-  <div id="remark42" ref="remark42"></div>
+  <div id="remark42" ref="remark42" />
 </template>
 
 <script setup lang="ts">
@@ -20,7 +20,6 @@ const remark42Instance = ref<Remark | null>(null);
 const remark42Ref = ref<HTMLElement | null>(null);
 
 const init = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const REMARK42 = (window as any).REMARK42;
   if (REMARK42) {
     if (remark42Instance.value) {
@@ -38,13 +37,11 @@ const init = () => {
 };
 
 onMounted(() => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((window as any).REMARK42) {
     init();
   } else {
     initRemark42();
     window.addEventListener('REMARK42::ready', () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).REMARK42.destroy();
       init();
     });

@@ -25,13 +25,13 @@
           :menu-props="{ maxHeight: '400px' }"
         >
           <template #selection="{ item }">
-            <span v-html="getItemHtml(item.raw.text)"></span>
+            <span v-html="getItemHtml(item.raw.text)" />
           </template>
 
           <template #item="{ item, props }">
             <VListItem v-bind="props">
               <template #title>
-                <span v-html="getItemHtml(item.raw.text)"></span>
+                <span v-html="getItemHtml(item.raw.text)" />
               </template>
             </VListItem>
           </template>
