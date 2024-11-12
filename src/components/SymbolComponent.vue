@@ -2,7 +2,7 @@
   <span class="symbol-component-wrapper" :style="style">
     <span :class="'symbol-component symbol-fill ' + geo" :style="fillStyle" />
     <span
-      :class="'symbol-component symbol-stroke ' + geo"
+      :class="`symbol-component symbol-stroke ${geo}`"
       :style="strokeStyle"
     />
   </span>
@@ -12,6 +12,7 @@
 import { computed } from 'vue';
 
 import type { PathPaint } from '@nextgis/paint';
+import type { CSSProperties } from 'vue';
 
 import type { OralGeomType } from '../interfaces';
 
@@ -26,27 +27,27 @@ const props = defineProps({
   },
 });
 
-const style = computed(() => ({
+const style = computed<CSSProperties>(() => ({
   width: '15px',
   height: '15px',
   // width: props.paint.radius + 'px',
   // height: props.paint.radius + 'px'
 }));
 
-const fillStyle = computed(() => {
+const fillStyle = computed<CSSProperties>(() => {
   const paint = props.paint;
   return {
     ...style.value,
-    backgroundColor: paint.fillColor || paint.color,
-    opacity: paint.fillOpacity || paint.opacity,
+    backgroundColor: String(paint.fillColor) || String(paint.color),
+    opacity: String(paint.fillOpacity) || String(paint.opacity),
   };
 });
 
-const strokeStyle = computed(() => {
+const strokeStyle = computed<CSSProperties>(() => {
   const paint = props.paint;
   return {
     ...style.value,
-    borderColor: paint.strokeColor || paint.color,
+    borderColor: String(paint.strokeColor) || String(paint.color),
   };
 });
 </script>

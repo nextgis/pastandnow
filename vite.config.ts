@@ -1,9 +1,8 @@
-// import path from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
 
 import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
-// import eslint from 'vite-plugin-eslint';
+import eslint from 'vite-plugin-eslint';
 import vuetify from 'vite-plugin-vuetify';
 
 import getAliases from './@nextgis/packages/build-tools/lib/aliases';
@@ -22,11 +21,11 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       vuetify(),
-      // eslint({
-      //   fix: true,
-      //   include: ['src/**/*.ts', 'src/**/*.vue'],
-      //   cache: false,
-      // }),
+      eslint({
+        fix: true,
+        include: ['src/**/*.ts', 'src/**/*.vue'],
+        cache: false,
+      }),
     ],
 
     resolve: {
