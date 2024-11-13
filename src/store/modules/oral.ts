@@ -1,6 +1,7 @@
 import { featureFilter } from '@nextgis/properties-filter';
+import { debounce } from '@nextgis/utils';
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, shallowRef } from 'vue';
 
 import { DEFAULT_PLACE, PLACE_KEYS } from '../../constants';
 import {
@@ -29,11 +30,11 @@ import type {
 } from '../../interfaces';
 
 export const useOralStore = defineStore('oral', () => {
-  const items = ref<OralPointFeature[]>([]);
-  const filtered = ref<OralPointFeature[]>([]);
-  const photos = ref<OralPhotoProperties[]>([]);
-  const meta = ref<LayerMetaItem[]>([]);
-  const detailItem = ref<OralFeature | null>(null);
+  const items = shallowRef<OralPointFeature[]>([]);
+  const filtered = shallowRef<OralPointFeature[]>([]);
+  const photos = shallowRef<OralPhotoProperties[]>([]);
+  const meta = shallowRef<LayerMetaItem[]>([]);
+  const detailItem = shallowRef<OralFeature | null>(null);
   const featuresLoading = ref(false);
   const narrativeTypeSelected = ref<string[]>([]);
   const specialFilterSelected = ref<string[]>([]);
@@ -44,9 +45,9 @@ export const useOralStore = defineStore('oral', () => {
     city: 'Москва',
     region: 'Московская обл.',
   });
-  const legendItems = ref<LegendItem[]>([]);
+  const legendItems = shallowRef<LegendItem[]>([]);
   const filterData = ref<FilterData>({ narrativeTypeItems: {} });
-  const filters = ref<FilterProperties>({
+  const filters = shallowRef<FilterProperties>({
     fullText: undefined,
     city: undefined,
     rayon: undefined,
@@ -62,7 +63,7 @@ export const useOralStore = defineStore('oral', () => {
   const activePlaceItems = computed(() => {
     const placeFilters: PropertiesFilter[] = [];
     PLACE_KEYS.forEach((key) => {
-      const filter = filters.value[key];
+      const filter = filters.value[key] as PropertiesFilter;
       if (filter) {
         placeFilters.push(filter);
       }
@@ -75,11 +76,14 @@ export const useOralStore = defineStore('oral', () => {
   });
 
   const getAllItems = async () => {
-    setFeaturesLoading(true);
-    await setMeta();
-    const features = await getLayerFeatures();
-    setFeaturesLoading(false);
-    items.value = features;
+    featuresLoading.value = true;
+    try {
+      await setMeta();
+      const features = await getLayerFeatures();
+      items.value = features;
+    } finally {
+      featuresLoading.value = false;
+    }
   };
 
   const setItems = async (features: OralPointFeature[]) => {
@@ -88,7 +92,7 @@ export const useOralStore = defineStore('oral', () => {
   };
 
   const loadStories = async () => {
-    setSearchReady(false);
+    searchReady.value = false;
     const updatedFeatures: OralPointFeature[] = [];
     const itemsFromLayer = await getLayerStoryItems();
     items.value.forEach((item) => {
@@ -102,7 +106,7 @@ export const useOralStore = defineStore('oral', () => {
       }
       updatedFeatures.push(updatedFeature);
     });
-    setSearchReady(true);
+    searchReady.value = true;
     items.value = updatedFeatures;
   };
 
@@ -141,11 +145,11 @@ export const useOralStore = defineStore('oral', () => {
   };
 
   const updateFilter = (newFilters: Partial<FilterProperties>) => {
-    _updateFilter({ ...filters.value, ...newFilters });
+    _setFilter({ ...filters.value, ...newFilters });
   };
 
   const resetNonPlaceFilter = () => {
-    const resetFilters = { ...filters.value };
+    const resetFilters = { ...filters.value } as FilterProperties;
     Object.keys(resetFilters).forEach((key) => {
       if (!PLACE_KEYS.includes(key as keyof PlaceProperties)) {
         resetFilters[key as keyof FilterProperties] = undefined;
@@ -153,10 +157,9 @@ export const useOralStore = defineStore('oral', () => {
     });
     setListSearchText('');
     resetSpecialFilter();
-    // @ts-expect-error Type instantiation is excessively deep and possibly infinite.
     const newActiveTypes = legendItems.value.map((item) => item.name);
     setActiveTypes(newActiveTypes);
-    _updateFilter(resetFilters);
+    _setFilter(resetFilters);
   };
 
   const resetSpecialFilter = () => {
@@ -169,7 +172,7 @@ export const useOralStore = defineStore('oral', () => {
 
   const setFullTextFilter = async (query: string) => {
     if (!query) {
-      _updateFilter({ ...filters.value, fullText: undefined });
+      _setFilter({ ...filters.value, fullText: undefined } as FilterProperties);
       return;
     }
     const meta = await getLayerMeta();
@@ -180,14 +183,17 @@ export const useOralStore = defineStore('oral', () => {
     searchFields.forEach((field) => {
       propertiesFilter.push([`%${field}%`, 'ilike', query]);
     });
-    _updateFilter({ ...filters.value, fullText: propertiesFilter });
+    _setFilter({
+      ...filters.value,
+      fullText: propertiesFilter,
+    } as FilterProperties);
   };
 
   const setTypesFilter = (types: string[] | undefined) => {
-    _updateFilter({
+    _setFilter({
       ...filters.value,
       type: types ? [['type', 'in', types]] : undefined,
-    });
+    } as FilterProperties);
   };
 
   const setSpecialFilter = (selected: string[] = []) => {
@@ -196,28 +202,29 @@ export const useOralStore = defineStore('oral', () => {
       'eq',
       '1',
     ]);
-    _updateFilter({
+    _setFilter({
       ...filters.value,
       specialFilter: selected.length ? ['any', ...properties] : undefined,
-    });
+    } as FilterProperties);
   };
 
   const setNarrativeType = (selected: string[] | undefined) => {
     const properties: PropertyFilter[] =
       selected?.map((value) => ['%narrativ_t%', 'ilike', value]) || [];
-    _updateFilter({
+    _setFilter({
       ...filters.value,
       narrativeType: selected ? ['any', ...properties] : undefined,
-    });
+    } as FilterProperties);
   };
 
   const setLegend = (legendItem: LegendItem) => {
     const newLegendItems = [...legendItems.value];
+
     if (!legendItems.value.find((item) => item.name === legendItem.name)) {
       newLegendItems.push(legendItem);
-      activeTypes.value = legendItems.value.map((item) => item.name);
+      activeTypes.value = newLegendItems.map((item) => item.name);
+      legendItems.value = newLegendItems;
     }
-    legendItems.value = newLegendItems;
   };
 
   const setDetail = async (id1: number | string | null) => {
@@ -265,14 +272,6 @@ export const useOralStore = defineStore('oral', () => {
     updateFilter(placeFilters);
   };
 
-  const setSearchReady = (ready: boolean) => {
-    searchReady.value = ready;
-  };
-
-  const setFeaturesLoading = (loading: boolean) => {
-    featuresLoading.value = loading;
-  };
-
   const setFilterData = (data: FilterData) => {
     filterData.value = data;
   };
@@ -293,7 +292,7 @@ export const useOralStore = defineStore('oral', () => {
     narrativeTypeSelected.value = selected;
   };
 
-  const _updateFilter = (newFilters: FilterProperties) => {
+  const _setFilter = debounce((newFilters: FilterProperties) => {
     const filteredItems = items.value.filter((item) =>
       featureFilter(item, Object.values(newFilters).filter(Boolean)),
     );
@@ -308,7 +307,7 @@ export const useOralStore = defineStore('oral', () => {
       detailItem.value = null;
     }
     filters.value = newFilters;
-  };
+  }, 50);
 
   return {
     meta,
@@ -327,20 +326,17 @@ export const useOralStore = defineStore('oral', () => {
     listSearchText,
     featuresLoading,
     activePlaceItems,
-
     specialFilterSelected,
     narrativeTypeSelected,
     setNarrativeTypeSelected,
     setSpecialFilterSelected,
     resetNonPlaceFilter,
-    setFeaturesLoading,
     setListSearchText,
     resetSpecialFilter,
     setFullTextFilter,
     setSpecialFilter,
     setNarrativeType,
     setActivePlace,
-    setSearchReady,
     setFilterData,
     setTypesFilter,
     setActiveTypes,

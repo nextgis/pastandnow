@@ -42,28 +42,4 @@ export default createVuetify({
       mdi,
     },
   },
-  defaults: {
-    VBtn: {
-      variant: 'text',
-      density: 'compact',
-      size: 'small',
-    },
-    VTextField: {
-      variant: 'outlined',
-      density: 'compact',
-      size: 'small',
-    },
-    VSelect: {
-      variant: 'outlined',
-      density: 'compact',
-      size: 'small',
-    },
-    VList: {
-      density: 'compact',
-      size: 'small',
-    },
-    VChip: {
-      size: 'small',
-    },
-  },
 });

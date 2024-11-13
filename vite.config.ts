@@ -21,11 +21,11 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       vuetify(),
-      eslint({
-        fix: true,
-        include: ['src/**/*.ts', 'src/**/*.vue'],
-        cache: false,
-      }),
+      // eslint({
+      //   fix: true,
+      //   include: ['src/**/*.ts', 'src/**/*.vue'],
+      //   cache: false,
+      // }),
     ],
 
     resolve: {

@@ -43,7 +43,6 @@ const app = useAppStore();
 
 const initZoomSet = ref(false);
 const zoomToFilteredFlag = ref(false);
-const loaded = ref(false);
 
 const oralStore = useOralStore();
 
@@ -63,28 +62,24 @@ watch(items, (newFeatures, oldFeatures) => {
 });
 
 watch(filtered, (filteredFeatures) => {
-  if (loaded.value) {
-    drawOralLayers(filteredFeatures);
-    if (!initZoomSet.value) {
-      zoomToFiltered();
-      initZoomSet.value = true;
-    }
+  drawOralLayers(filteredFeatures);
+  if (!initZoomSet.value) {
+    zoomToFiltered();
+    initZoomSet.value = true;
   }
 });
 
 watch(activePlace, (newPlace, oldPlace) => {
-  if (loaded.value) {
-    const activeCity = encodePlaceValue(newPlace, 'city');
-    const oldCity = encodePlaceValue(oldPlace, 'city');
-    if (activeCity !== oldCity) {
-      removeOralLayers();
-      zoomToFilteredFlag.value = true;
-    }
+  const activeCity = encodePlaceValue(newPlace, 'city');
+  const oldCity = encodePlaceValue(oldPlace, 'city');
+  if (activeCity !== oldCity) {
+    removeOralLayers();
+    zoomToFilteredFlag.value = true;
   }
 });
 
 watch(detailItem, (item) => {
-  if (item && loaded.value) {
+  if (item) {
     setSelected(item);
   } else {
     app.forEachGeomLayer(({ layer }) => {
@@ -96,7 +91,6 @@ watch(detailItem, (item) => {
 });
 
 const drawOralLayers = async (features: OralPointFeature[]) => {
-  loaded.value = false;
   const geoms: OralGeomType[] = ['poly', 'line', 'point'];
   const oralFeatures = await getOralFeatures(
     JSON.parse(JSON.stringify(features)),
@@ -104,7 +98,7 @@ const drawOralLayers = async (features: OralPointFeature[]) => {
   for (const g of geoms) {
     await drawOralLayer(g, oralFeatures[g]);
   }
-  loaded.value = true;
+
   if (zoomToFilteredFlag.value) {
     zoomToFiltered();
     zoomToFilteredFlag.value = false;
@@ -323,11 +317,6 @@ const setSelected = (item: OralFeature) => {
 const onMapLoad = async (ngwMap_: NgwMap) => {
   app.setNgwMap(ngwMap_);
   await ngwMap_.addNgwLayer({ resource: config.districtsLayer });
-  // const items = filtered.value;
-  // if (items && items.length) {
-  //   await drawOralLayers(items);
-  // }
-  // app.setMapReady(true);
-  // loaded.value = true;
+  app.setMapReady(true);
 };
 </script>

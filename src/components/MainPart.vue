@@ -1,19 +1,19 @@
 <template>
   <OralMap :map-options="mapOptions" full-filling>
-    <!-- <vue-ngw-control position="top-left" margin>
+    <VueNgwControl position="top-left" margin>
       <VBtn
         v-if="!appStore.drawer"
         :size="'small'"
         class="rectangle-fab"
         color="#fff"
-        @click="appStore.setDrawer"
+        @click="appStore.toggleDrawer"
       >
         <VIcon class="drawer-icon" :class="{ active: appStore.drawer }">
           {{ svg.chevron_right }}
         </VIcon>
       </VBtn>
-    </vue-ngw-control>
-    <vue-ngw-control position="bottom-left" margin>
+    </VueNgwControl>
+    <VueNgwControl position="bottom-left" margin>
       <div v-if="appStore.legendOpen" class="d-flex flex-column">
         <VCard
           v-if="oralStore.legendItems.length"
@@ -50,27 +50,28 @@
           <VIcon :class="{ active: appStore.drawer }">{{ svg.list }}</VIcon>
         </VBtn>
       </div>
-    </vue-ngw-control> -->
+    </VueNgwControl>
   </OralMap>
 </template>
 
 <script setup lang="ts">
-// import { VBtn, VCard, VIcon } from 'vuetify/components';
+import { VueNgwControl } from '@nextgis/vue-ngw-map';
+import { VBtn, VCard, VIcon } from 'vuetify/components';
 
-// import LegendComponent from '../components/LegendComponent.vue';
+import LegendComponent from '../components/LegendComponent.vue';
 import OralMap from '../components/OralMap.vue';
 import config from '../config';
-// import { svg } from '../constants';
+import { svg } from '../constants';
 import { connector } from '../services/ngw';
+import { useAppStore } from '../store/modules/app';
+import { useOralStore } from '../store/modules/oral';
 
-// import { useAppStore } from '../store/modules/app';
-// import { useOralStore } from '../store/modules/oral';
 import type { NgwMapOptions } from '@nextgis/ngw-map';
 
 const { qmsId } = config;
 
-// const appStore = useAppStore();
-// const oralStore = useOralStore();
+const appStore = useAppStore();
+const oralStore = useOralStore();
 
 const mapOptions: NgwMapOptions = {
   connector,

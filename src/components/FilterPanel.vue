@@ -49,12 +49,8 @@
           <span class="text-truncate">{{ item.raw.name }}</span>
         </VChip>
       </template>
-      <template #item="{ props, item }">
-        <VListItem v-bind="props">
-          <VListItemTitle>
-            {{ item.raw.name }}
-          </VListItemTitle>
-        </VListItem>
+      <template #item="{ props }">
+        <VListItem v-bind="props"></VListItem>
       </template>
     </VAutocomplete>
   </div>
@@ -68,7 +64,6 @@ import {
   VChip,
   VDivider,
   VListItem,
-  VListItemTitle,
 } from 'vuetify/components';
 
 import { useOralStore } from '../store/modules/oral';

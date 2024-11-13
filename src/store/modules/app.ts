@@ -32,6 +32,9 @@ export const useAppStore = defineStore('app', () => {
     drawer.value = false;
   };
 
+  const toggleDrawer = () => {
+    drawer.value = !drawer.value;
+  };
   const setDrawer = (value: boolean) => {
     drawer.value = value;
   };
@@ -128,6 +131,7 @@ export const useAppStore = defineStore('app', () => {
     zoomToFeature,
     setLegendOpen,
     toggleLegend,
+    toggleDrawer,
     setMapReady,
     showDrawer,
     hideDrawer,

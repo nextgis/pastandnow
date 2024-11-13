@@ -1,8 +1,11 @@
 <template>
   <span class="symbol-component-wrapper" :style="style">
-    <span :class="'symbol-component symbol-fill ' + geo" :style="fillStyle" />
     <span
-      :class="`symbol-component symbol-stroke ${geo}`"
+      :class="['symbol-component', 'symbol-fill', geo]"
+      :style="fillStyle"
+    />
+    <span
+      :class="['symbol-component', 'symbol-stroke', geo]"
       :style="strokeStyle"
     />
   </span>
@@ -30,15 +33,13 @@ const props = defineProps({
 const style = computed<CSSProperties>(() => ({
   width: '15px',
   height: '15px',
-  // width: props.paint.radius + 'px',
-  // height: props.paint.radius + 'px'
 }));
 
 const fillStyle = computed<CSSProperties>(() => {
   const paint = props.paint;
   return {
     ...style.value,
-    backgroundColor: String(paint.fillColor) || String(paint.color),
+    background: String(paint.fillColor || paint.color),
     opacity: String(paint.fillOpacity) || String(paint.opacity),
   };
 });

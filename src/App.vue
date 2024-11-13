@@ -34,6 +34,8 @@ onMounted(async () => {
     );
     oralStore.setFilterData(filterData);
   };
+  await oralStore.getAllItems();
+  setFilterData();
   const id = url.get('id');
   if (id !== undefined) {
     try {
@@ -53,8 +55,7 @@ onMounted(async () => {
       url.remove('id');
     }
   }
-  await oralStore.getAllItems();
-  setFilterData();
+
   oralStore.resetSpecialFilter();
   await oralStore.loadStories();
   setFilterData();

@@ -32,10 +32,11 @@
                 class="list-toolbar__count font-weight-medium"
                 size="small"
               >
-                <template v-if="isFilterSet">
-                  {{ filtered.length }}&nbsp;<span class="text-secondary"
-                    >из&nbsp;{{ activePlaceItems.length }}</span
-                  >
+                <template v-if="oralStore.featuresLoading"> ... </template>
+                <template v-else-if="isFilterSet">
+                  {{ filtered.length }}&nbsp;<span class="text-secondary">
+                    из&nbsp;{{ activePlaceItems.length }}
+                  </span>
                 </template>
                 <template v-else>
                   {{ activePlaceItems.length }}
@@ -59,9 +60,9 @@
                 class="filter-btn"
                 @click="filterPanelOpen = true"
               >
-                <VIcon class="filter-btn" color="primary">{{
-                  svg.filter
-                }}</VIcon>
+                <VIcon class="filter-btn" color="primary">
+                  {{ svg.filter }}
+                </VIcon>
               </VBtn>
             </span>
           </div>

@@ -8,9 +8,12 @@ import type {
   Point,
 } from 'geojson';
 
-type PlaceFilter = {
-  [key in keyof PlaceProperties]?: PropertiesFilter;
-};
+interface PlaceFilter {
+  cntry?: PropertiesFilter;
+  region?: PropertiesFilter;
+  city?: PropertiesFilter;
+  rayon?: PropertiesFilter;
+}
 interface NonPlaceFilter {
   type?: PropertiesFilter;
   fullText?: PropertiesFilter;
