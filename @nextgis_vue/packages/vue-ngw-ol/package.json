@@ -1,0 +1,58 @@
+{
+  "name": "@nextgis/vue2-ngw-ol",
+  "version": "2.2.1",
+  "description": "Vue ngw map component for openlayer",
+  "main": "index.js",
+  "module": "lib/vue2-ngw-ol.esm-bundler.js",
+  "types": "lib/index.d.ts",
+  "dependencies": {
+    "@nextgis/vue2-ngw-map": "^2.2.1"
+  },
+  "peerDependencies": {
+    "@nextgis/ol-map-adapter": "*"
+  },
+  "devDependencies": {
+    "@nextgis/build-tools": "^2.0.2",
+    "@nextgis/ol-map-adapter": "^3.0.0-alpha.13",
+    "ol": "^10.1.0"
+  },
+  "buildOptions": {
+    "name": "VueNgwOl",
+    "injectCss": true,
+    "tsbuild": true,
+    "alias": [
+      {
+        "find": "^(ol|ol(/.*))$",
+        "replacement": "ol/src$2"
+      }
+    ],
+    "formats": [
+      "esm-bundler"
+    ]
+  },
+  "scripts": {
+    "clean": "rimraf ./lib",
+    "dev": "node ../build-tools/lib/build.js",
+    "prod": "npm run dev -- --release",
+    "lint": "eslint ./src/**/*.ts --fix --c ../../.eslintrc",
+    "watch": "npm run dev -- --watch"
+  },
+  "keywords": [
+    "NextGIS",
+    "MAP"
+  ],
+  "author": "NextGIS",
+  "files": [
+    "index.js",
+    "lib"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/nextgis/nextgis_frontend_vue2/tree/master/packages/vue2-ngw-ol#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nextgis/nextgis_frontend_vue2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nextgis/nextgis_frontend_vue2/issues"
+  }
+}

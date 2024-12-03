@@ -1,0 +1,53 @@
+{
+  "name": "@nextgis/vue2-ngw-leaflet",
+  "version": "2.2.1",
+  "description": "Vue2 NextGIS Web map component for leaflet",
+  "main": "lib/index.js",
+  "module": "lib/vue2-ngw-leaflet.esm-bundler.js",
+  "types": "lib/index.d.ts",
+  "dependencies": {
+    "@nextgis/vue2-ngw-map": "^2.2.1"
+  },
+  "devDependencies": {
+    "@nextgis/build-tools": "^2.0.2",
+    "@nextgis/leaflet-map-adapter": "^3.0.0-alpha.13",
+    "@types/leaflet": "^1.9.14",
+    "leaflet": "1.7.1"
+  },
+  "peerDependencies": {
+    "@nextgis/leaflet-map-adapter": "*"
+  },
+  "buildOptions": {
+    "name": "VueNgwLeaflet",
+    "injectCss": true,
+    "tsbuild": true,
+    "formats": [
+      "esm-bundler"
+    ]
+  },
+  "scripts": {
+    "clean": "rimraf ./lib",
+    "dev": "node ../build-tools/lib/build.js",
+    "prod": "npm run dev -- --release",
+    "lint": "eslint ./src/**/*.ts --fix --c ../../.eslintrc",
+    "watch": "npm run dev -- --watch"
+  },
+  "keywords": [
+    "NextGIS",
+    "MAP"
+  ],
+  "author": "NextGIS",
+  "files": [
+    "index.js",
+    "lib"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/nextgis/nextgis_frontend_vue2/tree/master/packages/vue2-ngw-leaflet#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nextgis/nextgis_frontend_vue2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nextgis/nextgis_frontend_vue2/issues"
+  }
+}
