@@ -15,10 +15,11 @@
           <VBtn
             class="sidebar-drawer__header-close"
             variant="text"
-            :size="'small'"
+            :icon="svg.close"
+            density="compact"
+            color="grey"
             @click="detail = null"
           >
-            <VIcon>{{ svg.close }}</VIcon>
           </VBtn>
           <VChip
             class="sidebar-drawer__header-chip text-uppercase font-weight-bold"
@@ -72,8 +73,13 @@
           </div>
           <VDivider class="mx-1 my-2" inset vertical />
           <div class="bottom-buttons__item">
-            <VBtn variant="text" color="primary" @click="shareDialog = true">
-              <VIcon start>
+            <VBtn
+              variant="text"
+              color="primary"
+              style="min-width: 0"
+              @click="shareDialog = true"
+            >
+              <VIcon>
                 {{ svg.share }}
               </VIcon>
             </VBtn>
@@ -163,7 +169,7 @@ watch(detail, resolveDrawer);
 .bottom-buttons {
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 
   .v-btn {
     flex-grow: 1;

@@ -112,8 +112,7 @@ body {
 
 .sidebar-drawer {
   &__header,
-  &__content,
-  &__footer {
+  &__content {
     padding-left: 20px;
     padding-right: 20px;
   }

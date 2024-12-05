@@ -5,9 +5,11 @@
         <VBtn
           class="sidebar-drawer__header-close"
           variant="text"
+          :icon="svg.close"
+          density="compact"
+          color="white"
           @click="drawer = false"
         >
-          <VIcon>{{ svg.close }}</VIcon>
         </VBtn>
         <div class="place-select">
           <SelectPlace />
@@ -49,6 +51,7 @@
                 class="px-1"
                 size="small"
                 variant="text"
+                density="comfortable"
                 color="primary"
                 @click="resetNonPlaceFilter"
               >
@@ -56,13 +59,12 @@
               </VBtn>
               <VBtn
                 variant="text"
-                :size="'small'"
+                density="compact"
                 class="filter-btn"
+                color="primary"
+                :icon="svg.filter"
                 @click="filterPanelOpen = true"
               >
-                <VIcon class="filter-btn" color="primary">
-                  {{ svg.filter }}
-                </VIcon>
               </VBtn>
             </span>
           </div>

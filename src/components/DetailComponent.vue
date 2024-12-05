@@ -48,13 +48,13 @@
         </VCarouselItem>
       </VCarousel>
       <VBtn
-        icon
         variant="text"
-        size="small"
+        density="compact"
         class="close-img-dialog-btn"
+        :icon="svg.close"
+        color="white"
         @click="dialog = false"
       >
-        <VIcon>{{ svg.close }}</VIcon>
       </VBtn>
     </VDialog>
   </div>

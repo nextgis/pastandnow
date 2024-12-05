@@ -22,10 +22,7 @@ const light: ThemeDefinition = {
     // info: '#2196F3',
     // success: '#4CAF50',
     // warning: '#FB8C00',
-  },
-  // Available variables https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/styles/settings/_variables.scss
-  variables: {
-    'border-radius-root': '2px',
+    grey: '#808080',
   },
 };
 export default createVuetify({

@@ -1,0 +1,19 @@
+// Available variables https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/styles/settings/_variables.scss
+// plus components' sass variables https://vuetifyjs.com/en/api/v-btn/#sass-button-background
+
+$border-radius-root: 2px;
+$button-height: 40px;
+$btn-hover-opacity: .04;
+
+@use "vuetify/settings" with (
+  $border-radius-root: $border-radius-root,
+  $button-text-transform: none,
+  $button-height: $button-height,
+  $button-text-letter-spacing: 0,
+  $button-font-size: 13px,
+  $icon-sizes: ( 
+    'default': 1.615385em,
+  ),
+  $button-icon-density: ('default': 0, 'comfortable': -2, 'compact': -3)
+);
+

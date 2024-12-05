@@ -3,14 +3,12 @@
     <VueNgwControl position="top-left" margin>
       <VBtn
         v-if="!appStore.drawer"
-        :size="'small'"
-        class="rectangle-fab"
-        color="#fff"
+        class="rectangle-fab bg-white"
+        :icon="svg.chevron_right"
+        variant="text"
+        color="grey"
         @click="appStore.toggleDrawer"
       >
-        <VIcon class="drawer-icon" :class="{ active: appStore.drawer }">
-          {{ svg.chevron_right }}
-        </VIcon>
       </VBtn>
     </VueNgwControl>
     <VueNgwControl position="bottom-left" margin>
@@ -28,10 +26,11 @@
               <VBtn
                 class="legend__close"
                 variant="text"
-                :size="'small'"
+                :icon="svg.close"
+                density="compact"
+                color="white"
                 @click="appStore.legendOpen = false"
               >
-                <VIcon>{{ svg.close }}</VIcon>
               </VBtn>
             </div>
           </div>
@@ -42,12 +41,12 @@
       </div>
       <div v-else>
         <VBtn
-          :size="'small'"
-          class="rectangle-fab"
-          color="#fff"
+          class="rectangle-fab bg-white"
+          :icon="svg.list"
+          variant="text"
+          color="grey"
           @click="appStore.toggleLegend"
         >
-          <VIcon :class="{ active: appStore.drawer }">{{ svg.list }}</VIcon>
         </VBtn>
       </div>
     </VueNgwControl>
@@ -56,7 +55,7 @@
 
 <script setup lang="ts">
 import { VueNgwControl } from '@nextgis/vue-ngw-map';
-import { VBtn, VCard, VIcon } from 'vuetify/components';
+import { VBtn, VCard } from 'vuetify/components';
 
 import LegendComponent from '../components/LegendComponent.vue';
 import OralMap from '../components/OralMap.vue';
@@ -88,8 +87,10 @@ const mapOptions: NgwMapOptions = {
 </script>
 
 <style lang="scss" scoped>
+@use '@/styles/settings' as settings;
+
 .rectangle-fab {
-  /* border-radius: $border-radius-root; */
+  border-radius: settings.$border-radius-root;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 
   .v-btn__content .v-icon {
@@ -113,10 +114,6 @@ const mapOptions: NgwMapOptions = {
   &:hover {
     opacity: 1;
   }
-}
-
-.drawer-icon.active {
-  transform: rotate(-180deg);
 }
 
 .legend-card {

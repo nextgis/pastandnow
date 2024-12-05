@@ -1,6 +1,6 @@
 import {
   mdiArrowLeft,
-  mdiChevronRightCircle,
+  mdiChevronRight,
   mdiClose,
   mdiCrosshairsGps,
   mdiFilter,
@@ -39,5 +39,5 @@ export const svg = {
   arrow_back: mdiArrowLeft,
   feedback: mdiMessageAlert,
   list: mdiFormatListBulleted,
-  chevron_right: mdiChevronRightCircle,
+  chevron_right: mdiChevronRight,
 };

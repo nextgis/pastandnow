@@ -3,7 +3,7 @@ import { fileURLToPath, URL } from 'node:url';
 import vue from '@vitejs/plugin-vue';
 import Fonts from 'unplugin-fonts/vite';
 import { defineConfig } from 'vite';
-import eslint from 'vite-plugin-eslint';
+// import eslint from 'vite-plugin-eslint';
 import vuetify from 'vite-plugin-vuetify';
 
 import getAliases from './@nextgis/packages/build-tools/lib/aliases';
@@ -21,7 +21,13 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       vue(),
-      vuetify(),
+      vuetify({
+        styles: {
+          configFile: fileURLToPath(
+            new URL('./src/styles/settings.scss', import.meta.url),
+          ),
+        },
+      }),
       // eslint({
       //   fix: true,
       //   include: ['src/**/*.ts', 'src/**/*.vue'],

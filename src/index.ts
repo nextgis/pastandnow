@@ -6,6 +6,8 @@ import vuetify from './plugins/vuetify';
 import App from './App.vue';
 import pinia from './store';
 
+import '@/styles/main.scss';
+
 declare global {
   interface Window {
     version: string;
