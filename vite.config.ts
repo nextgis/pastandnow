@@ -1,6 +1,7 @@
 import { fileURLToPath, URL } from 'node:url';
 
 import vue from '@vitejs/plugin-vue';
+import Fonts from 'unplugin-fonts/vite';
 import { defineConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
 import vuetify from 'vite-plugin-vuetify';
@@ -26,6 +27,19 @@ export default defineConfig(({ mode }) => {
       //   include: ['src/**/*.ts', 'src/**/*.vue'],
       //   cache: false,
       // }),
+      Fonts({
+        google: {
+          families: [
+            {
+              name: 'Roboto',
+              styles: 'wght@400;500;700',
+            },
+            {
+              name: 'Material Symbols Outlined',
+            },
+          ],
+        },
+      }),
     ],
 
     resolve: {
