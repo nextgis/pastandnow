@@ -30,6 +30,10 @@ export default createVuetify({
     defaultTheme: 'light',
     themes: {
       light,
+      dark: {
+        dark: true,
+        colors: { 'surface-variant': '#fff' },
+      },
     },
   },
   icons: {

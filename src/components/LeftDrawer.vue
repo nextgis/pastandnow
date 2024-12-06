@@ -72,6 +72,7 @@
             v-model="listSearchText"
             :loading="!searchReady"
             flat
+            color="primary"
             variant="outlined"
             density="compact"
             hide-details

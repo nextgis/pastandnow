@@ -22,11 +22,12 @@
           return-object
           :custom-filter="() => true"
           no-data-text="Не найдено"
-          :menu-props="{ maxHeight: '400px' }"
+          :menu-props="{ maxHeight: '400px', theme: 'light' }"
+          flat
         >
-          <template #selection="{ item }">
+          <!-- <template #selection="{ item }">
             <span v-html="getItemHtml(item.raw.text)" />
-          </template>
+          </template> -->
 
           <template #item="{ item, props }">
             <VListItem v-bind="props">
@@ -251,11 +252,10 @@ const getActivePlace = (): CountItem | null => {
   &__control + &__control {
     margin-top: 10px;
   }
-
-  :deep(.v-field__input) {
-    min-height: 36px;
-    padding-top: 0;
-    padding-bottom: 0;
+  &__control {
+    :deep(.v-field) {
+      background-color: #2e7a93;
+    }
   }
 }
 </style>

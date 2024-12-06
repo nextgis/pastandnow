@@ -79,3 +79,7 @@
 // }
 
 @use './map.scss';
+
+.v-chip__content{
+  position: relative;
+}

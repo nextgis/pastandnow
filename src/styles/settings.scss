@@ -14,6 +14,14 @@ $btn-hover-opacity: .04;
   $icon-sizes: ( 
     'default': 1.615385em,
   ),
-  $button-icon-density: ('default': 0, 'comfortable': -2, 'compact': -3)
+  $field-control-height: 40px,
+  $field-control-padding-start: 8px,
+  $field-control-padding-end: 8px,
+  $input-control-height: 40px,
+  $button-icon-density: ('default': 0, 'comfortable': -2, 'compact': -3),
+  $field-font-size: 14px,
+  $field-control-affixed-padding: 8px,
+  $chip-font-size: 12px,
+  $chip-padding-ratio: 4
 );
 

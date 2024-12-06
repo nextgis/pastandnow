@@ -32,6 +32,7 @@
       :items="narrativeTypeItems"
       density="compact"
       variant="outlined"
+      color="primary"
       chips
       item-title="name"
       item-value="name"
@@ -40,8 +41,9 @@
       <template #chip="{ props, item }">
         <VChip
           class="filter-panel__chip text-primary my-1 mx-0"
-          size="small"
+          density="compact"
           label
+          size="small"
           v-bind="props"
           closable
           @click:close="removeNarrativeType(item.raw)"
