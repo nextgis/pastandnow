@@ -7,10 +7,10 @@
       <VCol>
         <VAutocomplete
           v-model="activePlace"
+          v-model:search="search"
           class="filter-form__control"
           :items="items"
           :disabled="places.length < 2"
-          :search="search"
           :loading="!places.length"
           item-title="text"
           item-value="value"
