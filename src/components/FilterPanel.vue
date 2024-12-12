@@ -1,12 +1,13 @@
 <template>
   <div class="filter-panel">
-    <h5 class="text-secondary mb-1">СПЕЦИАЛЬНЫЕ ФИЛЬТРЫ</h5>
+    <h5 class="text-grey mb-2">СПЕЦИАЛЬНЫЕ ФИЛЬТРЫ</h5>
 
     <VCheckbox
       :key="'allSpecialFilters'"
       v-model="allSpecialFilters"
       class="filter-panel__checkbox mt-0"
       density="compact"
+      color="primary"
       hide-details
       label="Все"
       :indeterminate="
@@ -15,18 +16,19 @@
       "
       @update:model-value="toggleAllSpecialFilters"
     />
-    <VDivider />
+    <VDivider class="my-1" />
     <VCheckbox
       v-for="v in specialFilterItems"
       :key="v.value"
       :model-value="specialFilters.includes(v.value)"
       class="filter-panel__checkbox mt-0"
       density="compact"
+      color="primary"
       hide-details
       :label="v.text"
       @update:model-value="toggleSpecialFilter(v.value)"
     />
-    <h5 class="text-secondary mt-5 mb-1">ТИПЫ СЮЖЕТОВ</h5>
+    <h5 class="text-grey mt-5 mb-1">ТИПЫ СЮЖЕТОВ</h5>
     <VAutocomplete
       v-model="narrativeTypesSelected"
       :items="narrativeTypeItems"
@@ -152,7 +154,10 @@ const removeNarrativeType = (item: NarrativeTypeItem) => {
   padding: 0 20px 20px;
 
   &__checkbox {
-    margin-left: -4px;
+    :deep(.v-selection-control__input) {
+      margin-left: -5px;
+      margin-right: 5px;
+    }
   }
 
   &__chip {

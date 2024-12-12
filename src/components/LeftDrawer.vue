@@ -17,11 +17,11 @@
         <VList v-if="filterPanelOpen">
           <VListItem @click="filterPanelOpen = false">
             <template #prepend>
-              <VIcon color="secondary">
+              <VIcon color="grey">
                 {{ svg.arrow_back }}
               </VIcon>
             </template>
-            <VListItemTitle class="text-secondary">
+            <VListItemTitle class="text-grey">
               Вернуться к списку объектов
             </VListItemTitle>
           </VListItem>
@@ -36,7 +36,7 @@
               >
                 <template v-if="oralStore.featuresLoading"> ... </template>
                 <template v-else-if="isFilterSet">
-                  {{ filtered.length }}&nbsp;<span class="text-secondary">
+                  {{ filtered.length }}&nbsp;<span class="text-grey">
                     из&nbsp;{{ activePlaceItems.length }}
                   </span>
                 </template>

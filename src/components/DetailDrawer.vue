@@ -52,7 +52,7 @@
         <div class="bottom-buttons">
           <div class="bottom-buttons__item">
             <VBtn variant="text" color="primary" @click="openFeedbackPage">
-              <VIcon start>
+              <VIcon class="mb-n1" start>
                 {{ svg.feedback }}
               </VIcon>
               Обратная связь
