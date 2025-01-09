@@ -28,11 +28,14 @@
         </VList>
         <div v-else class="list-toolbar" :class="{ shadowed: listIsScrolled }">
           <div class="d-flex justify-space-between align-center mb-4">
-            <span class="text-subtitle-1 font-weight-medium">
-              Объекты
+            <div class="d-flex align-center">
+              <span class="text-subtitle-1 mr-1 font-weight-medium"
+                >Объекты</span
+              >
               <VChip
                 class="list-toolbar__count font-weight-medium"
                 size="small"
+                density="comfortable"
               >
                 <template v-if="oralStore.featuresLoading"> ... </template>
                 <template v-else-if="isFilterSet">
@@ -44,8 +47,8 @@
                   {{ activePlaceItems.length }}
                 </template>
               </VChip>
-            </span>
-            <span>
+            </div>
+            <div>
               <VBtn
                 v-if="isFilterSet"
                 class="px-1"
@@ -66,7 +69,7 @@
                 @click="filterPanelOpen = true"
               >
               </VBtn>
-            </span>
+            </div>
           </div>
           <VTextField
             v-model="listSearchText"

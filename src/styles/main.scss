@@ -93,3 +93,13 @@
 .v-list-item__append{
   align-self:  auto;
 }
+
+.v-chip{
+  &.v-chip--size-small{
+  font-size: 12px;
+  }
+
+  &.v-chip--size-x-small{
+    font-size: 10px;
+  }
+}

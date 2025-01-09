@@ -22,15 +22,16 @@
           >
           </VBtn>
           <VChip
-            class="sidebar-drawer__header-chip text-uppercase font-weight-bold"
+            class="sidebar-drawer__header-chip text-uppercase font-weight-bold text-white"
             :color="
               detail.properties.status === 'существующий'
                 ? '#7bd235'
                 : '#d2357b'
             "
+            variant="flat"
             size="small"
             label
-            variant="elevated"
+            density="comfortable"
           >
             {{ detail.properties.status }}
           </VChip>
@@ -175,5 +176,9 @@ watch(detail, resolveDrawer);
     flex-grow: 1;
     margin: 0;
   }
+}
+
+.v-chip.sidebar-drawer__header-chip {
+  font-size: 10px;
 }
 </style>
