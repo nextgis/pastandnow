@@ -1,84 +1,18 @@
-// a {
-// 	text-decoration: none;
-// 	&:hover {
-// 		text-decoration: underline;
-// 	}
-// }
 
-// .v-icon {
-// 	svg {
-// 		width: 1em;
-// 		height: 1em;
-// 	}
-// }
-
-// .v-select {
-// 	&--chips {
-// 		.v-select__selections {
-// 			padding-block: 3px;
-// 		}
-// 	}
-
-// 	&.v-input--density-compact {
-// 		.v-field__prepend-inner,
-// 		.v-field__append-inner {
-// 			.v-icon {
-// 				margin-top: 0;
-// 			}
-// 		}
-// 	}
-// }
-
-// .v-switch {
-// 	&.v-switch--inset {
-// 		padding-block-start: 0;
-
-// 		.v-switch__track {
-// 			background-color: #fff;
-// 		}
-// 	}
-
-// 	&.v-input--density-compact {
-// 		.v-selection-control__wrapper {
-// 			height: 16px;
-// 			margin-inline-end: 0;
-// 		}
-
-// 		.v-selection-control__input {
-// 			width: 22px;
-// 			height: 22px;
-// 			transform: translateY(-3px);
-
-// 			&:hover::before {
-// 				background-color: #fff;
-// 			}
-// 		}
-
-// 		.v-switch__track {
-// 			inset-block-start: 0;
-// 			inset-inline-start: 0;
-// 		}
-
-// 		.v-switch__thumb {
-// 			transform: translateY(-50%);
-// 			inset-block-start: 50%;
-// 			inset-inline-start: 3px;
-// 		}
-// 	}
-// }
-
-// .v-text-field {
-// 	&.v-text-field--solo {
-// 		.v-field__prepend-inner {
-// 			margin-inline-start: -3px;
-// 		}
-// 		.v-field__append-inner {
-// 			margin-inline-end: -3px;
-// 		}
-// 	}
-// }
 
 @use './map.scss';
+
+.v-switch--inset{
+
+  .v-selection-control{
+    --v-selection-control-size: 20px;
+  }
+
+  .v-selection-control:not(.v-selection-control--dirty) .v-switch__thumb{
+    background-color: #bdbdbd;
+  }
+
+}
 
 .v-chip__content{
   position: relative;

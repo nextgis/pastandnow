@@ -10,7 +10,8 @@
         class="legend__item-switcher ml-3 mt-0"
         density="compact"
         hide-details
-        color="primary"
+        color="white"
+        inset
         @update:modelValue="onSwitchChange(item.text, $event)"
       />
     </div>
@@ -78,14 +79,14 @@ const onSwitchChange = (itemName: string, status: boolean | null) => {
 
 <style lang="scss" scoped>
 .legend {
-  width: 220px;
+  width: 200px;
   padding: 16px;
 
   &__item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8px;
+    margin-top: 4px;
   }
 
   &__item-label {

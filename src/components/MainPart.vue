@@ -117,12 +117,13 @@ const mapOptions: NgwMapOptions = {
 }
 
 .legend-card {
-  &.theme--dark {
+  &.v-theme--dark {
     background-color: rgba(0, 0, 0, 0.75);
   }
 
   .legend-header {
     padding: 12px 16px 0;
+    margin-bottom: 2px;
   }
 
   &__title {
