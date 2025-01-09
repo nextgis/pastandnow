@@ -4,10 +4,12 @@
       <VListItem
         v-for="item in properties"
         :key="item.value"
-        class="detail-prop-list px-0 pb-0"
+        class="detail-prop-list px-0"
       >
-        <span class="text-caption text-secondary">{{ item.text }}</span>
-        <span class="text-body-2" v-html="getText(item)" />
+        <div class="detail-prop-list__caption text-caption text-typographyGrey">
+          {{ item.text }}
+        </div>
+        <div class="text-body-2" v-html="getText(item)" />
       </VListItem>
       <VListItem
         v-if="photos && photos.length"
@@ -68,7 +70,6 @@ import {
   VCarousel,
   VCarouselItem,
   VDialog,
-  VIcon,
   VImg,
   VList,
   VListItem,
@@ -210,9 +211,11 @@ const getAuthorLinks = (names: string[]): string[] => {
 <style lang="scss" scoped>
 .detail-prop-list {
   &:first-child {
-    :deep(.v-list-item-text) {
-      padding-top: 0;
-    }
+    padding-top: 0;
+  }
+
+  &__caption {
+    margin-bottom: 2px;
   }
 }
 

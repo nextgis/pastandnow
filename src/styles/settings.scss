@@ -1,9 +1,13 @@
 // Available variables https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/styles/settings/_variables.scss
 // plus components' sass variables https://vuetifyjs.com/en/api/v-btn/#sass-button-background
 
+@use "sass:map";
+
 $border-radius-root: 2px;
 $button-height: 40px;
 $btn-hover-opacity: .04;
+$heading-font-family: 'Roboto', sans-serif;
+$body-font-family: 'Roboto', sans-serif;
 
 @use "vuetify/settings" with (
   $border-radius-root: $border-radius-root,
@@ -35,5 +39,17 @@ $btn-hover-opacity: .04;
   $switch-track-background: #fff,
   $switch-track-opacity: 1,
   $switch-thumb-background: #005e7c,
+  $typography: 
+    (
+      'subtitle-1': (
+        'size': 1.1428571428571428rem,
+        'weight': normal,
+        'line-height': 1.2,
+        'letter-spacing': .009375em,
+        'font-family': $body-font-family,
+        'text-transform': none
+      ),
+      
+    )
 );
 

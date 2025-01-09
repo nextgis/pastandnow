@@ -5,7 +5,7 @@
         v-for="(item, i) in portion"
         :key="i"
         :active="isItemActive(item)"
-        class="align-start"
+        class="items-list-item align-start"
         @click="setDetail(Number(item.id1))"
       >
         <template #prepend>
@@ -15,7 +15,9 @@
             class="mr-2 mt-1 list-item-icon"
           />
         </template>
-        <VListItemTitle>{{ item.name }}</VListItemTitle>
+        <VListItemTitle class="items-list-item__title">{{
+          item.name
+        }}</VListItemTitle>
         <VListItemSubtitle>{{ item.type }}</VListItemSubtitle>
       </VListItem>
     </VList>
@@ -115,5 +117,9 @@ onMounted(() => {
 <style lang="scss" scoped>
 .items-list {
   font-size: 14px;
+}
+
+.items-list-item__title {
+  white-space: normal;
 }
 </style>

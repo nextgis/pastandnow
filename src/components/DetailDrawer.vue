@@ -39,7 +39,7 @@
         <div class="text-subtitle-1 font-weight-medium">
           {{ detail.properties.name }}
         </div>
-        <div class="text-caption text-secondary">
+        <div class="text-caption text-typographyGrey">
           {{ detail.properties.type }}
         </div>
       </div>
