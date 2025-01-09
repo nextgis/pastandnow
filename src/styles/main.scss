@@ -87,3 +87,9 @@
 .v-selection-control__input .v-icon{
   --v-icon-size-multiplier: 0.9230769230769231;
 }
+
+.v-list-item__prepend,
+.v-list-item__content,
+.v-list-item__append{
+  align-self:  auto;
+}

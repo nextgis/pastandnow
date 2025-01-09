@@ -167,7 +167,7 @@ const filterPanelOpen = ref(false);
 
 <style scoped lang="scss">
 .list-toolbar {
-  padding: 16px 20px 20px;
+  padding: 16px 20px;
 }
 
 .place-select {

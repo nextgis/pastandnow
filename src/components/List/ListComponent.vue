@@ -12,7 +12,7 @@
           <SymbolComponent
             :paint="getItemPaint(item)"
             :geo="item.geo || 'point'"
-            class="mr-2 mt-2 list-item-icon"
+            class="mr-2 mt-1 list-item-icon"
           />
         </template>
         <VListItemTitle>{{ item.name }}</VListItemTitle>
