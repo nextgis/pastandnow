@@ -229,15 +229,17 @@ const searchParts = (val?: string): string[] => {
 };
 
 const getActivePlace = (): CountItem | null => {
-  const encode = encodePlaceValue(oralStore.activePlace);
-  const parts = encode.split('__');
-  for (let fry = 0; fry < parts.length; fry++) {
-    const v = parts.slice(0, parts.length - fry);
-    const place = places.value.find((p) => {
-      return p.value === joinPlaceParts(v);
-    });
-    if (place) {
-      return place;
+  if (oralStore.activePlace) {
+    const encode = encodePlaceValue(oralStore.activePlace);
+    const parts = encode.split('__');
+    for (let fry = 0; fry < parts.length; fry++) {
+      const v = parts.slice(0, parts.length - fry);
+      const place = places.value.find((p) => {
+        return p.value === joinPlaceParts(v);
+      });
+      if (place) {
+        return place;
+      }
     }
   }
   return null;

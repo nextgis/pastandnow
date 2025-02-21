@@ -37,8 +37,7 @@ import type {
 } from '../interfaces';
 
 const { ngwLineLayerId, ngwPolygonLayerId } = config;
-
-const attrs = useAttrs();
+const attrs = useAttrs() as Readonly<Record<string, unknown>>;
 const app = useAppStore();
 
 const initZoomSet = ref(false);
@@ -47,7 +46,7 @@ const zoomToFilteredFlag = ref(false);
 const oralStore = useOralStore();
 
 const filtered = computed<OralPointFeature[]>(() => oralStore.filtered);
-const activePlace = computed<Partial<PlaceProperties>>(
+const activePlace = computed<Partial<PlaceProperties> | undefined>(
   () => oralStore.activePlace,
 );
 const items = computed<OralPointFeature[]>(() => [...oralStore.items]);
@@ -70,8 +69,8 @@ watch(filtered, (filteredFeatures) => {
 });
 
 watch(activePlace, (newPlace, oldPlace) => {
-  const activeCity = encodePlaceValue(newPlace, 'city');
-  const oldCity = encodePlaceValue(oldPlace, 'city');
+  const activeCity = newPlace ? encodePlaceValue(newPlace, 'city') : null;
+  const oldCity = oldPlace ? encodePlaceValue(oldPlace, 'city') : null;
   if (activeCity !== oldCity) {
     removeOralLayers();
     zoomToFilteredFlag.value = true;
@@ -121,10 +120,7 @@ const zoomToFiltered = () => {
     }
   });
   if (features.length) {
-    const extent = bbox({
-      type: 'FeatureCollection',
-      features,
-    });
+    const extent = bbox({ type: 'FeatureCollection', features });
     app.ngwMap?.fitBounds(extent, { maxZoom: 16, padding: 20 });
   }
 };
@@ -165,10 +161,7 @@ const drawOralLayer = async (geo: OralGeomType, features: OralFeature[]) => {
         if (geo && geo !== 'point') {
           return getPathPaint(feature, { weight: 4, fillOpacity: 0.8 });
         }
-        return getOralPaint(feature, {
-          radius: 13,
-          weight: 3,
-        });
+        return getOralPaint(feature, { radius: 13, weight: 3 });
       },
       waitFullLoad: true,
       selectable: true,
@@ -201,11 +194,7 @@ const drawOralLayer = async (geo: OralGeomType, features: OralFeature[]) => {
 const getOralFeatures = async (
   features: OralPointFeature[],
 ): Promise<OralFeatures> => {
-  const oralFeatures: OralFeatures = {
-    point: [],
-    line: [],
-    poly: [],
-  };
+  const oralFeatures: OralFeatures = { point: [], line: [], poly: [] };
   const lineIds: number[] = [];
   const polygonIds: number[] = [];
   for (const f of features) {

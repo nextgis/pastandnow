@@ -1,7 +1,7 @@
 import { featureFilter } from '@nextgis/properties-filter';
 import { debounce } from '@nextgis/utils';
 import { defineStore } from 'pinia';
-import { computed, ref, shallowRef } from 'vue';
+import { computed, ref, shallowRef, watch } from 'vue';
 
 import { DEFAULT_PLACE, PLACE_KEYS } from '../../constants';
 import {
@@ -31,7 +31,6 @@ import type {
 
 export const useOralStore = defineStore('oral', () => {
   const items = shallowRef<OralPointFeature[]>([]);
-  const filtered = shallowRef<OralPointFeature[]>([]);
   const photos = shallowRef<OralPhotoProperties[]>([]);
   const meta = shallowRef<LayerMetaItem[]>([]);
   const detailItem = shallowRef<OralFeature | null>(null);
@@ -40,11 +39,7 @@ export const useOralStore = defineStore('oral', () => {
   const specialFilterSelected = ref<string[]>([]);
   const listSearchText = ref('');
   const activeTypes = ref<string[] | false>([]);
-  const activePlace = ref<Partial<PlaceProperties>>({
-    cntry: 'Россия',
-    city: 'Москва',
-    region: 'Московская обл.',
-  });
+  const activePlace = ref<Partial<PlaceProperties>>();
   const legendItems = shallowRef<LegendItem[]>([]);
   const filterData = ref<FilterData>({ narrativeTypeItems: {} });
   const filters = shallowRef<FilterProperties>({
@@ -58,7 +53,19 @@ export const useOralStore = defineStore('oral', () => {
   });
   const searchReady = ref(false);
 
-  const features = computed(() => filtered.value);
+  watch(
+    filters,
+    debounce((newFilters: FilterProperties) => {
+      filters.value = newFilters;
+    }, 50),
+    { deep: true },
+  );
+
+  const filtered = computed(() => {
+    const activeFilters = Object.values(filters.value).filter(Boolean);
+
+    return items.value.filter((item) => featureFilter(item, activeFilters));
+  });
 
   const activePlaceItems = computed(() => {
     const placeFilters: PropertiesFilter[] = [];
@@ -73,6 +80,19 @@ export const useOralStore = defineStore('oral', () => {
 
   const sortedFeatures = computed(() => {
     return sortFeatures([...filtered.value] as OralFeature[]);
+  });
+
+  watch(filtered, (newFiltered) => {
+    if (
+      detailItem.value &&
+      !newFiltered.find(
+        (item) =>
+          String(item.properties.id1) ===
+          String(detailItem.value?.properties.id1),
+      )
+    ) {
+      detailItem.value = null;
+    }
   });
 
   const getAllItems = async () => {
@@ -145,7 +165,7 @@ export const useOralStore = defineStore('oral', () => {
   };
 
   const updateFilter = (newFilters: Partial<FilterProperties>) => {
-    _setFilter({ ...filters.value, ...newFilters });
+    filters.value = { ...filters.value, ...newFilters };
   };
 
   const resetNonPlaceFilter = () => {
@@ -159,7 +179,7 @@ export const useOralStore = defineStore('oral', () => {
     resetSpecialFilter();
     const newActiveTypes = legendItems.value.map((item) => item.name);
     setActiveTypes(newActiveTypes);
-    _setFilter(resetFilters);
+    filters.value = resetFilters;
   };
 
   const resetSpecialFilter = () => {
@@ -172,28 +192,25 @@ export const useOralStore = defineStore('oral', () => {
 
   const setFullTextFilter = async (query: string) => {
     if (!query) {
-      _setFilter({ ...filters.value, fullText: undefined } as FilterProperties);
+      filters.value = { ...filters.value, fullText: undefined };
       return;
     }
-    const meta = await getLayerMeta();
-    const searchFields = meta
+    const metaData = await getLayerMeta();
+    const searchFields = metaData
       .filter((item) => item.search)
       .map((item) => item.value);
     const propertiesFilter: PropertiesFilter = ['any'];
     searchFields.forEach((field) => {
       propertiesFilter.push([`%${field}%`, 'ilike', query]);
     });
-    _setFilter({
-      ...filters.value,
-      fullText: propertiesFilter,
-    } as FilterProperties);
+    filters.value = { ...filters.value, fullText: propertiesFilter };
   };
 
   const setTypesFilter = (types: string[] | undefined) => {
-    _setFilter({
+    filters.value = {
       ...filters.value,
       type: types ? [['type', 'in', types]] : undefined,
-    } as FilterProperties);
+    };
   };
 
   const setSpecialFilter = (selected: string[] = []) => {
@@ -202,19 +219,19 @@ export const useOralStore = defineStore('oral', () => {
       'eq',
       '1',
     ]);
-    _setFilter({
+    filters.value = {
       ...filters.value,
       specialFilter: selected.length ? ['any', ...properties] : undefined,
-    } as FilterProperties);
+    };
   };
 
   const setNarrativeType = (selected: string[] | undefined) => {
     const properties: PropertyFilter[] =
       selected?.map((value) => ['%narrativ_t%', 'ilike', value]) || [];
-    _setFilter({
+    filters.value = {
       ...filters.value,
       narrativeType: selected ? ['any', ...properties] : undefined,
-    } as FilterProperties);
+    };
   };
 
   const setLegend = (legendItem: LegendItem) => {
@@ -292,30 +309,12 @@ export const useOralStore = defineStore('oral', () => {
     narrativeTypeSelected.value = selected;
   };
 
-  const _setFilter = debounce((newFilters: FilterProperties) => {
-    const filteredItems = items.value.filter((item) =>
-      featureFilter(item, Object.values(newFilters).filter(Boolean)),
-    );
-    filtered.value = filteredItems;
-    const currentDetail = detailItem.value;
-    if (
-      currentDetail &&
-      !filteredItems.find(
-        (item) => item.properties.id1 === currentDetail.properties.id1,
-      )
-    ) {
-      detailItem.value = null;
-    }
-    filters.value = newFilters;
-  }, 50);
-
   return {
     meta,
     items,
     photos,
     filters,
     filtered,
-    features,
     detailItem,
     filterData,
     activePlace,

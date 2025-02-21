@@ -106,7 +106,7 @@ const specialFilterItems = computed<LayerMetaItem[]>(() =>
 );
 
 const narrativeTypeItems = computed(() => {
-  const city = oralStore.activePlace.city;
+  const city = oralStore.activePlace?.city;
   const types = city ? oralStore.filterData.narrativeTypeItems[city] : [];
   return (types || []).map((name) => ({ name }));
 });

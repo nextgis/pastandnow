@@ -24,7 +24,7 @@ export const PLACE_KEYS: (keyof PlaceProperties)[] = [
 
 export const DEFAULT_PLACE: PlaceProperties = {
   cntry: 'Россия',
-  city: 'Москва',
+  city: '',
   region: '',
   rayon: '',
 };

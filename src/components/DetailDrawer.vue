@@ -72,8 +72,8 @@
               На карте
             </VBtn>
           </div>
-          <VDivider class="mx-1 my-2" inset vertical />
-          <div class="bottom-buttons__item">
+          <!-- <VDivider class="mx-1 my-2" inset vertical /> -->
+          <!-- <div class="bottom-buttons__item">
             <VBtn
               variant="text"
               color="primary"
@@ -84,7 +84,7 @@
                 {{ svg.share }}
               </VIcon>
             </VBtn>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
