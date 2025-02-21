@@ -1,3 +1,3 @@
-import { VueNgwOl } from './VueNgwOl';
+// import { VueNgwOl } from './VueNgwOl';
 
-export default VueNgwOl;
+// export default VueNgwOl;

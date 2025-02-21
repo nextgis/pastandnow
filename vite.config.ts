@@ -5,6 +5,7 @@ import Fonts from 'unplugin-fonts/vite';
 import { defineConfig } from 'vite';
 // import eslint from 'vite-plugin-eslint';
 import vuetify from 'vite-plugin-vuetify';
+// import checker from 'vite-plugin-checker';
 
 import getAliases from './@nextgis/packages/build-tools/lib/aliases';
 
@@ -28,6 +29,11 @@ export default defineConfig(({ mode }) => {
           ),
         },
       }),
+      // checker({
+      //   typescript: {
+      //     // tsconfigPath: 'tsconfig.check.json',
+      //   },
+      // }),
       // eslint({
       //   fix: true,
       //   include: ['src/**/*.ts', 'src/**/*.vue'],
@@ -36,13 +42,8 @@ export default defineConfig(({ mode }) => {
       Fonts({
         google: {
           families: [
-            {
-              name: 'Roboto',
-              styles: 'wght@400;500;700',
-            },
-            {
-              name: 'Material Symbols Outlined',
-            },
+            { name: 'Roboto', styles: 'wght@400;500;700' },
+            { name: 'Material Symbols Outlined' },
           ],
         },
       }),
@@ -56,32 +57,19 @@ export default defineConfig(({ mode }) => {
       extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue'],
     },
 
-    css: {
-      preprocessorOptions: {
-        scss: {
-          api: 'modern-compiler',
-        },
-      },
-    },
+    css: { preprocessorOptions: { scss: { api: 'modern-compiler' } } },
 
     build: {
       sourcemap: true,
 
       rollupOptions: {
-        output: {
-          manualChunks: {
-            vendor: ['vue', 'vuetify'],
-          },
-        },
+        output: { manualChunks: { vendor: ['vue', 'vuetify'] } },
       },
       chunkSizeWarningLimit: 250,
       ...(isProd && {
         minify: 'terser',
         terserOptions: {
-          compress: {
-            drop_console: true,
-            drop_debugger: true,
-          },
+          compress: { drop_console: true, drop_debugger: true },
         },
       }),
     },
@@ -90,9 +78,7 @@ export default defineConfig(({ mode }) => {
       historyApiFallback: true,
       port: 8080,
 
-      hmr: {
-        overlay: true,
-      },
+      hmr: { overlay: true },
     },
 
     define: {
