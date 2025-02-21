@@ -40,7 +40,6 @@ const { ngwLineLayerId, ngwPolygonLayerId } = config;
 const attrs = useAttrs() as Readonly<Record<string, unknown>>;
 const app = useAppStore();
 
-const initZoomSet = ref(false);
 const zoomToFilteredFlag = ref(false);
 
 const oralStore = useOralStore();
@@ -62,10 +61,7 @@ watch(items, (newFeatures, oldFeatures) => {
 
 watch(filtered, (filteredFeatures) => {
   drawOralLayers(filteredFeatures);
-  if (!initZoomSet.value) {
-    zoomToFiltered();
-    initZoomSet.value = true;
-  }
+  zoomToFiltered();
 });
 
 watch(activePlace, (newPlace, oldPlace) => {

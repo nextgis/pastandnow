@@ -75,8 +75,8 @@ const oralStore = useOralStore();
 const mapOptions: NgwMapOptions = {
   connector,
   target: 'map',
-  center: [37.63, 55.75],
-  zoom: 10,
+  center: [105.3188, 61.5240],
+  zoom: 3,
   qmsId,
   controls: ['ZOOM', 'ATTRIBUTION'],
   controlsOptions: {
