@@ -15,7 +15,7 @@ import type {
   OralProperties,
 } from '../interfaces';
 
-let limit = Infinity;
+const limit = Infinity;
 
 // if (process.env.NODE_ENV === 'development') {
 //   limit = 1200;
@@ -44,9 +44,6 @@ export async function getLayerFeatures(): Promise<
     resourceId: config.ngwMarkerLayerId,
     geomFormat: 'wkt',
     limit,
-    // filters: [
-    //   ['id1', 'in', [4418, 6687, 100001, 100002, 100003, 100004, 100005]],
-    // ],
     fields,
     extensions: [],
   });

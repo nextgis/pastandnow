@@ -1,4 +1,4 @@
-import { getCurrentInstance, ref } from 'vue';
+import { getCurrentInstance, shallowRef } from 'vue';
 
 import type { NgwMap } from '@nextgis/ngw-map';
 import type { ComponentInternalInstance, Ref } from 'vue';
@@ -9,7 +9,7 @@ interface ExposedNgwMap {
 
 export function useNgwMap(): Ref<NgwMap | undefined> {
   const instance = getCurrentInstance();
-  const ngwMapRef = ref<NgwMap>();
+  const ngwMapRef = shallowRef<NgwMap>();
 
   if (!instance) {
     console.warn('useNgwMap must be used within a setup function.');

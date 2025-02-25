@@ -10,20 +10,16 @@ import bbox from '@turf/bbox';
 import { computed, ref, useAttrs, watch } from 'vue';
 
 import config from '../config';
+import { useOralLayer } from '../hooks/useOralLayer';
 import { connector } from '../services/ngw';
 import { useAppStore } from '../store/modules/app';
 import { useOralStore } from '../store/modules/oral';
-import { getOralPaint } from '../utils/getHistoryIcons';
-import { getPathPaint } from '../utils/getHistoryPaint';
 import { encodePlaceValue } from '../utils/place';
 
 import type { NgwMap } from '@nextgis/ngw-map';
-import type {
-  FeatureLayerAdapter,
-  GeoJsonAdapterOptions,
-  VectorAdapterLayerType,
-} from '@nextgis/webmap';
-import type { Feature, FeatureCollection } from 'geojson';
+import type { FeatureLayerAdapter } from '@nextgis/webmap';
+import type { Feature } from 'geojson';
+import type { Map } from 'maplibre-gl';
 
 import type {
   OralFeature,
@@ -39,6 +35,8 @@ import type {
 const { ngwLineLayerId, ngwPolygonLayerId } = config;
 const attrs = useAttrs() as Readonly<Record<string, unknown>>;
 const app = useAppStore();
+
+const { drawOralLayer, prepareLayerData } = useOralLayer();
 
 const zoomToFilteredFlag = ref(false);
 
@@ -61,7 +59,10 @@ watch(items, (newFeatures, oldFeatures) => {
 
 watch(filtered, (filteredFeatures) => {
   drawOralLayers(filteredFeatures);
-  zoomToFiltered();
+  if (!app.initZoomSet) {
+    zoomToFiltered();
+    app.initZoomSet = true;
+  }
 });
 
 watch(activePlace, (newPlace, oldPlace) => {
@@ -86,7 +87,8 @@ watch(detailItem, (item) => {
 });
 
 const drawOralLayers = async (features: OralPointFeature[]) => {
-  const geoms: OralGeomType[] = ['poly', 'line', 'point'];
+  // const geoms: OralGeomType[] = ['poly', 'line', 'point'];
+  const geoms: OralGeomType[] = ['point'];
   const oralFeatures = await getOralFeatures(
     JSON.parse(JSON.stringify(features)),
   );
@@ -126,64 +128,6 @@ const removeOralLayers = () => {
     for (const l in app.layers) {
       app.ngwMap.removeLayer(l);
     }
-  }
-};
-
-const drawOralLayer = async (geo: OralGeomType, features: OralFeature[]) => {
-  const layerId = app.layers[geo];
-  const layer = app.ngwMap?.getLayer(
-    layerId,
-  ) as FeatureLayerAdapter<OralProperties>;
-  if (!layer) {
-    const typeAlias: Record<OralGeomType, VectorAdapterLayerType> = {
-      point: 'point',
-      poly: 'polygon',
-      line: 'line',
-    };
-    const data = prepareLayerData(features, geo);
-    const adapterOptions: GeoJsonAdapterOptions<OralFeature> = {
-      id: geo,
-      data,
-      type: typeAlias[geo] || 'point',
-      paint: (feature) => {
-        const geo = feature.properties.geo;
-        if (geo && geo !== 'point') {
-          return getPathPaint(feature, { weight: 2, fillOpacity: 0.4 }, true);
-        }
-        return getOralPaint(feature, { radius: 8 }, true);
-      },
-      selectedPaint: (feature) => {
-        const geo = feature.properties.geo;
-        if (geo && geo !== 'point') {
-          return getPathPaint(feature, { weight: 4, fillOpacity: 0.8 });
-        }
-        return getOralPaint(feature, { radius: 13, weight: 3 });
-      },
-      waitFullLoad: true,
-      selectable: true,
-      unselectOnSecondClick: true,
-      visibility: true,
-      labelField: 'name',
-      labelOnHover: true,
-      onSelect: (e) => {
-        if (e.type !== 'api') {
-          const feature = e.features && e.features[0];
-          const id = feature
-            ? feature.properties
-              ? Number(feature.properties.id1)
-              : null
-            : null;
-          useOralStore().setDetail(id);
-        }
-      },
-    };
-
-    await app.ngwMap?.addGeoJsonLayer(adapterOptions);
-    app.layers[geo] = geo;
-  } else if (layer.propertiesFilter) {
-    layer.propertiesFilter([
-      ['id1', 'in', features.map((x) => x.properties.id1)],
-    ]);
   }
 };
 
@@ -245,27 +189,6 @@ const setLayersData = async (features: OralPointFeature[]) => {
   }
 };
 
-const prepareLayerData = (
-  features: OralFeature[],
-  geom: OralGeomType = 'point',
-): FeatureCollection => {
-  const forMap: Feature[] = [];
-  for (const x of features) {
-    forMap.push({
-      type: x.type,
-      id: x.id,
-      geometry: x.geometry,
-      properties: {
-        id1: x.properties.id1,
-        type: x.properties.type,
-        name: x.properties.name,
-        geo: x.properties.geo || geom,
-      },
-    });
-  }
-  return { type: 'FeatureCollection', features: forMap };
-};
-
 const setSelected = (item: OralFeature) => {
   const isAlreadySelected = (l: FeatureLayerAdapter<OralProperties>) => {
     return (
@@ -300,7 +223,7 @@ const setSelected = (item: OralFeature) => {
 };
 
 const onMapLoad = async (ngwMap_: NgwMap) => {
-  app.setNgwMap(ngwMap_);
+  app.setNgwMap(ngwMap_ as NgwMap<Map>);
   await ngwMap_.addNgwLayer({ resource: config.districtsLayer });
   app.setMapReady(true);
 };

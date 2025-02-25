@@ -60,5 +60,6 @@
     "vite-plugin-checker": "^0.9.0",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-vuetify": "^2.1.0"
-  }
+  },
+  "packageManager": "yarn@3.6.3+sha256.08ead1821a257416e6f217e89365425bf4b6d2430c3279318bedcec1a245fff5"
 }

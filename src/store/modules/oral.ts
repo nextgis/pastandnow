@@ -138,14 +138,14 @@ export const useOralStore = defineStore('oral', () => {
   const setDetailById = async (id: string | number) => {
     const feature = await fetchOralFeature(id);
     if (feature) {
-      if (
-        activeTypes.value &&
-        !activeTypes.value.includes(feature.properties.type)
-      ) {
-        setActiveTypes([...(activeTypes.value || []), feature.properties.type]);
-        setTypesFilter(activeTypes.value as string[]);
-      }
-      setActivePlace(feature.properties);
+      // if (
+      //   activeTypes.value &&
+      //   !activeTypes.value.includes(feature.properties.type)
+      // ) {
+      //   setActiveTypes([...(activeTypes.value || []), feature.properties.type]);
+      //   setTypesFilter(activeTypes.value as string[]);
+      // }
+      // setActivePlace(feature.properties);
       if (
         !items.value.some(
           (item) =>

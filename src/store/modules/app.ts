@@ -1,10 +1,11 @@
 import { type FeatureLayerAdapter } from '@nextgis/ngw-map';
 import bbox from '@turf/bbox';
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 
 import type { NgwMap } from '@nextgis/ngw-map';
 import type { Feature, Point } from 'geojson';
+import type { Map } from 'maplibre-gl';
 
 import type {
   OralGeomType,
@@ -16,13 +17,14 @@ export type AppPages = 'main' | 'table' | 'about';
 
 export const useAppStore = defineStore('app', () => {
   const layers = ref<OralLayers>({ point: '', line: '', poly: '' });
+
   const drawer = ref(true);
   const mapReady = ref(true);
   const page = ref<AppPages>('main');
   const legendOpen = ref(true);
   const shareDialog = ref(false);
-
-  const ngwMap = ref<NgwMap>();
+  const initZoomSet = ref(false);
+  const ngwMap = shallowRef<NgwMap<Map>>();
 
   const showDrawer = () => {
     drawer.value = true;
@@ -46,7 +48,7 @@ export const useAppStore = defineStore('app', () => {
     page.value = newPage;
   };
 
-  const setNgwMap = (mapId: NgwMap) => {
+  const setNgwMap = (mapId: NgwMap<Map>) => {
     ngwMap.value = mapId;
   };
 
@@ -60,6 +62,9 @@ export const useAppStore = defineStore('app', () => {
 
   const toggleLegend = () => {
     legendOpen.value = !legendOpen.value;
+  };
+  const setLayer = (geom: OralGeomType, layerId: string) => {
+    layers.value = { ...layers.value, [geom]: layerId };
   };
 
   const zoomToFeature = (feature: Feature) => {
@@ -125,6 +130,7 @@ export const useAppStore = defineStore('app', () => {
     layers,
     mapReady,
     legendOpen,
+    initZoomSet,
     shareDialog,
     forEachGeomLayer,
     setShareDialog,
@@ -137,6 +143,7 @@ export const useAppStore = defineStore('app', () => {
     hideDrawer,
     setDrawer,
     setNgwMap,
+    setLayer,
     setPage,
     zoomTo,
   };

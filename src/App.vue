@@ -45,7 +45,8 @@ onMounted(async () => {
           () => appStore.mapReady,
           () => {
             if (appStore.mapReady) {
-              appStore.zoomTo(feature.properties.id1);
+              appStore.initZoomSet = true;
+              appStore.zoomToFeature(feature);
             }
           },
           { immediate: true },
