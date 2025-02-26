@@ -11,7 +11,7 @@
     "dev": "vite",
     "prod": "vite build",
     "update": "ncu -u -x sass,@mdi/js",
-    "docker": "docmypkg -r registry.nextgis.com -n pastandnow -l -d ./docker",
+    "docker": "docmypkg -r harbor.nextgis.net -n frontend/pastandnow -l -d ./docker/Dockerfile",
     "lint": "eslint --fix"
   },
   "dependencies": {
