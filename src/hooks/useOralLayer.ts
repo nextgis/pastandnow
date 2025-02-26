@@ -235,7 +235,6 @@ export function useOralLayer() {
           el.innerHTML = html;
           return el.firstChild as HTMLElement;
         }
-
         function updateClusterMarkers() {
           if (!map) return;
           const source = map.getSource(sourceId) as GeoJSONSource;
@@ -253,6 +252,18 @@ export function useOralLayer() {
             let marker = markers[clusterId];
             if (!marker) {
               const el = createDonutChart(props);
+
+              el.addEventListener('click', () => {
+                const map = app.ngwMap?.mapAdapter.map;
+                if (!map) return;
+                const source = map.getSource(sourceId) as GeoJSONSource;
+                source.getClusterExpansionZoom(props.cluster_id).then((e) => {
+                  map.easeTo({
+                    center: coords as [number, number],
+                    zoom: e,
+                  });
+                });
+              });
               marker = markers[clusterId] = new Marker({
                 element: el,
               }).setLngLat(coords as [number, number]);
@@ -296,10 +307,6 @@ export function useOralLayer() {
 
         source.setData(data);
       }
-
-      // layer.propertiesFilter([
-      //   ['id1', 'in', features.map((x) => x.properties.id1)],
-      // ]);
     }
   };
 
