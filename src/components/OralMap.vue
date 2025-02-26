@@ -6,7 +6,6 @@
 <script setup lang="ts">
 import { fetchNgwLayerFeatures } from '@nextgis/ngw-kit';
 import VueNgwMap from '@nextgis/vue-ngw-maplibre-gl';
-import bbox from '@turf/bbox';
 import { computed, ref, useAttrs, watch } from 'vue';
 
 import config from '../config';
@@ -18,7 +17,6 @@ import { encodePlaceValue } from '../utils/place';
 
 import type { NgwMap } from '@nextgis/ngw-map';
 import type { FeatureLayerAdapter } from '@nextgis/webmap';
-import type { Feature } from 'geojson';
 import type { Map } from 'maplibre-gl';
 
 import type {
@@ -60,7 +58,7 @@ watch(items, (newFeatures, oldFeatures) => {
 watch(filtered, (filteredFeatures) => {
   drawOralLayers(filteredFeatures);
   if (!app.initZoomSet) {
-    zoomToFiltered();
+    app.zoomToFiltered();
     app.initZoomSet = true;
   }
 });
@@ -97,29 +95,11 @@ const drawOralLayers = async (features: OralPointFeature[]) => {
   }
 
   if (zoomToFilteredFlag.value) {
-    zoomToFiltered();
+    app.zoomToFiltered();
     zoomToFilteredFlag.value = false;
   }
   if (detailItem.value) {
     setSelected(detailItem.value);
-  }
-};
-
-const zoomToFiltered = () => {
-  const features: Feature[] = [];
-  app.forEachGeomLayer(({ layer }) => {
-    if (layer && layer.getLayers) {
-      const layers = layer.getLayers();
-      for (const x of layers) {
-        if (x.feature && x.visible) {
-          features.push(x.feature);
-        }
-      }
-    }
-  });
-  if (features.length) {
-    const extent = bbox({ type: 'FeatureCollection', features });
-    app.ngwMap?.fitBounds(extent, { maxZoom: 16, padding: 20 });
   }
 };
 

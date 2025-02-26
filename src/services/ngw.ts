@@ -15,11 +15,11 @@ import type {
   OralProperties,
 } from '../interfaces';
 
-const limit = Infinity;
+let limit = Infinity;
 
-// if (process.env.NODE_ENV === 'development') {
-//   limit = 1200;
-// }
+if (process.env.NODE_ENV === 'development') {
+  limit = 1200;
+}
 
 // export const url = config.baseUrl.replace(
 //   /^(https?|ftp):\/\//,

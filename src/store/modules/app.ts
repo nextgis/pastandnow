@@ -79,6 +79,24 @@ export const useAppStore = defineStore('app', () => {
     }
   };
 
+  const zoomToFiltered = () => {
+    const features: Feature[] = [];
+    forEachGeomLayer(({ layer }) => {
+      if (layer && layer.getLayers) {
+        const layers = layer.getLayers();
+        for (const x of layers) {
+          if (x.feature && x.visible) {
+            features.push(x.feature);
+          }
+        }
+      }
+    });
+    if (features.length) {
+      const extent = bbox({ type: 'FeatureCollection', features });
+      ngwMap.value?.fitBounds(extent, { maxZoom: 16, padding: 20 });
+    }
+  };
+
   const forEachGeomLayer = (
     cb: (opt: {
       layer: FeatureLayerAdapter<OralProperties>;
@@ -134,6 +152,7 @@ export const useAppStore = defineStore('app', () => {
     shareDialog,
     forEachGeomLayer,
     setShareDialog,
+    zoomToFiltered,
     zoomToFeature,
     setLegendOpen,
     toggleLegend,

@@ -11,6 +11,16 @@
       >
       </VBtn>
     </VueNgwControl>
+    <VueNgwControl position="top-right" margin>
+      <VBtn
+        class="rectangle-fab bg-white"
+        :icon="svg.fit"
+        variant="text"
+        color="grey"
+        @click="appStore.zoomToFiltered"
+      >
+      </VBtn>
+    </VueNgwControl>
     <VueNgwControl position="bottom-left" margin>
       <div v-if="appStore.legendOpen" class="d-flex flex-column">
         <VCard
@@ -75,7 +85,7 @@ const oralStore = useOralStore();
 const mapOptions: NgwMapOptions = {
   connector,
   target: 'map',
-  center: [105.3188, 61.5240],
+  center: [105.3188, 61.524],
   zoom: 3,
   qmsId,
   controls: ['ZOOM', 'ATTRIBUTION'],

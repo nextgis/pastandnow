@@ -4,6 +4,7 @@ import {
   mdiClose,
   mdiCrosshairsGps,
   mdiFilter,
+  mdiFitToPage,
   mdiFormatListBulleted,
   mdiMagnify,
   mdiMapMarker,
@@ -40,4 +41,5 @@ export const svg = {
   feedback: mdiMessageAlert,
   list: mdiFormatListBulleted,
   chevron_right: mdiChevronRight,
+  fit: mdiFitToPage,
 };
