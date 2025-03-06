@@ -95,18 +95,19 @@ export const useOralStore = defineStore('oral', () => {
     }
   });
 
+  watch(specialFilterSelected, (val) => {
+    setSpecialFilter(val.length ? val : undefined);
+  });
+
+  watch(narrativeTypeSelected, (val) => {
+    setNarrativeType(val.length ? val : undefined);
+  });
+
   const specialFilterItems = computed<LayerMetaItem[]>(() =>
     meta.value
       .filter((x) => x.type === 'Special')
       .sort((a, b) => (a.text > b.text ? 1 : -1)),
   );
-
-  watch(specialFilterSelected, (val) => {
-    setSpecialFilter(val.length ? val : undefined);
-  });
-  watch(narrativeTypeSelected, (val) => {
-    setNarrativeType(val.length ? val : undefined);
-  });
 
   const getAllItems = async () => {
     featuresLoading.value = true;
@@ -151,14 +152,6 @@ export const useOralStore = defineStore('oral', () => {
   const setDetailById = async (id: string | number) => {
     const feature = await fetchOralFeature(id);
     if (feature) {
-      // if (
-      //   activeTypes.value &&
-      //   !activeTypes.value.includes(feature.properties.type)
-      // ) {
-      //   setActiveTypes([...(activeTypes.value || []), feature.properties.type]);
-      //   setTypesFilter(activeTypes.value as string[]);
-      // }
-      // setActivePlace(feature.properties);
       if (
         !items.value.some(
           (item) =>
@@ -230,11 +223,15 @@ export const useOralStore = defineStore('oral', () => {
       'eq',
       '1',
     ]);
+    const otherFilter: PropertyFilter[] = specialFilterItems.value.map(
+      (item) => [item.value, 'ne', '1'],
+    );
+
     filters.value = {
       ...filters.value,
       specialFilter:
-        selected.length && specialFilterItems.value.length !== selected.length
-          ? ['any', ...properties]
+        specialFilterItems.value.length !== selected.length
+          ? ['any', ...properties, ['all', ...otherFilter]]
           : undefined,
     };
   };
