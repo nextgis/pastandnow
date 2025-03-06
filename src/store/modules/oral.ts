@@ -35,7 +35,7 @@ export const useOralStore = defineStore('oral', () => {
   const meta = shallowRef<LayerMetaItem[]>([]);
   const detailItem = shallowRef<OralFeature | null>(null);
   const featuresLoading = ref(false);
-  const narrativeTypeSelected = shallowRef<string[]>([]);
+  const narrativeTypeSelected = shallowRef<Set<string>>(new Set());
   const specialFilterSelected = shallowRef<string[]>([]);
   const listSearchText = ref('');
   const activeTypes = shallowRef<string[] | false>([]);
@@ -100,7 +100,8 @@ export const useOralStore = defineStore('oral', () => {
   });
 
   watch(narrativeTypeSelected, (val) => {
-    setNarrativeType(val.length ? val : undefined);
+    const uniqueValues = Array.from(val);
+    setNarrativeType(uniqueValues.length ? uniqueValues : undefined);
   });
 
   const specialFilterItems = computed<LayerMetaItem[]>(() =>

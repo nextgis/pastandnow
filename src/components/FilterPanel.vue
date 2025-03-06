@@ -82,8 +82,10 @@ const specialFilters = computed({
 });
 
 const narrativeTypesSelected = computed({
-  get: () => oralStore.narrativeTypeSelected,
-  set: (val) => (oralStore.narrativeTypeSelected = val),
+  get: () => Array.from(oralStore.narrativeTypeSelected),
+  set: (val: string[]) => {
+    oralStore.narrativeTypeSelected = new Set(val);
+  },
 });
 
 const allSpecialFilters = computed({
@@ -102,7 +104,8 @@ const narrativeTypeItems = computed(() => {
   const city = oralStore.activePlace?.city;
   const items = oralStore.filterData.narrativeTypeItems;
   const types = city ? items[city] : Object.values(items).flat();
-  return (types || []).map((name) => ({ name }));
+  const uniqueTypes = Array.from(new Set(types || []));
+  return uniqueTypes.map((name) => ({ name }));
 });
 
 const toggleAllSpecialFilters = () => {
