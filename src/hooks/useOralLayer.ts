@@ -155,6 +155,7 @@ export function useOralLayer() {
       };
 
       const map = app.ngwMap?.mapAdapter.map;
+
       if (map && data) {
         const source = map.getSource(sourceId) as GeoJSONSource;
         if (source) {

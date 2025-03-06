@@ -88,15 +88,15 @@ const mapOptions = shallowRef<NgwMapOptions | null>(null);
 onMounted(async () => {
   let style: Partial<StyleSpecification> | undefined = undefined;
   try {
-    // const resp = await fetch(config.geoservice.url);
-    // style = (await resp.json()) as StyleSpecification;
-    // style = {
-    //   transition: {
-    //     duration: 0,
-    //     delay: 0,
-    //   },
-    //   ...style,
-    // };
+    const resp = await fetch(config.geoservice.url);
+    style = (await resp.json()) as StyleSpecification;
+    style = {
+      transition: {
+        duration: 0,
+        delay: 0,
+      },
+      ...style,
+    };
   } catch {
     //
   }

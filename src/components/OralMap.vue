@@ -3,6 +3,7 @@
     <slot />
   </VueNgwMap>
 </template>
+
 <script setup lang="ts">
 import { fetchNgwLayerFeatures } from '@nextgis/ngw-kit';
 import VueNgwMap from '@nextgis/vue-ngw-maplibre-gl';
@@ -37,6 +38,7 @@ const app = useAppStore();
 const { drawOralLayer, prepareLayerData } = useOralLayer();
 
 const zoomToFilteredFlag = ref(false);
+const mapLoaded = ref(false);
 
 const oralStore = useOralStore();
 
@@ -55,8 +57,10 @@ watch(items, (newFeatures, oldFeatures) => {
   }
 });
 
-watch(filtered, (filteredFeatures) => {
-  drawOralLayers(filteredFeatures);
+watch([filtered, mapLoaded], ([filteredFeatures]) => {
+  if (mapLoaded.value) {
+    drawOralLayers(filteredFeatures);
+  }
   if (!app.initZoomSet) {
     app.zoomToFiltered();
     app.initZoomSet = true;
@@ -85,7 +89,8 @@ watch(detailItem, (item) => {
 });
 
 const drawOralLayers = async (features: OralPointFeature[]) => {
-  // const geoms: OralGeomType[] = ['poly', 'line', 'point'];
+  if (!mapLoaded.value) return;
+
   const geoms: OralGeomType[] = ['point'];
   const oralFeatures = await getOralFeatures(
     JSON.parse(JSON.stringify(features)),
@@ -205,6 +210,7 @@ const setSelected = (item: OralFeature) => {
 const onMapLoad = async (ngwMap_: NgwMap) => {
   app.setNgwMap(ngwMap_ as NgwMap<Map>);
   await ngwMap_.addNgwLayer({ resource: config.districtsLayer });
+  mapLoaded.value = true;
   app.setMapReady(true);
 };
 </script>
