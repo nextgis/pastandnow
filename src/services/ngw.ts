@@ -222,8 +222,8 @@ const emergencySpecialFields: LayerMetaItem[] = [
   { text: 'Подземелья', value: 'mos4', detail: false, type: 'Special' },
   { text: 'Субкультуры', value: 'mos5', detail: false, type: 'Special' },
   { text: 'Легенды', value: 'mos6', detail: false, type: 'Special' },
-  // { text: 'Памятники', value: 'mos7', type: 'Special' },
-  // { text: 'Последний адрес', value: 'mos8', type: 'Special' },
+  { text: 'Памятники', value: 'mos7', type: 'Special' },
+  { text: 'Последний адрес', value: 'mos8', type: 'Special' },
 ];
 
 export async function getLayerMeta(): Promise<LayerMetaItem[]> {

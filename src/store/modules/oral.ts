@@ -35,13 +35,13 @@ export const useOralStore = defineStore('oral', () => {
   const meta = shallowRef<LayerMetaItem[]>([]);
   const detailItem = shallowRef<OralFeature | null>(null);
   const featuresLoading = ref(false);
-  const narrativeTypeSelected = ref<string[]>([]);
-  const specialFilterSelected = ref<string[]>([]);
+  const narrativeTypeSelected = shallowRef<string[]>([]);
+  const specialFilterSelected = shallowRef<string[]>([]);
   const listSearchText = ref('');
-  const activeTypes = ref<string[] | false>([]);
-  const activePlace = ref<Partial<PlaceProperties>>();
+  const activeTypes = shallowRef<string[] | false>([]);
+  const activePlace = shallowRef<Partial<PlaceProperties>>();
   const legendItems = shallowRef<LegendItem[]>([]);
-  const filterData = ref<FilterData>({ narrativeTypeItems: {} });
+  const filterData = shallowRef<FilterData>({ narrativeTypeItems: {} });
   const filters = shallowRef<FilterProperties>({
     fullText: undefined,
     city: undefined,
@@ -93,6 +93,19 @@ export const useOralStore = defineStore('oral', () => {
     ) {
       detailItem.value = null;
     }
+  });
+
+  const specialFilterItems = computed<LayerMetaItem[]>(() =>
+    meta.value
+      .filter((x) => x.type === 'Special')
+      .sort((a, b) => (a.text > b.text ? 1 : -1)),
+  );
+
+  watch(specialFilterSelected, (val) => {
+    setSpecialFilter(val.length ? val : undefined);
+  });
+  watch(narrativeTypeSelected, (val) => {
+    setNarrativeType(val.length ? val : undefined);
   });
 
   const getAllItems = async () => {
@@ -183,11 +196,9 @@ export const useOralStore = defineStore('oral', () => {
   };
 
   const resetSpecialFilter = () => {
-    setSpecialFilterSelected(
-      meta.value
-        .filter((item) => item.type === 'Special')
-        .map((item) => item.value),
-    );
+    specialFilterSelected.value = meta.value
+      .filter((item) => item.type === 'Special')
+      .map((item) => item.value);
   };
 
   const setFullTextFilter = async (query: string) => {
@@ -221,7 +232,10 @@ export const useOralStore = defineStore('oral', () => {
     ]);
     filters.value = {
       ...filters.value,
-      specialFilter: selected.length ? ['any', ...properties] : undefined,
+      specialFilter:
+        selected.length && specialFilterItems.value.length !== selected.length
+          ? ['any', ...properties]
+          : undefined,
     };
   };
 
@@ -301,14 +315,6 @@ export const useOralStore = defineStore('oral', () => {
     activeTypes.value = types;
   };
 
-  const setSpecialFilterSelected = (selected: string[]) => {
-    specialFilterSelected.value = selected;
-  };
-
-  const setNarrativeTypeSelected = (selected: string[]) => {
-    narrativeTypeSelected.value = selected;
-  };
-
   return {
     meta,
     items,
@@ -325,10 +331,9 @@ export const useOralStore = defineStore('oral', () => {
     listSearchText,
     featuresLoading,
     activePlaceItems,
+    specialFilterItems,
     specialFilterSelected,
     narrativeTypeSelected,
-    setNarrativeTypeSelected,
-    setSpecialFilterSelected,
     resetNonPlaceFilter,
     setListSearchText,
     resetSpecialFilter,

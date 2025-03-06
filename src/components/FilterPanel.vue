@@ -12,13 +12,13 @@
       label="Все"
       :indeterminate="
         !!specialFilters.length &&
-        specialFilters.length < specialFilterItems.length
+        specialFilters.length < oralStore.specialFilterItems.length
       "
       @update:model-value="toggleAllSpecialFilters"
     />
     <VDivider class="my-1" />
     <VCheckbox
-      v-for="v in specialFilterItems"
+      v-for="v in oralStore.specialFilterItems"
       :key="v.value"
       :model-value="specialFilters.includes(v.value)"
       class="filter-panel__checkbox mt-0"
@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import {
   VAutocomplete,
   VCheckbox,
@@ -72,38 +72,31 @@ import {
 
 import { useOralStore } from '../store/modules/oral';
 
-import type { LayerMetaItem, NarrativeTypeItem } from '../interfaces';
+import type { NarrativeTypeItem } from '../interfaces';
 
 const oralStore = useOralStore();
 
-const meta = computed<LayerMetaItem[]>(() => oralStore.meta);
-
 const specialFilters = computed({
   get: () => oralStore.specialFilterSelected,
-  set: (val) => oralStore.setSpecialFilterSelected(val),
+  set: (val) => (oralStore.specialFilterSelected = val),
 });
 
 const narrativeTypesSelected = computed({
   get: () => oralStore.narrativeTypeSelected,
-  set: (val) => oralStore.setNarrativeTypeSelected(val),
+  set: (val) => (oralStore.narrativeTypeSelected = val),
 });
 
 const allSpecialFilters = computed({
-  get: () => specialFilters.value.length === specialFilterItems.value.length,
+  get: () =>
+    specialFilters.value.length === oralStore.specialFilterItems.length,
   set: (val) => {
     if (val) {
       oralStore.resetSpecialFilter();
     } else {
-      oralStore.setSpecialFilterSelected([]);
+      oralStore.specialFilterSelected = [];
     }
   },
 });
-
-const specialFilterItems = computed<LayerMetaItem[]>(() =>
-  meta.value
-    .filter((x) => x.type === 'Special')
-    .sort((a, b) => (a.text > b.text ? 1 : -1)),
-);
 
 const narrativeTypeItems = computed(() => {
   const city = oralStore.activePlace?.city;
@@ -112,20 +105,12 @@ const narrativeTypeItems = computed(() => {
   return (types || []).map((name) => ({ name }));
 });
 
-watch(specialFilters, (val) => {
-  oralStore.setSpecialFilter(val.length ? val : undefined);
-});
-
-watch(narrativeTypesSelected, (val) => {
-  oralStore.setNarrativeType(val.length ? val : undefined);
-});
-
 const toggleAllSpecialFilters = () => {
   if (allSpecialFilters.value) {
     oralStore.resetSpecialFilter();
   } else {
-    const allFilters = specialFilterItems.value.map((item) => item.value);
-    oralStore.setSpecialFilterSelected(allFilters);
+    const allFilters = oralStore.specialFilterItems.map((item) => item.value);
+    oralStore.specialFilterSelected = allFilters;
   }
 };
 

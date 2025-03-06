@@ -62,6 +62,8 @@ export interface OralProperties {
   description?: string;
   mos2?: string;
   mos5?: string;
+  mos7?: string;
+  mos8?: string;
   mos4?: string;
   visual?: string;
   mos6?: string;

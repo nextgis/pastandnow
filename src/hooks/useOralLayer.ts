@@ -118,7 +118,7 @@ export function useOralLayer() {
         id: geo,
         name: layerId,
         source: sourceId,
-
+        order: 10000,
         type: typeAlias[geo] || 'point',
         paint: {
           stroke: true,
@@ -249,7 +249,7 @@ export function useOralLayer() {
             const props = feature.properties;
 
             const clusterId = props.cluster_id;
-            let marker = markers[clusterId];
+            let marker: Marker = markers[clusterId];
             if (!marker) {
               const el = createDonutChart(props);
 
@@ -269,7 +269,9 @@ export function useOralLayer() {
               }).setLngLat(coords as [number, number]);
             }
             newMarkers[clusterId] = marker;
-            if (!markersOnScreen[clusterId]) marker.addTo(map);
+            if (!markersOnScreen[clusterId]) {
+              marker.addTo(map);
+            }
           });
 
           for (const id in markersOnScreen) {

@@ -1,5 +1,5 @@
 <template>
-  <OralMap :map-options="mapOptions" full-filling>
+  <OralMap v-if="mapOptions" :map-options="mapOptions" full-filling>
     <VueNgwControl position="top-left" margin>
       <VBtn
         v-if="!appStore.drawer"
@@ -65,6 +65,7 @@
 
 <script setup lang="ts">
 import { VueNgwControl } from '@nextgis/vue-ngw-map';
+import { onMounted, shallowRef } from 'vue';
 import { VBtn, VCard } from 'vuetify/components';
 
 import LegendComponent from '../components/LegendComponent.vue';
@@ -76,24 +77,46 @@ import { useAppStore } from '../store/modules/app';
 import { useOralStore } from '../store/modules/oral';
 
 import type { NgwMapOptions } from '@nextgis/ngw-map';
+import type { StyleSpecification } from 'maplibre-gl';
 
 const { qmsId } = config;
 
 const appStore = useAppStore();
 const oralStore = useOralStore();
+const mapOptions = shallowRef<NgwMapOptions | null>(null);
 
-const mapOptions: NgwMapOptions = {
-  connector,
-  target: 'map',
-  center: [105.3188, 61.524],
-  zoom: 3,
-  qmsId,
-  controls: ['ZOOM', 'ATTRIBUTION'],
-  controlsOptions: {
-    ZOOM: { position: 'top-right' },
-    ATTRIBUTION: { position: 'bottom-right' },
-  },
-};
+onMounted(async () => {
+  let style: Partial<StyleSpecification> | undefined = undefined;
+  try {
+    // const resp = await fetch(config.geoservice.url);
+    // style = (await resp.json()) as StyleSpecification;
+    // style = {
+    //   transition: {
+    //     duration: 0,
+    //     delay: 0,
+    //   },
+    //   ...style,
+    // };
+  } catch {
+    //
+  }
+
+  mapOptions.value = {
+    connector,
+    target: 'map',
+    center: [105.3188, 61.524],
+    zoom: 3,
+    qmsId: style ? undefined : qmsId,
+    controls: ['ZOOM', 'ATTRIBUTION'],
+    controlsOptions: {
+      ZOOM: { position: 'top-right' },
+      ATTRIBUTION: { position: 'bottom-right' },
+    },
+    mapAdapterOptions: {
+      style: style ? style : undefined,
+    },
+  };
+});
 </script>
 
 <style lang="scss" scoped>
@@ -102,14 +125,6 @@ const mapOptions: NgwMapOptions = {
 .rectangle-fab {
   border-radius: settings.$border-radius-root;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-
-  .v-btn__content .v-icon {
-    /* color: $icon-color; */
-  }
-
-  &:hover .v-btn__content .v-icon {
-    /* color: $icon-color-active; */
-  }
 }
 
 .legend-body {
